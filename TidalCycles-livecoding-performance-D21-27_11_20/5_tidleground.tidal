@@ -1,0 +1,61 @@
+setcps (152/60/4)
+
+hush
+
+d1
+$ fast 0.5
+$ striate 16
+$ s "breaks157*4" # up (irand 2)
+# gain 0.85 # cut 3
+
+hush
+
+d1 $ silence
+
+d2 $ hurry 0.5 $ s "hh27(16,18)" # n (range 0 24 $ rand)
+-- # binshift 0.5
+# cut 1 # gain 1.15
+
+d3
+$ hurry 1.125
+$ s "trump?(6,8)" # n (range 0 16 $ rand)
+# gain 0.9
+# smear 0.2
+# cut 2
+
+hush
+
+--------------
+
+d4 $ s "hand(6,9)" # n (range 0 16 $ rand)
+# triode 2.5
+
+d5 $ s "jazz(2,9)" # n (choose [0,2]) # gain 0.9
+
+d6 $ jux rev $ s "peri(4,18)" # n (range 0 15 $ rand)
+-- # lbrick 0.75
+# gain 0.7
+
+setcps (92/60/4)
+
+hush
+
+--------------
+
+d7
+-- $ brak
+-- $ stut 3 1.2 0.125
+$ s "boombapbd(3,12)" # n (range 8 6 $ rand) # gain 1.1 # cut 3
+
+d8 $ (0.25 ~>) $ s "boombaphh(5,12)" # n (choose [4,7..34]) # gain 0.85 # room 0.4
+
+d9 $ (0.25 ~>) $ s "boombapsn(4,12)" # n (choose [4,7,10]) # gain 0.8 # leslie 1.2
+# pan (slow 2 $ sine)
+
+d10 $ jux rev $ s "superpiano(7,12)" # sustain 2.5 # n "cs'maj7 <es'min9 g'sus4>"
+# legato 2
+-- # leslie 1
+# gain 0.7
+# distort 1.25 # waveloss 10
+
+hush
