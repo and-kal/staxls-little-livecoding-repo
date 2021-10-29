@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 Here are some TidalCycles snippets I used for a livecoding thing I did with TidalCycles at [Kunstraum D21](https://www.d21-leipzig.de) in Leipzig as part of their exhibition "Anybody out there?! 100 Jahre Radio in Deutschland". Check [soundartlab](https://soundcloud.com/soundartlab) for other recordings and interviews that were part of the programme—it's worth it!
+=======
+Here are some TidalCycles snippets I used for a livecoding thing I did with TidalCycles at [Kunstraum D21](https://www.d21-leipzig.de) in Leipzig as part of their exhibition "Anybody out there?! 100 Jahre Radio in Deutschland." Check [soundartlab](https://soundcloud.com/soundartlab) for other recordings and interviews that were part of the programme—it's worth it!
+>>>>>>> df1ac38c6f7142c0d37fbebd2db9a4e85e29ab25
 I prepared most of the code already beforehand and basically just let them play and layered them played and twisted the patterns' parameters, 'cause I was quite new to TidalCycles and 'cause it was more to showcase some simple stuff you can do with one or two lines in TidalCycles and not meant to be an artistic "performance" proper.
 What you hear is mostly based on the default generators and samples that come with TidalCycles/Dirt when you install it, though I included some custom samples from my Alesis HR16A drum machine, a Simmons SDS1 sound library tape, the videogame Portal, the [galen tipton](https://soundcloud.com/galentipton) sample pack and a few more things I forgot.
