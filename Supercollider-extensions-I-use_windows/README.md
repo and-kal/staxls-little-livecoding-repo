@@ -1,0 +1,1 @@
+just a backup of my C:\Users\Li\AppData\Local\SuperCollider\Extensions folder, so I keep track of which of other SC people's classes I regularly use
