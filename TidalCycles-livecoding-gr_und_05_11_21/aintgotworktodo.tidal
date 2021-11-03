@@ -1,0 +1,361 @@
+-- some sound designs and samples are by myself
+-- others I took from somewhere
+-- like, from random, but I guess talented people on youtube:
+-- https://www.youtube.com/watch?v=N6D7XK6x8c0
+-- https://www.youtube.com/watch?v=mNnv1ZucQKw
+-- or github:
+-- https://github.com/Miserlou/ableton-backup/
+-- or from TidalCycles' "#samples" channel on discord
+-- https://discord.gg/GtFrAtNR
+
+d1 $ stack [whenmod 5 4 (jux rev) $ whenmod 5 3 (# up 13) $ superimpose (hurry "[2 4]") $ s "{[LCBC_drum_kit_01:3(5,8)|LCBC_drum_kit_01:7(3,8)]}"
+  , n "[[10, 20, 30, 0]|[5, 20, 3, 50]]" # s "gabor" # up (-20)
+  , s "sostoms*16?" # gain 1.25 # up (20) # crush 10
+]
+
+hush
+
+scaleList
+
+d2 $ slow 2 $ n (scale "neapolitanMinor" $ "<{13 19 10, 17 4}, {7 9 10 12, 15 3 5}>") # s "super808" # fshift (range (-100) (-350) $ slow "[18 12]" $ cosine) # gain 0.9
+
+let fftmod = (range 0 1 $ slow 3 $ saw)
+
+d3 $ s "superhammond" # n "<-20 -30 -40>"
+# real fftmod # imag fftmod
+# gain 1.5
+
+d4 $ stack [whenmod 4 3 (hurry 0.5) $ whenmod 4 2 (hurry 2) $ s "[LCBC_drum_kit_03:5 _ _ [LCBC_drum_kit_03:6*4|LCBC_drum_kit_03:3(2,6)]]",
+ whenmod 4 3 (# fshift "[160 100 50]") $ whenmod 5 4 (0.25 <~) $ struct ("t ~ ~ t ~ ~ t ~ t ~ t ~") $ s "[LCBC_drum_kit_03:4*8|LCBC_drum_kit_04:1(8,10)]"
+]
+# nudge (range 0.5 2 $ slow 16 $ sine)
+
+hush
+
+cps (140/60/4)
+
+d5 $ stack [
+  -- loopAt 4 $ whenmod 8 7 (hurry 1.25 . (jux rev)) $ fast 1 $ striate 32 $ s "classic-breakz:22" # gain 1
+  -- # delayfeedback 0.73 # delaytime 0.49 # delay 0.8
+  -- ,
+  whenmod 3 2 ((fast 8) . (randslice 64)) $
+  whenmod 7 6 (bite 8 "7!8") $
+  whenmod 7 3 (bite 8 "8 .. 3") $
+  loopAt 1 $ whenmod 5 3 (0.5 ~>) $ whenmod 5 4 (trunc 0.25) $ someCycles rev $ slice 8 "0!4 1 5 3 6" $ "classic-breakz:8" # cut 0
+]
+
+d6
+$ slow 2
+$ whenmod 3 2 (hurry "[0.25 4]")
+$ slice 4 "3 2 0 1 0 0 0 0"
+$ loopAt 1
+$ s "classic-breakz:4 classic-breakz:1 classic-breakz:3"
+# cps (180/60/4)
+-- # lpf 1000 # resonance 0.25
+-- # distort 0.5
+
+let
+ ampdist = pF "ampdist"
+ minfreq = pF "minfreq"
+ maxfreq = pF "maxfreq"
+
+d7 $ fast 4 $ freq "[300 1000 100 50]" # s "gendy3" # ampdist (segment 8 $ range 0 8 $ slow 4 $ sine)
+
+d8 $ stack [
+whenmod 3 2 (jux rev) $ whenmod 4 3 (# up 7) $ whenmod 5 3 (# up (-7)) $ n (scale "minor" ("[3 [6!2|6!4] 9*4 [12|17]*4]"))
+# up (range 30 50 $ fast 4 $ sine2)
+# s "braids" # model 4 # speed 2.5,
+ palindrome $ whenmod 5 3 (hurry 0.25) $ s "omi*32" # up (-10) # gain 1.25
+# binshift 2.9 # fshift "[200 1000 2000 5000]"
+]
+
+hush
+
+d9
+$ whenmod 9 6 (|- note (range 0 20 $ slow 3 $ saw))
+$ whenmod 5 3 (# smear 0.2)
+$ whenmod 6 4 (slow 2 . (|+ note 24))
+$ n "{[0 3 7], [2 4] 7, 3 8, [2 1 1 3]}%2" # s "superfm"
+# ratio1 ((6/5)*0.3)
+# ratio2 ((5/4)*10)
+# ratio3 ((48/35)*3)
+# ratio4 ((10/7)*10)
+# ratio5 ((3/2)*30)
+# ratio6 ((5/3)*0.05)
+# mod41 0.4
+# mod31 0.2
+# mod43 0.4
+# mod16 0.3
+# mod62 0.7
+# up (-10)
+# attack 0.1
+# release 0.1
+# gain 0.8
+
+hush
+
+setcps(120/60/4)
+
+d10
+-- $ whenmod 5 4 (# real (range 0.2 1 $ slow 4 $ cosine))
+$ whenmod 5 4 (# binshift (range 0.2 1 $ slow 4 $ cosine))
+-- $ whenmod 3 2 (# imag (range 0.1 2 $ slow 8 $ sine))
+$ someCyclesBy 0.2 (jux rev)
+$ someCyclesBy 0.1 (# lbrick (range 0 1 $ cosine))
+$ whenmod 6 4 (|+ note 14)
+$ whenmod 10 8 (hurry 2)
+$ whenmod 12 10 (# nudge (range 0.5 1 $ slow 2 $ sine))
+$ s "{[[ESTECDRUMS_samples:10*1|ESTECDRUMS_samples:2*3] ESTECDRUMS_samples:12*5]}%2" # cut 0
+-- # cps (range 0.25 1.5 $ slow 16 $ cosine)
+# room 0.125 # size 0.125
+
+hush
+
+
+-- d11 $ s "808bd:6*2"
+-- # binshift 0.25
+-- # up "[-30 -12]" # cut 0
+-- # gain 0.9
+
+-- d11 $ silence
+
+d12
+-- $ fast 2
+$ whenmod 7 5 (fastspread ($) [(|+ note 24), (# room 0.1)])
+$ whenmod 4 3 (shuffle 3)
+$ whenmod 9 6 ((|+ note "30 -30") . (# binshift (range 0 3 $ slow 1.5 $ sine)))
+$ s "[<[SOPHIE_claps:9*4, LEX_HATZ:2*24] [LEX_HATZ:9*8, Snares-gqom:9(3,8)]>, Cymatics:37*3]"
+# nudge (slow 16 $ "0 0.25 0.5")
+# gain 0.85
+
+hush
+
+---
+
+setcps(110/60/4)
+
+d1
+$ whenmod 6 4 (chew 4 ("<3 .. 0, 3 0 2*2 1>"))
+$ stack [
+  rarely (# distort (1/6)) $ s (step "Kicks-gqom"  "9 8 34 ") # gain 1.1
+  , hurry 1  $ s (step "Claps-gqom"  "    5   9   1     0")
+  , sometimes (ply 3) $ s (step "Snares-gqom"   "   4         2     ") # up (0) # gain 0.9
+  ]
+
+setcps (160/60/4)
+
+d2 $ stack [
+    s (step "Kicks-gqom"  "7   3      3 "),
+    whenmod 5 1 (trunc 0.75) $ whenmod 4 3 ((ply 2) . (slow 3)) $ s (step "Claps-gqom"  "111      3     "),
+    whenmod 6 3 ((linger (1/3)) . (# fshift 3000) . (fast 8)) $ s (step "Snares-gqom"   "       1   4     "),
+    sometimes rev $ s "{Sematary_Drumkit:11 Sematary_Drumkit:12 Sematary_Drumkit:11 ~}%16" # gain 0.8
+    ]
+
+
+--------
+-- initializing control >:D
+--------
+let
+-- superfm parameters
+ mod11 = pF "mod11"
+ mod12 = pF "mod12"
+ mod13 = pF "mod13"
+ mod14 = pF "mod14"
+ mod15 = pF "mod15"
+ mod16 = pF "mod16"
+ mod21 = pF "mod21"
+ mod22 = pF "mod22"
+ mod23 = pF "mod23"
+ mod24 = pF "mod24"
+ mod25 = pF "mod25"
+ mod26 = pF "mod26"
+ mod31 = pF "mod31"
+ mod32 = pF "mod32"
+ mod33 = pF "mod33"
+ mod34 = pF "mod34"
+ mod35 = pF "mod35"
+ mod36 = pF "mod36"
+ mod41 = pF "mod41"
+ mod42 = pF "mod42"
+ mod43 = pF "mod43"
+ mod44 = pF "mod44"
+ mod45 = pF "mod45"
+ mod46 = pF "mod46"
+ mod51 = pF "mod51"
+ mod52 = pF "mod52"
+ mod53 = pF "mod53"
+ mod54 = pF "mod54"
+ mod55 = pF "mod55"
+ mod56 = pF "mod56"
+ mod61 = pF "mod61"
+ mod62 = pF "mod62"
+ mod63 = pF "mod63"
+ mod64 = pF "mod64"
+ mod65 = pF "mod65"
+ mod66 = pF "mod66"
+ -- operator envelope generator levels
+ eglevel11 = pF "eglevel11"
+ eglevel12 = pF "eglevel12"
+ eglevel13 = pF "eglevel13"
+ eglevel14 = pF "eglevel14"
+ eglevel21 = pF "eglevel21"
+ eglevel22 = pF "eglevel22"
+ eglevel23 = pF "eglevel23"
+ eglevel24 = pF "eglevel24"
+ eglevel31 = pF "eglevel31"
+ eglevel32 = pF "eglevel32"
+ eglevel33 = pF "eglevel33"
+ eglevel34 = pF "eglevel34"
+ eglevel41 = pF "eglevel41"
+ eglevel42 = pF "eglevel42"
+ eglevel43 = pF "eglevel43"
+ eglevel44 = pF "eglevel44"
+ eglevel51 = pF "eglevel51"
+ eglevel52 = pF "eglevel52"
+ eglevel53 = pF "eglevel53"
+ eglevel54 = pF "eglevel54"
+ eglevel61 = pF "eglevel61"
+ eglevel62 = pF "eglevel62"
+ eglevel63 = pF "eglevel63"
+ eglevel64 = pF "eglevel64"
+ -- operator envelope generator rates
+ egrate11 = pF "egrate11"
+ egrate12 = pF "egrate12"
+ egrate13 = pF "egrate13"
+ egrate14 = pF "egrate14"
+ egrate21 = pF "egrate21"
+ egrate22 = pF "egrate22"
+ egrate23 = pF "egrate23"
+ egrate24 = pF "egrate24"
+ egrate31 = pF "egrate31"
+ egrate32 = pF "egrate32"
+ egrate33 = pF "egrate33"
+ egrate34 = pF "egrate34"
+ egrate41 = pF "egrate41"
+ egrate42 = pF "egrate42"
+ egrate43 = pF "egrate43"
+ egrate44 = pF "egrate44"
+ egrate51 = pF "egrate51"
+ egrate52 = pF "egrate52"
+ egrate53 = pF "egrate53"
+ egrate54 = pF "egrate54"
+ egrate61 = pF "egrate61"
+ egrate62 = pF "egrate62"
+ egrate63 = pF "egrate63"
+ egrate64 = pF "egrate64"
+ -- operator output levels
+ amp1 = pF "amp1"
+ amp2 = pF "amp2"
+ amp3 = pF "amp3"
+ amp4 = pF "amp4"
+ amp5 = pF "amp5"
+ amp6 = pF "amp6"
+ -- operator frequency ratios
+ ratio1 = pF "ratio1"
+ ratio2 = pF "ratio2"
+ ratio3 = pF "ratio3"
+ ratio4 = pF "ratio4"
+ ratio5 = pF "ratio5"
+ ratio6 = pF "ratio6"
+ -- operator frequency detuners
+ detune1 = pF "detune1"
+ detune2 = pF "detune2"
+ detune3 = pF "detune3"
+ detune4 = pF "detune4"
+ detune5 = pF "detune5"
+ detune6 = pF "detune6"
+ -- other
+ feedback = pF "feedback"
+ lfofreq = pF "lfofreq"
+ lfodepth = pF "lfodepth"
+ -- mutable synths
+ timbre = pF "timbre"
+ color = pF "color"
+ model = pI "model"
+ mode = pI "mode"
+ tidesshape = pF "tidesshape"
+ tidessmooth = pF "tidessmooth"
+ slope = pF "slope"
+ shift = pF "shift"
+ engine = pI "engine"
+ harm = pF "harm"
+ morph = pF "morph"
+ level = pF "level"
+ lpgdecay = pF "lpgdecay"
+ lpgcolour = pF "lpgcolour"
+ lpg d c = lpgdecay d # lpgcolour c
+ -- mutable effects
+ cloudspitch = pF "cloudspitch"
+ cloudspos = pF "cloudspos"
+ cloudssize = pF "cloudssize"
+ cloudsdens = pF "cloudsdens"
+ cloudstex = pF "cloudstex"
+ cloudswet = pF "cloudswet"
+ cloudsgain = pF "cloudsgain"
+ cloudsspread = pF "cloudsspread"
+ cloudsrvb = pF "cloudsrvb"
+ cloudsfb = pF "cloudsfb"
+ cloudsfreeze = pF "cloudsfreeze"
+ cloudsmode = pF "cloudsmode"
+ cloudslofi = pF "cloudslofi"
+ clouds p s d t = cloudsgain 1 # cloudspos p # cloudssize s # cloudsdens d # cloudstex t
+ cloudsblend w s f r = cloudsgain 1 # cloudswet w # cloudsspread s # cloudsfb f # cloudsrvb r
+ c = clouds
+ cb = cloudsblend
+ elementspitch = pF "elementspitch"
+ elementsstrength = pF "elementsstrength"
+ elementscontour = pF "elementscontour"
+ elementsbowlevel = pF "elementsbowlevel"
+ elementsblowlevel = pF "elementsblowlevel"
+ elementsstrikelevel = pF "elementsstrikelevel"
+ elementsflow = pF "elementsflow"
+ elementsmallet = pF "elementsmallet"
+ elementsbowtimb = pF "elementsbowtimb"
+ elementsblowtimb = pF "elementsblowtimb"
+ elementsstriketimb = pF "elementsstriketimb"
+ elementsgeom = pF "elementsgeom"
+ elementsbright = pF "elementsbright"
+ elementsdamp = pF "elementsdamp"
+ elementspos = pF "elementspos"
+ elementsspace = pF "elementsspace"
+ elementsmodel = pI "elementsmodel"
+ elementseasteregg = pI "elementseasteregg"
+ mu = pF "mu"
+ ringsfreq = pF "ringsfreq"
+ ringsstruct = pF "ringsstruct"
+ ringsbright = pF "ringsbright"
+ ringsdamp = pF "ringsdamp"
+ ringspos = pF "ringspos"
+ ringsmodel = pF "ringsmodel"
+ ringspoly = pI "ringspoly"
+ ringsinternal = pI "ringsinternal"
+ ringseasteregg = pI "ringseasteregg"
+ rings f s b d p = ringsfreq f # ringsstruct s # ringsbright b # ringsdamp d # ringspos p
+ ripplescf = pF "ripplescf"
+ ripplesreson = pF "ripplesreson"
+ ripplesdrive = pF "ripplesdrive"
+ ripples c r d = ripplescf c # ripplesreson r # ripplesdrive d
+ verbgain = pF "verbgain"
+ verbwet = pF "verbwet"
+ verbtime = pF "verbtime"
+ verbdamp = pF "verbdamp"
+ verbhp = pF "verbhp"
+ verbfreeze = pI "verbfreeze"
+ verbdiff = pF "verbdiff"
+ verb w t d h = verbgain 1 # verbwet w # verbtime t # verbdamp d # verbhp h
+ v = verb
+ warpsalgo = pI "warpsalgo"
+ warpstimb = pF "warpstimb"
+ warpsosc = pI "warpsosc"
+ warpsfreq = pF "warpsfreq"
+ warpsvgain = pF "warpsvgain"
+ warpseasteregg = pI "warpseasteregg"
+
+-- benjolis params
+ oscA = pF "oscA"
+ oscB = pF "oscB"
+ runA = pF "runA"
+ runB = pF "runB"
+ runF = pF "runF"
+ res = pF "res"
+ freq = pF "freq"
