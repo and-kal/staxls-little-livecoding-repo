@@ -1,102 +1,109 @@
--- some sound designs and samples are by myself
--- others I took from somewhere
--- like, from random, but I guess talented people on youtube:
--- https://www.youtube.com/watch?v=N6D7XK6x8c0
--- https://www.youtube.com/watch?v=mNnv1ZucQKw
--- or github:
--- https://github.com/Miserlou/ableton-backup/
--- or from TidalCycles' "#samples" channel on discord
--- https://discord.gg/GtFrAtNR
+-- once $ s "thanks:1" # accelerate "[-1]"
 
-d1 $ stack [whenmod 5 4 (jux rev) $ whenmod 5 3 (# up 13) $ superimpose (hurry "[2 4]") $ s "{[LCBC_drum_kit_01:3(5,8)|LCBC_drum_kit_01:7(3,8)]}"
-  , n "[[10, 20, 30, 0]|[5, 20, 3, 50]]" # s "gabor" # up (-20)
-  , s "sostoms*16?" # gain 1.25 # up (20) # crush 10
+let fftmod = (range 0 1 $ slow 3 $ saw)
+in
+d3 $ s "superhammond" # n "<-20 -30 -40>"
+# real fftmod # imag fftmod
+# gain 1.5
+
+d1 $ slow 2 $ n (scale "neapolitanMinor" $ "<{13 19 10, 17 4}, {7 9 10 12, 15 3 5}>") # s "super808" # fshift (range (-100) (-350) $ slow "[18 12]" $ cosine) # gain 0.9
+
+d2 $ stack [whenmod 5 4 (jux rev) $ whenmod 5 3 (# up 13) $ superimpose (hurry "[2 4]") $ s "{[LCBC_drum_kit_01:3(5,8)|LCBC_drum_kit_01:7(3,8)]}" # shape 0.3
+  -- , n "[[10, 20, 30, 0]|[5, 20, 3, 50]]" # s "gabor" # up (-20)
+  -- , s "sostoms*16?" # gain 1.125 # up (20) # crush 12 # accelerate "[3]"
+  -- , whenmod 7 5 (# accelerate "[-1 -2 1 2 -3]") $ whenmod 5 3 (hurry "[2 4 3 1.5]/2") $ s "MPC-Drums:168*6" # shape 0.5
 ]
 
 hush
 
 scaleList
 
-d2 $ slow 2 $ n (scale "neapolitanMinor" $ "<{13 19 10, 17 4}, {7 9 10 12, 15 3 5}>") # s "super808" # fshift (range (-100) (-350) $ slow "[18 12]" $ cosine) # gain 0.9
-
-let fftmod = (range 0 1 $ slow 3 $ saw)
-
-d3 $ s "superhammond" # n "<-20 -30 -40>"
-# real fftmod # imag fftmod
-# gain 1.5
-
-d4 $ stack [whenmod 4 3 (hurry 0.5) $ whenmod 4 2 (hurry 2) $ s "[LCBC_drum_kit_03:5 _ _ [LCBC_drum_kit_03:6*4|LCBC_drum_kit_03:3(2,6)]]",
- whenmod 4 3 (# fshift "[160 100 50]") $ whenmod 5 4 (0.25 <~) $ struct ("t ~ ~ t ~ ~ t ~ t ~ t ~") $ s "[LCBC_drum_kit_03:4*8|LCBC_drum_kit_04:1(8,10)]"
+d4 $
+whenmod 8 7 ((shuffle 4) . (jux rev)) $
+whenmod 5 4 (ghost) $
+stack [
+struct "t ~!3 t ~!2 t ~ t ~!2" $ s "[Young-Thug:35*6, Young-Thug:41*6]" # shape 0.5
+, whenmod 4 3 (# accelerate "[1.5 -1.5]") $ whenmod 6 4 (hurry 2) $ s "[MPC-Drums:113|MPC-Drums:154*3 _ _ [LCBC_drum_kit_03:6*4|LCBC_drum_kit_03:3(2,6)]]"
+, whenmod 4 3 (# fshift "[160 100 50]") $ whenmod 5 4 (0.25 <~) $ struct ("t ~ ~ t ~ ~ t ~ t ~ t ~") $ s "[LCBC_drum_kit_04:4*8|LCBC_drum_kit_04:1(8,10)]"
 ]
 # nudge (range 0.5 2 $ slow 16 $ sine)
+
+
+d5 $
+whenmod 8 7 ((shuffle 4) . (jux rev)) $
+whenmod 5 4 (ghost) $
+stack [
+whenmod 4 3 (# accelerate "[1.5 -1.5]") $ whenmod 6 4 (hurry 2) $ s "[minim:4 _ _ [Recorder:6*4|Recorder:3(2,6)]]" # gain 0.6
+, whenmod 5 2 (# accelerate "[2.5 -2.5]") $ s "RockOrgan*2" # up (0) # cut 1 # gain 1.1
+, randslice 5 $ s "SynthGoblins:4*2" # up (-30) # cut 2
+]
+# nudge (range 0.5 3 $ slow 16 $ sine)
 
 hush
 
 cps (140/60/4)
 
-d5 $ stack [
-  -- loopAt 4 $ whenmod 8 7 (hurry 1.25 . (jux rev)) $ fast 1 $ striate 32 $ s "classic-breakz:22" # gain 1
-  -- # delayfeedback 0.73 # delaytime 0.49 # delay 0.8
-  -- ,
-  whenmod 3 2 ((fast 8) . (randslice 64)) $
-  whenmod 7 6 (bite 8 "7!8") $
-  whenmod 7 3 (bite 8 "8 .. 3") $
-  loopAt 1 $ whenmod 5 3 (0.5 ~>) $ whenmod 5 4 (trunc 0.25) $ someCycles rev $ slice 8 "0!4 1 5 3 6" $ "classic-breakz:8" # cut 0
-]
+-- d5 $ stack [
+--   loopAt 4 $ whenmod 8 7 (hurry 1.25 . (jux rev)) $ fast 1 $ striate 32 $ s "classic-breakz:22" # gain 1
+--   # delayfeedback 0.73 # delaytime 0.49 # delay 0.8
+--   ,
+--   whenmod 3 2 ((fast 8) . (randslice 64)) $
+--   whenmod 7 6 (bite 8 "7!8") $
+--   whenmod 7 3 (bite 8 "8 .. 3") $
+--   loopAt 1 $ whenmod 5 3 (0.5 ~>) $ whenmod 5 4 (trunc 0.25) $ someCycles rev $ slice 8 "0!4 1 5 3 6" $ "classic-breakz:8" # cut 0
+-- ]
 
-d6
-$ slow 2
+d6 $
+whenmod 7 5 (# accelerate "[-2 2]")
+$ stack [
+slow 2
 $ whenmod 3 2 (hurry "[0.25 4]")
-$ slice 4 "3 2 0 1 0 0 0 0"
 $ loopAt 1
+$ whenmod 8 7 (loopAt 2)
+$ slice 4 "3 2 0 1 0 0 0 0"
 $ s "classic-breakz:4 classic-breakz:1 classic-breakz:3"
-# cps (180/60/4)
--- # lpf 1000 # resonance 0.25
--- # distort 0.5
+-- # lpf 1000 # resonance 0.25 # distort 0.5
+, whenmod 3 2 (# speed "[-1 2]") $ struct "t ~!5 t!2 ~!3 t!4" $ s "MPC-Drums:94*4" # shape 0.5
+] # cps (180/60/4)
 
-let
- ampdist = pF "ampdist"
- minfreq = pF "minfreq"
- maxfreq = pF "maxfreq"
 
-d7 $ fast 4 $ freq "[300 1000 100 50]" # s "gendy3" # ampdist (segment 8 $ range 0 8 $ slow 4 $ sine)
+-- -- for use with mutable instruments UGens
+-- d7 $ stack [
+-- whenmod 3 2 (jux rev) $ whenmod 4 3 (# up 7) $ whenmod 5 3 (# up (-7)) $ n (scale "minor" ("[3 [6!2|6!4] 9*4 [12|17]*4]"))
+-- # up (range 30 50 $ fast 4 $ sine2)
+-- # s "braids" # model 4 # speed 2.5,
+--  palindrome $ whenmod 5 3 (hurry 0.25) $ s "omi*32" # up (-10) # gain 1.25
+-- # binshift 2.9 # fshift "[200 1000 2000 5000]"
+-- ]
 
-d8 $ stack [
-whenmod 3 2 (jux rev) $ whenmod 4 3 (# up 7) $ whenmod 5 3 (# up (-7)) $ n (scale "minor" ("[3 [6!2|6!4] 9*4 [12|17]*4]"))
-# up (range 30 50 $ fast 4 $ sine2)
-# s "braids" # model 4 # speed 2.5,
- palindrome $ whenmod 5 3 (hurry 0.25) $ s "omi*32" # up (-10) # gain 1.25
-# binshift 2.9 # fshift "[200 1000 2000 5000]"
-]
 
-hush
-
-d9
-$ whenmod 9 6 (|- note (range 0 20 $ slow 3 $ saw))
-$ whenmod 5 3 (# smear 0.2)
-$ whenmod 6 4 (slow 2 . (|+ note 24))
-$ n "{[0 3 7], [2 4] 7, 3 8, [2 1 1 3]}%2" # s "superfm"
-# ratio1 ((6/5)*0.3)
-# ratio2 ((5/4)*10)
-# ratio3 ((48/35)*3)
-# ratio4 ((10/7)*10)
-# ratio5 ((3/2)*30)
-# ratio6 ((5/3)*0.05)
-# mod41 0.4
-# mod31 0.2
-# mod43 0.4
-# mod16 0.3
-# mod62 0.7
-# up (-10)
-# attack 0.1
-# release 0.1
-# gain 0.8
+-- -- evaluate superfm parameter declaration below
+-- d8
+-- $ whenmod 9 6 (|- note (range 0 20 $ slow 3 $ saw))
+-- $ whenmod 5 3 (# smear 0.2)
+-- $ whenmod 6 4 (slow 2 . (|+ note 24))
+-- $ n "{[0 3 7], [2 4] 7, 3 8, [2 1 1 3]}%2" # s "superfm"
+-- # ratio1 ((6/5)*0.3)
+-- # ratio2 ((5/4)*10)
+-- # ratio3 ((48/35)*3)
+-- # ratio4 ((10/7)*10)
+-- # ratio5 ((3/2)*30)
+-- # ratio6 ((5/3)*0.05)
+-- # mod41 0.4
+-- # mod31 0.2
+-- # mod43 0.4
+-- # mod16 0.3
+-- # mod62 0.7
+-- # up (-10)
+-- # attack 0.1
+-- # release 0.1
+-- # gain 0.8
 
 hush
 
 setcps(120/60/4)
 
-d10
+d9
 -- $ whenmod 5 4 (# real (range 0.2 1 $ slow 4 $ cosine))
 $ whenmod 5 4 (# binshift (range 0.2 1 $ slow 4 $ cosine))
 -- $ whenmod 3 2 (# imag (range 0.1 2 $ slow 8 $ sine))
@@ -112,14 +119,7 @@ $ s "{[[ESTECDRUMS_samples:10*1|ESTECDRUMS_samples:2*3] ESTECDRUMS_samples:12*5]
 hush
 
 
--- d11 $ s "808bd:6*2"
--- # binshift 0.25
--- # up "[-30 -12]" # cut 0
--- # gain 0.9
-
--- d11 $ silence
-
-d12
+d10
 -- $ fast 2
 $ whenmod 7 5 (fastspread ($) [(|+ note 24), (# room 0.1)])
 $ whenmod 4 3 (shuffle 3)
@@ -130,27 +130,41 @@ $ s "[<[SOPHIE_claps:9*4, LEX_HATZ:2*24] [LEX_HATZ:9*8, Snares-gqom:9(3,8)]>, Cy
 
 hush
 
----
 
 setcps(110/60/4)
 
-d1
-$ whenmod 6 4 (chew 4 ("<3 .. 0, 3 0 2*2 1>"))
-$ stack [
-  rarely (# distort (1/6)) $ s (step "Kicks-gqom"  "9 8 34 ") # gain 1.1
-  , hurry 1  $ s (step "Claps-gqom"  "    5   9   1     0")
-  , sometimes (ply 3) $ s (step "Snares-gqom"   "   4         2     ") # up (0) # gain 0.9
-  ]
+
+-- -- too wonky
+-- d11
+-- $ whenmod 6 4 (chew 4 ("<3 .. 0, 3 0 2*2 1>"))
+-- $ stack [
+--   rarely (# distort (1/6)) $ s (step "Kicks-gqom"  "9 8 34 ") # gain 1.1
+--   , hurry 1  $ s (step "Claps-gqom"  "    5   9   1     0")
+--   , sometimes (ply 3) $ s (step "Snares-gqom"   "   4         2     ") # up (0) # gain 0.9
+--   ]
 
 setcps (160/60/4)
 
-d2 $ stack [
+d12 $ stack [
     s (step "Kicks-gqom"  "7   3      3 "),
     whenmod 5 1 (trunc 0.75) $ whenmod 4 3 ((ply 2) . (slow 3)) $ s (step "Claps-gqom"  "111      3     "),
     whenmod 6 3 ((linger (1/3)) . (# fshift 3000) . (fast 8)) $ s (step "Snares-gqom"   "       1   4     "),
     sometimes rev $ s "{Sematary_Drumkit:11 Sematary_Drumkit:12 Sematary_Drumkit:11 ~}%16" # gain 0.8
     ]
 
+
+---
+-- goodbye
+---
+
+d12 $ stack [
+whenmod 4 2 (ply 8)
+$ whenmod 5 3 (# speed "-1.2")
+$ whenmod 4 3 ((hurry 6) . (rev) . juxBy (-1) (# crush 8))
+$ slow 3 $ s "thanks*12" # n "[6 7]" # cut 1
+]
+
+hush
 
 --------
 -- initializing control >:D
@@ -268,94 +282,3 @@ let
  feedback = pF "feedback"
  lfofreq = pF "lfofreq"
  lfodepth = pF "lfodepth"
- -- mutable synths
- timbre = pF "timbre"
- color = pF "color"
- model = pI "model"
- mode = pI "mode"
- tidesshape = pF "tidesshape"
- tidessmooth = pF "tidessmooth"
- slope = pF "slope"
- shift = pF "shift"
- engine = pI "engine"
- harm = pF "harm"
- morph = pF "morph"
- level = pF "level"
- lpgdecay = pF "lpgdecay"
- lpgcolour = pF "lpgcolour"
- lpg d c = lpgdecay d # lpgcolour c
- -- mutable effects
- cloudspitch = pF "cloudspitch"
- cloudspos = pF "cloudspos"
- cloudssize = pF "cloudssize"
- cloudsdens = pF "cloudsdens"
- cloudstex = pF "cloudstex"
- cloudswet = pF "cloudswet"
- cloudsgain = pF "cloudsgain"
- cloudsspread = pF "cloudsspread"
- cloudsrvb = pF "cloudsrvb"
- cloudsfb = pF "cloudsfb"
- cloudsfreeze = pF "cloudsfreeze"
- cloudsmode = pF "cloudsmode"
- cloudslofi = pF "cloudslofi"
- clouds p s d t = cloudsgain 1 # cloudspos p # cloudssize s # cloudsdens d # cloudstex t
- cloudsblend w s f r = cloudsgain 1 # cloudswet w # cloudsspread s # cloudsfb f # cloudsrvb r
- c = clouds
- cb = cloudsblend
- elementspitch = pF "elementspitch"
- elementsstrength = pF "elementsstrength"
- elementscontour = pF "elementscontour"
- elementsbowlevel = pF "elementsbowlevel"
- elementsblowlevel = pF "elementsblowlevel"
- elementsstrikelevel = pF "elementsstrikelevel"
- elementsflow = pF "elementsflow"
- elementsmallet = pF "elementsmallet"
- elementsbowtimb = pF "elementsbowtimb"
- elementsblowtimb = pF "elementsblowtimb"
- elementsstriketimb = pF "elementsstriketimb"
- elementsgeom = pF "elementsgeom"
- elementsbright = pF "elementsbright"
- elementsdamp = pF "elementsdamp"
- elementspos = pF "elementspos"
- elementsspace = pF "elementsspace"
- elementsmodel = pI "elementsmodel"
- elementseasteregg = pI "elementseasteregg"
- mu = pF "mu"
- ringsfreq = pF "ringsfreq"
- ringsstruct = pF "ringsstruct"
- ringsbright = pF "ringsbright"
- ringsdamp = pF "ringsdamp"
- ringspos = pF "ringspos"
- ringsmodel = pF "ringsmodel"
- ringspoly = pI "ringspoly"
- ringsinternal = pI "ringsinternal"
- ringseasteregg = pI "ringseasteregg"
- rings f s b d p = ringsfreq f # ringsstruct s # ringsbright b # ringsdamp d # ringspos p
- ripplescf = pF "ripplescf"
- ripplesreson = pF "ripplesreson"
- ripplesdrive = pF "ripplesdrive"
- ripples c r d = ripplescf c # ripplesreson r # ripplesdrive d
- verbgain = pF "verbgain"
- verbwet = pF "verbwet"
- verbtime = pF "verbtime"
- verbdamp = pF "verbdamp"
- verbhp = pF "verbhp"
- verbfreeze = pI "verbfreeze"
- verbdiff = pF "verbdiff"
- verb w t d h = verbgain 1 # verbwet w # verbtime t # verbdamp d # verbhp h
- v = verb
- warpsalgo = pI "warpsalgo"
- warpstimb = pF "warpstimb"
- warpsosc = pI "warpsosc"
- warpsfreq = pF "warpsfreq"
- warpsvgain = pF "warpsvgain"
- warpseasteregg = pI "warpseasteregg"
-
--- benjolis params
- oscA = pF "oscA"
- oscB = pF "oscB"
- runA = pF "runA"
- runB = pF "runB"
- runF = pF "runF"
- res = pF "res"
- freq = pF "freq"
