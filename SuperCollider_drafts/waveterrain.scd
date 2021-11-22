@@ -47,13 +47,3 @@ x = {
 )
 
 x.release(3)
-
-
-(
-{Pan2.ar(
-	FreqShift.ar(
-		LFDNoise3.ar,FSinOsc.kr(9.25,0,5000,100).unipolar,0,10.85*Impulse.kr(8)
-	)
-)
-}.play;
-)
