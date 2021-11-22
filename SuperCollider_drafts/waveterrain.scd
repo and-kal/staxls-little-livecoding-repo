@@ -8,6 +8,7 @@ s.freqscope;
 // function for wave terrain example
 
 f = { |x, y| sin(x) - (sin(y) * log2(x * (x*10+1))/(10))};
+// g = { |x, y| (sin(x) + sin(x * y) * ln((x / 20) + 20))) / 2 };
 
 // check the surface produced by the function with GeoGebra
 
