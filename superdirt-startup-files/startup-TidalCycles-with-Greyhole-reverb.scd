@@ -1,4 +1,5 @@
 // taken from https://club.tidalcycles.org/t/greyhole-global-effect/3717
+// caution: really CPU heavy
 
 (
 s.reboot {
