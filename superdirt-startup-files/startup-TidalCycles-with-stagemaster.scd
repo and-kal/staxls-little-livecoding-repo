@@ -1,4 +1,8 @@
-
+// install StageMaster Quark
+Quarks.install("https://github.com/calumgunn/StageMaster.git");
+// then recompile class library
+thisProcess.recompile();
+// and boot
 (
 s.reboot { // server options are only updated on reboot
     // configure the sound server: here you could add hardware specific options
@@ -29,14 +33,6 @@ s.reboot { // server options are only updated on reboot
     s.latency = 0.3; // increase this if you get "late" messages
 };
 )
-
-
-// install StageMaster Quark
-Quarks.install("https://github.com/calumgunn/StageMaster.git");
-// then recompile class library
-thisProcess.recompile();
-// and reboot
-s.reboot;
 
 // adds light compression, EQ and limiting to all output
 StageMaster.activate(numChannels: 2, compThreshold: 0.7, limiterLevel: 1.0, highEndDb: 3.0);
