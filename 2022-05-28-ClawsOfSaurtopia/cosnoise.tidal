@@ -1,0 +1,28 @@
+setcps(144/60/4)
+
+
+hush
+
+
+d1 $
+  whenmod 20 18 (# accelerate "{-2 2 -3 4}%2")
+  $ whenmod 9 7 (linger 0.33)
+  $ stack [
+  -- ("[0.025|0.05|0]" <~) $
+  every 4 ((|+ note (range 15 10 $ rand)) . (# pan (1))) $ s "Cymatics:32*24" # amp 1.5
+  , someCyclesBy 0.125 (fast "[2|4]") $ every 4 ((|+ note (range (10) 30 $ rand)) . (# pan (0))) $ s "[~![1|2] Cymatics:20*4]" # up (4) # amp 0.5
+  , someCyclesBy 0.5 (|+ note "[-2|-9|-7]") $ whenmod 10 9 ((# scram 0.6) . (jux rev)) $ s "Cymatics:38([9|7],16,2)" # gain 1.1
+  , whenmod 4 3 (linger 0.1) $ s "~!2 Smoke:0*[4|3]" # up 4 # cut 1 # amp (range 0 1 $ tri2)
+  , whenmod 20 2 (# amp 0) $ someCyclesBy 0.125 (hurry 2) $ sometimes (|- note 2) $ n (scale "lydian" $ "[4, 3, 7]*2 [11 12 1]*3") # s "supertron" # detune 0.5 # accelerate "7 14" # gain 0.5 -- somehow kills all other sounds
+  , loopAt "[2|4|8]" $ s "Cymatics:49" # accelerate "10 3 2 [10|20|30|-5|-8]"
+]
+
+
+d1
+  $ whenmod 26 24 ((linger 0.05) . (fast 2))
+  $ whenmod 20 18 ((slow 2) . (# binshift (range 0 2 $ slow 2 $ saw))) $ stack [
+  -- whenmod 10 8 ((# crush "<1, 0.8>")) $
+  whenmod 6 2 (# amp 0) $ every 2 (|- note "[12|24]") $ note (run "[96|64|32]") # s "You:3" # gain 0.7 # cut 1,
+  someCyclesBy 0.125 (bite 4 "3 0 2 1") $ someCyclesBy 0.125 (|+ note "[1|7|2]") $ note "3 ~ ~ 0 ~ ~ 2 ~ ~ ~ 0 ~ -1 ~ ~ ~" # s "5X:7*3" # shape 0.75 # cut 2 # release 0.9,
+  s "Way_Bigger:2(9, 16)" # cut 3 # accelerate "-0.1 0.2" # up (17) # amp 0.8
+]
