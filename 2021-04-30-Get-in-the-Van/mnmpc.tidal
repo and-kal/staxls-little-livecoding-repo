@@ -1,0 +1,101 @@
+import Sound.Tidal.Chords
+chordList
+scaleList
+
+setcps (110/60/4)
+
+d1 $ s "[mpckick*3]" # n (range 6 18 rand) # gain 0.9 # lpf 1000 
+
+d2 $ degradeBy 0.5 $ (0.25 <~) $ s "mpcsnare*6" # n "[11, 12 ~ 13 10 ~ ~ 14]" # up (2) 
+-- # imag 0.2 # real 1.2
+
+d2 $ ((1/3) <~) $ s "mpcsnare*9" # n "[7 2 ~ 3 10 ~ ~ 4]" # up "[-6 0 10]/5"
+
+d3 $ someCyclesBy 0.125 (# imag 0.4) $ s "mpchat*9" # n (irand 2) # cut 1 # gain (slow 6 $ range 0 1 cosine)
+
+d4 $ shuffle 8 $ s "<[mpckick:3 mpcsnare:9] [mpckick:6*3, mpckick:1]>" # gain 0.9 # up (-5)
+
+hush
+
+d5 
+  $ fast 8
+  $ someCyclesBy 0.25 (off 0.375 (# up 5))
+  $ off 0.25 (# up (range (-2) 24 rand))
+  $ off 0.125 (# up (range (-20) 0 rand))
+  -- $ striate (slow 8 $ choose [40, 60, 120, 20, 120]) 
+  $ someCyclesBy 0.25 (jux rev)
+  $ someCyclesBy 0.25 (brak)
+  $ someCyclesBy 0.25 (hurry 0.125) 
+  $ s "perc5k" 
+  # n (irand 20) 
+  # cut 1
+  -- # release 0.2
+  # gain 0.5
+  # room 0.1 # size 0.1
+
+ 
+d6 
+  $ hurry 2
+  $ someCyclesBy 0.25 (jux rev)
+  $ someCyclesBy 0.25 (brak)
+  $ s "kick5k:9*4" # n (range 0 12 rand)
+  -- # room 0.8 # size 0.8
+  -- # real 0.2 # imag 1
+  -- # binshift 9
+  # comb 0.25
+  # freeze 0
+  # gain 0.8
+  # up (1)
+
+hush
+
+d7
+  $ fast 2
+  $ jux rev 
+  $ scramble 2
+    $ struct "[t ~ t t ~ t t ~]" $ slice 4 "[1 1 2 3 4]"
+    -- $ striate 8
+    $ s "fada" 
+    # n (irand 8) 
+    -- # up (-12) 
+    # gain 0.6
+    # cut 0
+    # speed "[0.8 1.25 1.5 0.9]" 
+    # room 0.5 # size 0.5
+
+hush
+
+let chords = "{g4'13*3 e4'msharp5*3 cs4'plus*4, cs5'dom7*2 cs5'6by9*3}"
+  in d8 
+    $ slow 5
+    -- $ jux rev
+    $ shuffle 8 
+    -- $ stut 2 0.25 0.125 
+    $ s "superfm"
+      |+| note (scale "hexAeolian" chords)
+      # fmfeedback 1
+      -- # fmdetune 1 2 
+      # fmmod 4 2 1
+      # fmmod 2 1 1
+      # lfmel 1 [0.5, 0.5, 0, 0.5]     -- EG Level (Operator 1)
+      # lfmer 1 [0.8, 0.9, 0.1, 10]  -- EG Rate (Operator 1)
+      # lfmel 2 [1, 0.9, 0, 0]       -- EG Level (Operator 2)
+      # lfmer 2 [0.1, 0.9, 0.7, 1]   -- EG Rate (Operator 2)
+      # lfmel 3 [1,0.3,0,1]        -- EG Level (Operator 3)
+      # lfmer 3 [0.1,0.3,0.4,1]     -- EG Rate (Operator 3)
+      # lfmel 4 [1,0.2,0,1]        -- EG Level (Operator 4)
+      # lfmer 4 [0.1,0.5,0.4,1]     -- EG Rate (Operator 4)
+      # lfmel 5 [1,0.2,0,1]        -- EG Level (Operator 5)
+      # lfmer 5 [0.1,0.5,0.4,1]     -- EG Rate (Operator 5)
+      # lfma [1, 1, 0, 0, 1]    -- Amps (Operators 1..5)
+      # lfmr [1, 2.12, 1.75, 3.5, 1.9]        -- Ratios (Operators 1..5)
+      # room 0.5 # size 0.5
+      -- # lpf 3000 # up (12)
+      # gain 0.6
+
+hush
+
+d9 $ jux rev $ often (# up (slow 8 $ choose [-1, 1,-2,3,4, -5, -4, -2])) $ slow 0.25 $ slice 2 "[1 8 2 7 3 6 4 5]" $ s "myS:24" 
+  # gain 0.9
+  # up (24)
+  -- # triode 1 # comb 1
