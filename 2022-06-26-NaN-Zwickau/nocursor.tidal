@@ -10,6 +10,7 @@ $ fast 0.5 $ sometimes (# up ("[-4|22]")) $ n (scale "lydian" "{[[1 ~!7 4 8 3]*[
 hush
 
 d2
+$ whenmod 22 18 (slow 4)
 $ every 4 (# accelerate "[-4 4]")
 $ whenmod 12 9 (# nudge (range 0.99 0.9 $ tri))
 $ somecyclesBy 0.125 (scramble 4)
@@ -19,27 +20,28 @@ $ stack [
     , 
     sometimes (shuffle 4) $ s "[Fairlight_CMI:318(5,12)]" # up (scale "wholetone" "[0 12 7 9 1]") # start 0.6 # release 0.3
     , 
-    every 5 (# binshift "[0.5 3]") $ euclidInv 5 12 (s "Doudou1:52") 
+    every 5 (# enhance "[0.75|0.5]") $ euclidInv 5 12 (s "Doudou1:52") 
 ]
--- # verb 0.6 0.4 0.85 0.85 
-# amp 0.8
+# verb 0.7 0.6 0.85 0.85 
+# amp 1
 # cps (95/60/4)
 
-d3 
+d3
     $ 
-    whenmod 12 9 (hurry (slow 6 $ range 1 1.05 $ saw)) $ 
+    whenmod 12 10 (hurry (slow 6 $ range 1 1.05 $ saw)) $ 
     stack [
-        somecyclesBy 0.5 (0.125 <~) $ s "[KILPACK_HATS:1*8, KILPACK_SNARES:8*16?]" # cut 0 # up (-2)
+        whenmod 14 11 (striate 8) $ whenmod 12 8 (fast 4) $ fast 8 $ somecyclesBy (1/6) (jux rev) $ randslice "[6|12]" $ s "umru_bernie:32" # cut 3 # pan "[0|1|0.3|0.6]" # up (segment 15 (fast 2 $ range (-24) 0 $ sine))
         , somecyclesBy 0.5 (mask "~!2 t!1") $ sometimes (randslice 16) $ slice 8 "[2 3 4 6] [1 0 4 0]" $ s "GRIME-Eski:30*6" # cut 2 # up "<12 7 2>"
-        , whenmod 19 16 ((degradeBy 0) . (fast 2)) $ degradeBy 0.5 $ rarely (0.1 ~>) $ s "Doudou2:45*8" # cut 1
-        , fast 8 $ randslice "[6|12]" $ s "umru_bernie:32" # cut 3 # pan "[0|1|0.3|0.6]" # up (segment 15 (fast 2 $ range (-24) 0 $ sine))
+        , somecyclesBy 0.5 (0.125 <~) $ s "[KILPACK_HATS:1*8, KILPACK_SNARES:5*16?]" # cut 0 # up (-2)
+        , whenmod 19 16 ((degradeBy 0) . (fast 2)) $ degradeBy 0.5 $ someCyclesBy 0.1 ((1/16) ~>) $ s "Doudou2:45*8" # cut 1
     ] 
 # amp 0.8
--- every 3 (# fshift (750)) $ euclidInv 11 16 (s "stxl:1") 
     
+d4 $ every 3 (# fshift (750)) $ euclidInv 11 16 (s "stxl:1") # cps(145/60/2)
+
 hush
 
-d4
+d5
 $ every 8 (slice 4 "[3 2 1 0]*2")
 $ every 12 ((hurry 2) . (|+ n (irand 8)) . (# cut 1))
 $ whenmod 14 11 (linger (1/5))
@@ -59,8 +61,7 @@ $ stack [
 
 hush
 
-
-d5 $ stack [
+d6 $ stack [
     whenmod 5 4 (jux rev) $ somecyclesBy 0.25 (degrade) $ somecyclesBy 0.2 ((shuffle 4)) 
     $ slice 6 "{4 3 2 1 0 ~!3}*2" 
     $ s "stxl:6" # up ("[-7|0|3]")
@@ -72,10 +73,9 @@ d5 $ stack [
 ]
 # cps(150/60/4)
 
-
 scaleList
 
-d6 
+d4
 $ whenmod 12 8 (# cps (145/60/4))
 $ stack [
     whenmod 20 18 ((|+ n ((range 1 200 $ rand))) . (# cut 1)) $ rarely ((jux rev)) $ s "Mega_Genesis:13([3|5],8)" *| up (scale "sikah" "[[0|12] [2|4] 3 7]*4") # cut 0 
