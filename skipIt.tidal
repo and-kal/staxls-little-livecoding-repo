@@ -1,0 +1,15 @@
+setcps(155/60/4)
+
+d1 $ stack [
+    somecyclesBy 0.25 (# speed (-1)) 
+    $ s "hh:8*12" 
+    # shape (range 0 0.85 $ cF 0 "32") 
+    # pan (fast 16 $ range 0 1 $ sine)
+    , 
+    cat [
+        s "[bd:8 bd:8 bd:8 {bd:9}%3 ~, ~*2 cp:2]"
+        , s "bd:10?!4 cp:2 bd:10!2 sd:2" 
+    ]
+]
+
+hush
