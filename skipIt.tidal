@@ -1,125 +1,80 @@
 setcps(165/60/4)
 
-d1 $ somecyclesBy 0.125 (# speed (-1)) 
-    $ somecyclesBy 0.125 (hurry 2) 
-    $ stack [
-        s "undefined:21" 
-        # cut 1
-        # end 0.5
-        # shape (range 0 0.85 $ cF 0 "32") 
-        # pan (fast 16 $ range 0 1 $ sine)
-        , 
-        cat [
-            s "[null:1 null:1 null:1 {kicky:11}%3 ~]" # cut 2 # gain 1.25
-            , rarely (# up "[2|-1]") $ s "kicky:10?!4 undefined:5 kicky:10!2 sd:4" 
-            , loopAt 16 $ someCyclesBy (1/4) ((chop 128) . (striate 2)) $ s "null:4" 
-        ]
-        , s "[~*2 undefined:5*3]"
-        , rarely (# up 3) $ s "minima:16*12" # cut 3 # pan (fast 2 $ smooth "-1 1") 
-    ]
-
-hush
-
-d2 $
-whenmod 16 12 (sometimesBy 0.25 (hurry 2))
-$ someCyclesBy 0.25 (0.125 <~) 
-$ someCyclesBy 0.125 (linger (1/16))
-$ someCyclesBy 0.25 (slow 4)
+d1 
+$ whenmod 8 1 ((slow 4) . (ply 8))
+$ somecyclesBy (1/8) (# speed (-1)) 
+$ somecyclesBy (1/8) (hurry 2) 
 $ stack [
-    s "[AcdBrnOut:18*4]" # cut 2
-    , someCyclesBy 0.5 (# up "[1|-1]") $ ((1/8) <~) $ s "nome:14*4" # cut 1
-    , s "undefined:22" # note (scale "hirajoshi" (choose[-1,0,1,2,3])) # cut 3 
-] 
-# cps (170/60/4)
+    s "undefined:21" 
+    # cut 1
+    # end 0.5
+    # shape (range 0 0.85 $ cF 0 "32") 
+    # pan (fast 16 $ range 0 1 $ sine)
+    , 
+    cat [
+        s "[null:1 null:1 null:1 {kicky:11}%3 ~]" # cut 2 # gain 1.25
+        , rarely (# up "[2|-1]") $ s "kicky:10?!4 undefined:5 kicky:10!2 sd:4" 
+        , loopAt 16 $ someCyclesBy (1/4) ((chop 128) . (striate 2)) $ s "null:4" 
+    ]
+    , s "[~*2 undefined:5*3]"
+    , rarely (# up 3) $ s "minima:16*12" # cut 3 # pan (fast 2 $ smooth "-1 1") 
+]
 
 hush
-
-let 
-    maxTemp = (125/60/4)
-    minTemp = (85/60/4)
-in
--- clutchIn 2 8
-d3 
-$ someCycles (fast 2) $ 
-stack [
-    rarely ((5/4) <~) $ s "[kicky:7*2 quasi:3*2 kicky quasi:3*2]"
-    , somecyclesBy (1/4) (fast 3) $ somecyclesBy (1/8) (fast 2) $ s "minima:17*4" # up (4)
-] 
-# cps (range maxTemp minTemp $ slow 2 $ tri)
-
-hush
-
 
 ---------------
 --     1     --
 ---------------
 
-let pattern_1 = "{0@5 -2@6 2@3 4@8 -1@4}%8"
-    pattern_2 = (ascii "<t r y t h i s>")
-    maxTemp = (155/60/4)
-    minTemp = (145/60/4)
-in
-d4 $ 
-someCyclesBy (1/8) (jux brak)
-$ stack [
-    n (scale "hirajoshi" (pattern_1) |+ 24) # s "midi" # legato 0.5
-    , ccv (segment 20 $ range 10 100 $ saw) # ccn 43 # s "midi"
-    , ccv (segment 20 $ range 10 100 $ rand) # ccn 44 # s "midi"
-    , ccv (segment 20 $ range 10 120 $ rand) # ccn 45 # s "midi"
-    , ccv (segment 20 $ range 0 80 $ rand) # ccn 46 # s "midi"
-    , ccv (segment 20 $ range 0 127 $ rand) # ccn 47 # s "midi"
-    , degradeBy 0.125 $ sometimesBy (1/4) ((1/8) ~>) $ s "kicky:23*2" # shape 0.5 # cut 1 # speed (range 0.9 1.1 $ saw)
-    , slow 2 $ struct pattern_2 $ s "808sd:11" # shape 0.25
-    , whenmod 8 6 (fast 2) $ whenmod 11 8 ((chop 2) . (fast 3)) $ s "minima:1*8" 
-] 
--- # cps (range maxTemp minTemp $ sine )
-# cps maxTemp
-
----------------
---     2     --
----------------
-
 let pattern = "{0@3 0@4 1@2 0@3 2@2 2*[4|3|2|1]@2 1@2}%16"
 in 
-d6 
-$ somecyclesBy (1/6) (slow 2)  
-$ somecyclesBy (1/8) (linger (1/4))  
-$ somecyclesBy (1/12) (trunc (1/8))  
-$ somecyclesBy (1/10) (stutter 8 (1/4))  
+d2
+-- $ somecyclesBy (1/6) ((ply 8) . (slow 4))  
+-- $ somecyclesBy (1/6) (slow 2)  
+-- $ somecyclesBy (1/8) (linger (1/4))  
+-- $ somecyclesBy (1/12) (trunc (1/8))  
+-- $ somecyclesBy (1/10) (stutter 8 (1/4))  
 $ stack [
-    midichan (fmap ([9,10,11]!!) $ pattern ) # s "midi" # n "0"
-    , sometimes ((1/16) <~) $ n "0*8" # s "midi" # midichan 8
-    , sometimes (|+ n (choose [0,1..7])) $ n (scale "hirajoshi" (unwrap $ fmap ([0, "~", "~"]!!) $ pattern )) # s "midi" # midichan 0 
-    , n (unwrap $ fmap (["~", 7, "~"]!!) $ pattern ) # s "midi" # midichan 1 # legato 1
-    , ccv (segment 64 $ range 20 100 $ slow 32 $ saw) # ccn 46 # s "midi"
-    , ccv (segment 64 $ range 5 100 $ slow 8 $ tri) # ccn 47 # s "midi"
+    sometimes (|+ n ("[-1|1|2]")) $
+    midichan (fmap ([9,10,11]!!) $ pattern ) # s "midi" # n "0" 
+    , 
+    sometimes ((1/16) <~) $ n "0*8" # s "midi" # midichan 8 
+    , 
+    sometimes (|+ n (choose [0,2..10])) $ n (scale "hirajoshi" (unwrap $ fmap (["~", 0, "~"]!!) $ pattern )) # s "midi" # midichan 0 # legato 1 -- aalto 
+    , 
+    n (unwrap $ fmap (["~", 7, "~"]!!) $ pattern ) # s "midi" # midichan 1 -- reaktor
+    # legato 4 
+    , 
+    ccv (segment 64 $ range 20 100 $ slow 32 $ saw) # ccn 46 # s "midi"
+    , 
+    ccv (segment 64 $ range 5 100 $ slow 8 $ tri) # ccn 47 # s "midi"
 ]
 # cps (165/60/4)
 
 hush
 
-d7 
--- $ hurry 1.05
+d3
+$ hurry 1.08
+$ someCyclesBy (1/8) (|+ n "[1|2]")
 $ stack [
     chop "32"
-    $ someCyclesBy (1/8) (randslice 2)
-    $ someCyclesBy 0.125 ((striate 8) . (# fshift (range (-500) 500 sine)) . (# gain 0.75))
-    $ someCyclesBy 0.25 (linger (1/16))
-    $ whenmod 10 8 ((slow 8) . (slice 4 "3 2 1 0")) 
-    $ whenmod 12 10 ((jux rev) . (# cut 0) . (# gain 0.9)) 
-    $ whenmod 15 13 (# speed 8) 
-    $ whenmod 21 18 ((hurry (1.05/2)) . (# cps (170/60/2)))
-    $ whenmod 30 27 (loopAt 4) 
-    $ every 2 (0.25 <~)
-    $ every 5 (0.5 <~)
-    $ every 8 (0.5 ~>)
-    $ every 12 (trunc 0.1)
+    $ someCyclesBy (1/8) (randslice "[2|4]")
+    $ someCyclesBy (1/8) ((striate 8) . (# fshift (range (-500) 500 sine)) . (# gain 0.75))
+    -- $ someCyclesBy 0.25 (linger (1/16))
+    -- $ whenmod 10 8 ((slow 8) . (slice 4 "3 2 1 0")) 
+    -- $ whenmod 12 10 ((jux rev) . (# cut 0) . (# gain 0.9)) 
+    -- $ whenmod 15 13 (# speed 8) 
+    -- $ whenmod 20 18 (loopAt 4) 
+    -- $ whenmod 23 20 ((hurry (1.05/2)) . (# cps (170/60/2)))
+    -- $ every 2 (0.25 <~)
+    -- $ every 5 (0.25 <~)
+    -- $ every 8 (trunc 0.1)
     $ loopAt 2
-    $ s "Breaks:29" # shape (6/10) # cut 1
-    ,
-    loopAt 12 $ s "padu:11"
-    ,
-    sometimes (# accelerate "-4 1") $ s "[undefined:10]/4" 
+    $ n 29 # s "Breaks" # gain 1.2 # shape 0.55 # cut 1
+    -- ,
+    -- loopAt 12 $ s "padu:11"
+    -- ,
+    -- sometimes (# accelerate "-4 1") $ s "[undefined:10]/4" 
 ]
 # cps (170/60/4)
 
@@ -131,7 +86,7 @@ hush
 
 let pattern = "{0@2 0@3 1@4 0@5 1@4 0@6 2@2}%16"
 in 
-d8 
+d4 
 $ somecyclesBy (1/4) (rev)
 $ whenmod 14 11 (linger (1/16))
 $ stack [
@@ -149,56 +104,91 @@ $ stack [
 
 hush
 
+d5
+$ whenmod 16 12 (sometimesBy 0.25 (hurry 2))
+$ someCyclesBy 0.25 (0.125 <~) 
+$ someCyclesBy (1/8) (linger (1/16))
+$ someCyclesBy 0.25 (slow 4)
+$ stack [
+    s "[AcdBrnOut:18*4]" # cut 2 -- either...
+    ,
+    -- whenmod 12 9 ((chop 16) . (striate 2)) $ s "vocaloi:0/2" -- ...or 
+    -- , 
+    someCyclesBy 0.5 (# up "[1|-1]") $ ((1/8) <~) $ s "nome:14*4" # cut 1
+    , 
+    s "undefined:22" # note (scale "hirajoshi" (choose[-1,0,1,2,3])) # cut 3 
+] 
+# shape 0.3
+# cps (170/60/4)
+
+hush
 
 ---------------
 --     3     --
 ---------------
 
-
 let pattern = "{0@4 0@8 3@2 1@2 0@4 1@10 2@5 @5}%16"
-in d6 
-$ whenmod 32 28 ((ply 6) . (slow 2)) 
+in 
+d6
+-- $ whenmod 32 28 ((ply 6) . (slow 2)) 
 -- $ always ((#end 0.1) . (# legato 0.2))
 $ stack [
     sometimes (|+ n 6) $ n (scale "messiaen2" (unwrap $ fmap(["c'add9", "e'maj9", "c'maj9", "f'maj9"]!!) $ pattern)) 
     # s "midi" #midichan 0 -- xylo
     ,
     ccv (segment 100 $ range 0 120 $ slow 2 $ perlin) # ccn 46 # s "midi" 
-    , 
-    ccv (segment 100 $ range 30 120 $ perlin) # ccn 49 # s "midi" 
-    , 
-    ccv (segment 100 $ range 1 126 $ fast 4 $ cosine) # ccn 47 # s "midi" -- panning 
-    ,
-    ccv (segment 100 $ range 1 126 $ fast 4 $ sine) # ccn 48 # s "midi" 
-    ,
-    someCyclesBy (1/8) (+| n (run "[8|16|32]")) $
-    n (unwrap $ fmap(["c3", "e3", "~", "~"]!!) $ pattern) # s "midi" #midichan 1 -- kick
-    ,
-    somecyclesBy(1/8) (plyWith 3 (|+ n 2)) $ 
-    n (scale "messiaen2" (unwrap $ fmap(["~", "~", "~", "0"]!!) $ pattern)) # s "midi" #midichan 2 -- clap
-    ,
-    plyWith 4 (|- n 2) $ 
-    n (scale "messiaen2" (unwrap $ fmap(["0", "0", "0", "0"]!!) $ pattern)) # s "midi" #midichan 3 -- hihat
+    -- , 
+    -- ccv (segment 100 $ range 30 120 $ perlin) # ccn 49 # s "midi" 
+    -- , 
+    -- ccv (segment 100 $ range 1 126 $ fast 4 $ cosine) # ccn 47 # s "midi" -- panning 
+    -- ,
+    -- ccv (segment 100 $ range 1 126 $ fast 4 $ sine) # ccn 48 # s "midi" 
+    -- ,
+    -- someCyclesBy (1/8) (+| n (run "[8|16|32]")) $
+    -- n (unwrap $ fmap(["c3", "e3", "~", "~"]!!) $ pattern) # s "midi" #midichan 1 -- kick
+    -- ,
+    -- somecyclesBy(1/8) (plyWith 3 (|+ n 2)) $ 
+    -- n (scale "messiaen2" (unwrap $ fmap(["~", "~", "~", "0"]!!) $ pattern)) # s "midi" #midichan 2 -- clap
+    -- ,
+    -- plyWith 4 (|- n 2) $ 
+    -- n (scale "messiaen2" (unwrap $ fmap(["0", "0", "0", "0"]!!) $ pattern)) # s "midi" #midichan 3 -- hihat
 ] 
 -- # cps( range (155/60/4) (20/60/4) $ sine)
 # cps(155/60/4)
 
+hush
 
----- doodlez ----
+-- ╔════════════════════════════════════╗ --
+-- ║              doodlez               ║ --
+-- ╚════════════════════════════════════╝ --
 
--- d3 $ someCyclesBy (1/8) (# up 7) $ stack [ 
---     struct (inv (ascii "<k r a c h a t h o n>")) $ s "808bd:4"
---     , struct (ascii "<k r a c h a t h o n>") $ s "808sd:4"
---     , sometimes (|+ n 3) $ s "hand:0*16" # cut 1 
--- ] # cps (150/60/4)
+{-
+d3 $ someCyclesBy (1/8) (# up 7) $ stack [ 
+    struct (inv (ascii "<k r a c h a t h o n>")) $ s "808bd:4"
+    , struct (ascii "<k r a c h a t h o n>") $ s "808sd:4"
+    , sometimes (|+ n 3) $ s "hand:0*16" # cut 1 
+] # cps (150/60/4)
 
--- hush
+hush
 
--- let jersey = "t f!3 t f!3 t f!2 t f!2 t f!1"
--- in
--- d4 $ 
--- stack [struct (jersey) $ s "808bd:9"
--- , struct (inv jersey) $ s "ul:2"
--- ]
+let jersey = "t f!3 t f!3 t f!2 t f!2 t f!1"
+in
+d4 $ 
+stack [struct (jersey) $ s "808bd:9"
+, struct (inv jersey) $ s "ul:2"
+]
 
--- d6 $ loopAt 8 $ chop 24 $ striate 2 $ s"padu:5" # cut 1
+d6 $ loopAt 8 $ chop 24 $ striate 2 $ s"padu:5" # cut 1
+
+let 
+    maxTemp = (125/60/4)
+    minTemp = (85/60/4)
+in
+d2
+$ someCycles (fast 2) $ 
+stack [
+    rarely ((5/4) <~) $ s "[kicky:7*2 quasi:3*2 kicky quasi:3*2]"
+    , somecyclesBy (1/4) (fast 3) $ somecyclesBy (1/8) (fast 2) $ s "minima:17*4" # up (4)
+] 
+# cps (range maxTemp minTemp $ slow 2 $ tri)
+-}
