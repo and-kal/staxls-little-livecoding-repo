@@ -1,0 +1,216 @@
+--    _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._
+--  ,'_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._`.
+-- ( (                                                         ) )
+--  ) )                                                       ( (
+-- ( (        Thank you all for coming out!                    ) )
+--  ) )                                                       ( (
+-- ( (                                                         ) )
+--  ) )                My name is S t a x l                    ( (
+-- ( (                                                         ) )
+--  ) )                                                       ( (
+-- ( (                                                         ) )
+--  ) )     I will play a little set of livecoded music now   ( (
+-- ( (                                                         ) )
+--  ) )           using a language/tool called                ( (
+-- ( (                         T i d a l C y c l e s           ) )
+--  ) )                                                       ( (
+-- ( (                                                         ) )
+--  ) )       The visual part is done with                    ( (
+-- ( (              M i l k d r o p                            ) )
+--  ) )                                                       ( (
+-- ( (_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._) )
+--  `._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._,'
+
+
+setcps(165/60/4)
+
+d1 
+$ whenmod 8 1 ((slow 4) . (ply 8))
+$ somecyclesBy (1/8) (# speed (-1)) 
+$ somecyclesBy (1/8) (hurry 2) 
+$ stack [
+    s "undefined:21" 
+    # cut 1
+    # end 0.5
+    # shape (range 0 0.85 $ cF 0 "32") 
+    # pan (fast 16 $ range 0 1 $ sine)
+    , 
+    cat [
+        s "[null:1 null:1 null:1 {kicky:11}%3 ~]" # cut 2 # gain 1.25
+        , rarely (# up "[2|-1]") $ s "kicky:10?!4 undefined:5 kicky:10!2 sd:4" 
+        , loopAt 16 $ someCyclesBy (1/4) ((chop 128) . (striate 2)) $ s "null:4" 
+    ]
+    , s "[~*2 undefined:5*3]"
+    , rarely (# up 3) $ s "minima:16*12" # cut 3 # pan (fast 2 $ smooth "-1 1") 
+]
+
+hush
+
+
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      1,2,3,15,16              --
+--                               --
+--     relevant CC channels      --
+--     1-8: aalto                --
+--     9-16: Reaktor             --
+--     17-24: Kick               --
+--     25-32: Vocode             --
+-----------------------------------
+
+
+let pattern = "{0@3 0@4 1@2 0@3 2@2 2*[4|3|2|1]@2 1@2}%16"
+in 
+d2
+$ somecyclesBy (1/6) ((ply 8) . (slow 4))  
+$ somecyclesBy (1/6) (slow 2)  
+$ somecyclesBy (1/8) (linger (1/4))  
+$ somecyclesBy (1/12) (trunc (1/8))  
+$ somecyclesBy (1/10) (stutter 8 (1/4))  
+$ stack [
+    sometimes (|+ n ("[-1|1|2]")) $
+    midichan (fmap ([2,14,15]!!) $ pattern ) # s "midi" # n "0" -- kick[helm],snare[shared],clap[shared]
+    , 
+    midichan (fmap ([3,3,3]!!) $ pattern ) # s "midi" # n "24" -- vocode[helm]
+    , 
+    sometimes ((1/16) <~) $ n "0*8" # s "midi" # midichan 8 -- ???
+    , 
+    sometimes (|+ n (choose [0,2..10])) $ n (scale "hirajoshi" (unwrap $ fmap (["~", 0, "~"]!!) $ pattern )) # s "midi" # midichan 0 # legato 1 -- aalto 
+    , 
+    n (unwrap $ fmap (["~", 7, "~"]!!) $ pattern ) # s "midi" # midichan 1 -- reaktor
+    # legato 4 
+    , 
+    ccv (segment 64 $ range 20 100 $ slow 32 $ saw) # ccn 9 # s "midi" -- beat 
+    , 
+    ccv (segment 64 $ range 5 100 $ slow 8 $ tri) # ccn 10 # s "midi" -- ratio
+]
+# cps (165/60/4)
+
+hush
+
+d3
+$ hurry 1.08
+$ someCyclesBy (1/8) (|+ n "[1|2]")
+$ stack [
+    chop "32"
+    $ someCyclesBy (1/8) (randslice "[2|4]")
+    $ someCyclesBy (1/8) ((striate 8) . (# fshift (range (-500) 500 sine)) . (# gain 0.75))
+    $ someCyclesBy 0.25 (linger (1/16))
+    $ whenmod 10 8 ((slow 8) . (slice 4 "3 2 1 0")) 
+    $ whenmod 12 10 ((jux rev) . (# cut 0) . (# gain 0.9)) 
+    $ whenmod 15 13 (# speed 8) 
+    $ whenmod 20 18 (loopAt 4) 
+    $ whenmod 23 20 ((hurry (1.05/2)) . (# cps (170/60/2)))
+    $ every 2 (0.25 <~)
+    $ every 5 (0.25 <~)
+    $ every 8 (trunc 0.1)
+    $ loopAt 2
+    $ n 29 # s "Breaks" # gain 1.2 # shape 0.55 # cut 1
+    ,
+    loopAt 12 $ s "padu:11"
+    ,
+    sometimes (# accelerate "-4 1") $ s "[undefined:10]/4" 
+]
+# cps (170/60/4)
+
+hush
+
+-----------------------------------
+--           part two            --
+--                               --
+--   relevant note channels      --
+--      5,6,7,8,15               --
+--                               --
+--     relevant CC channels      --
+--     33-40: Plaits             --
+--     41-48: Plaits variant     --
+--     49-56: Kick+Surge         --
+-----------------------------------
+
+
+
+
+let pattern = "{0@2 0@3 1@4 0@5 1@4 0@6 2@2}%16"
+in 
+d4 
+$ somecyclesBy (1/4) (rev)
+$ whenmod 14 11 (linger (1/16))
+$ stack [
+    someCyclesBy (1/8) (|+ n 7)
+    $ n (unwrap $ fmap (["c3","d3","~"]!!) $ pattern) # s "midi" # midichan 6 -- Kick2 + Surge
+    , n (unwrap $ fmap (["~","[[c4 ~]*16, [~ f3]*16]","~"]!!) $ pattern) # s "midi" # midichan 7 -- Hihat [hitick]
+    , n (unwrap $ fmap (["0","0","0*16"]!!) $ pattern) # s "midi" # midichan 14 -- LEX-Snare
+    , somecyclesBy (1/4) (|+ n "[-2|12]")
+    $ n (scale "hirajoshi" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) # s "midi" # midichan "[4|5]" -- MI Plaits
+    , ccv (segment 100 $ range 30 80 $ slow 6 $ sine) # ccn "[33,41]" # s "midi"
+    , ccv (segment 100 $ range 0 100 $ slow 12 $ sine) # ccn "[34,42]" # s "midi"
+    , ccv (segment 100 $ range 30 60 $ slow 6 $ sine) # ccn "[35,43]" # s "midi"
+]
+# cps(145/60/4)
+
+hush
+
+d5
+$ whenmod 16 12 (sometimesBy 0.25 (hurry 2))
+$ someCyclesBy 0.25 (0.125 <~) 
+$ someCyclesBy (1/8) (linger (1/16))
+$ someCyclesBy 0.25 (slow 4)
+$ stack [
+    s "[AcdBrnOut:18*4]" # cut 2 -- either...
+    ,
+    whenmod 12 9 ((chop 16) . (striate 2)) $ s "vocaloi:0/2" -- ...or 
+    , 
+    someCyclesBy 0.5 (# up "[1|-1]") $ ((1/8) <~) $ s "nome:14*4" # cut 1
+    , 
+    s "undefined:22" # note (scale "hirajoshi" (choose[-1,0,1,2,3])) # cut 3 
+] 
+# shape 0.3
+# cps (170/60/4)
+
+hush
+
+-----------------------------------
+--           part three          --
+--                               --
+--   relevant note channels      --
+--      9,10,11,12               --
+--                               --
+--     relevant CC channels      --
+--     57-64: Vital              --
+--     65-72: Kick               --
+--     73-80: ...                --
+-----------------------------------
+
+
+let pattern = "{0@4 0@8 3@2 1@2 0@4 1@10 2@5 @5}%16"
+in 
+d6
+$ whenmod 32 28 ((ply 6) . (slow 2)) 
+-- $ always ((#end 0.1) . (# legato 0.2))
+$ stack [
+    sometimes (|+ n 6) $ n (scale "messiaen2" (unwrap $ fmap(["c'add9", "e'maj9", "c'maj9", "f'maj9"]!!) $ pattern)) 
+    # s "midi" # midichan 8 -- xylo[vital]
+    ,
+    ccv (segment 100 $ range 0 120 $ slow 2 $ perlin) # ccn 57 # s "midi" 
+    , 
+    ccv (segment 100 $ range 30 120 $ perlin) # ccn 60 # s "midi" 
+    , 
+    ccv (segment 100 $ range 1 126 $ fast 4 $ cosine) # ccn 58# s "midi" -- panning 
+    ,
+    ccv (segment 100 $ range 1 126 $ fast 4 $ sine) # ccn 59 # s "midi" -- panning
+    ,
+    someCyclesBy (1/8) (+| n (run "[4|8|16|32]")) $
+    n (unwrap $ fmap(["c3", "e3", "~", "~"]!!) $ pattern) # s "midi" #midichan 9 -- kick
+    ,
+    somecyclesBy(1/8) (plyWith 3 (|+ n 2)) $ 
+    n (scale "messiaen2" (unwrap $ fmap(["~", "~", "~", "0"]!!) $ pattern)) # s "midi" #midichan 10 -- clap
+    ,
+    plyWith 4 (|- n 2) $ 
+    n (scale "messiaen2" (unwrap $ fmap(["0", "0", "0", "0"]!!) $ pattern)) # s "midi" #midichan 11 -- hihat
+] 
+# cps(155/60/4)
+-- # cps( range (155/60/4) (20/60/4) $ sine)
+
+hush
