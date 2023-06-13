@@ -75,8 +75,8 @@ $ stack [
     , 
     midichan (fmap ([3,3,3]!!) $ pattern ) # s "midi" # n "24" -- vocode[helm]
     , 
-    sometimes ((1/16) <~) $ n "0*8" # s "midi" # midichan 8 -- ???
-    , 
+    -- sometimes ((1/16) <~) $ n "0*8" # s "midi" # midichan 3 
+    -- , 
     sometimes (|+ n (choose [0,2..10])) $ n (scale "hirajoshi" (unwrap $ fmap (["~", 0, "~"]!!) $ pattern )) # s "midi" # midichan 0 # legato 1 -- aalto 
     , 
     n (unwrap $ fmap (["~", 7, "~"]!!) $ pattern ) # s "midi" # midichan 1 -- reaktor
