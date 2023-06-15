@@ -42,9 +42,9 @@ s.reboot { // server options are only updated on reboot
 };
 );
 
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/Krachathon/Staxl-sample-pack/*");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Verpixelt/Staxl-sample-pack/*");
 ~dirt.loadSoundFiles("C:/Users/Li/Documents/Ableton/samples/Jungle Jungle - 1989 to 1999 Samplepack/Breaks");
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/Krachathon/gig-exclusive-samples/*");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Verpixelt/gig-exclusive-samples/*");
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 (
