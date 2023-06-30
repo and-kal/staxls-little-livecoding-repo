@@ -1,0 +1,101 @@
+   _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._
+ ,'_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._`.
+( (                                                         ) )
+ ) )                                                       ( (
+( (        Thank you all for coming out!                    ) )
+ ) )                                                       ( (
+ ) )                My name is . . .                       ( (
+ ) )                                                       ( ( 
+( (         _______ _________ _______           _           ) ) 
+ ) )      (  ____ \\__   __/(  ___  )|\     /|( \          ( ( 
+( (       | (    \/   ) (   | (   ) |( \   / )| (           ) )
+ ) )      | (_____    | |   | (___) | \ (_) / | |          ( ( 
+( (       (_____  )   | |   |  ___  |  ) _ (  | |           ) )
+ ) )            ) |   | |   | (   ) | / ( ) \ | |          ( ( 
+( (       /\____) |   | |   | )   ( |( /   \ )| (____/\     ) )
+ ) )      \_______)   )_(   |/     \||/     \|(_______/    ( ( 
+( (                                                         ) )
+ ) )     I will play a little set of livecoded music now   ( (
+( (                                                         ) )
+ ) )           using a language/tool called                ( (
+( (                         T i d a l C y c l e s           ) )
+ ) )                                                       ( (
+( (_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._) )
+ `._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._,'
+
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      1,2,3,15,16              --
+--                               --
+--     relevant CC channels      --
+--     1-8: Dexed                --
+--     9-16: Opal                --
+--     17-24: Kick               --
+--     25-32: rings             --
+-----------------------------------
+
+let 
+  pattern = ascii "<sm as hc ap it al is m>"
+  melody = "[~ 2 [6 7]? 8 ~ 9]"
+in
+d1
+$ stack [
+    (|- note 36) $ plyWith 8 ((slow 4) . (|+ note 1)) $ struct (pattern) $ s "midi" # note (scale "partch" melody) 
+    # midichan 0
+    ,
+    (|+ note 12) $ plyWith 8 ((slow 4) . (|+ note 1)) $ struct (inv pattern) $ s "midi" # note (scale "partch" melody) 
+    # midichan 1
+    , 
+    s "midi/8" # n 0 # legato 0.25
+    # midichan 2
+    , 
+    ccv (segment 60 $ range 0 100 (slow 8 $ isaw)) # ccn "[26, 27]" # s "midi"
+    ,
+    s "midi" # n 0
+    # midichan 3
+] # cps(92/60/4)
+
+hush
+
+-----------------------------------
+--           part two            --
+--                               --
+--   relevant note channels      --
+--      5,6,7,8,15               --
+--                               --
+--     relevant CC channels      --
+--     33-40: Plaits             --
+--     41-48: Plaits variant     --
+--     49-56: Kick+Surge         --
+-----------------------------------
+
+
+let pattern = "{0@2 0@8 1@4 0@6 1@6 0@6 2@2}%16"
+in 
+d2
+$ stack [
+]
+
+
+-----------------------------------
+--           part three          --
+--                               --
+--   relevant note channels      --
+--      9,10,11,12               --
+--                               --
+--     relevant CC channels      --
+--     57-64: Vital              --
+--     65-72: Kick               --
+--     73-80: FM8                --
+-----------------------------------
+
+
+let pattern = "{0@4 3@4 3@2 2@2 1@4 0@10 1@5 2@5}%16"
+in 
+d3
+$ stack [
+] 
+
+hush

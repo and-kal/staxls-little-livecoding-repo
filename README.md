@@ -1,13 +1,9 @@
-##### dedicated branch for the `Verpixelt` event
+##### dedicated branch for my tour in September
 
 ----
-https://heizhaus-leipzig.de/projekt/verpixelt
-16th June 2023 \/\ 5pm-8pm 
-Heizhaus Leipzig
+16.09. Strasbourg [???]
+17.09. Metz [???]
+27.09. Chemnitz w/ Cesar Palace
+28.09. Berlin @ KuLe w/ Cesar Palace
 
-[https://heizhaus-leipzig.de/projekt/verpixelt](https://heizhaus-leipzig.de/projekt/verpixelt)
-
-Creative/live coding showcase
-w/ solquemal
-
-Don't be late ヾ(⌐■_■)ノ♪
+Don't miss it ヾ(⌐■_■)ノ♪
