@@ -36,6 +36,9 @@
 --     25-32: rings             --
 -----------------------------------
 
+d2 $ ccv (segment 60 $ range 0 100 (slow 8 $ isaw)) # ccn "[26, 27]" # s "midi"
+
+
 let 
   pattern = ascii "<sm as hc ap it al is m>"
   melody = "[~ 2 [6 7]? 8 ~ 9]"
@@ -67,17 +70,41 @@ hush
 --                               --
 --     relevant CC channels      --
 --     33-40: Plaits             --
---     41-48: Plaits variant     --
---     49-56: Kick+Surge         --
+--     41-48: Digits             --
+--     49-56: chiral             --
+--     57-64: grainthing         --
 -----------------------------------
 
+import Sound.Tidal.Chords
+-- chordList
+-- scaleList
 
-let pattern = "{0@2 0@8 1@4 0@6 1@6 0@6 2@2}%16"
+
+let pattern = "{0@4 1@4 2@8 3@8 1@2 3@16 1@2}%16"
 in 
 d2
+$
+somecyclesBy 0.25 ((slow 3) . (linger (1/16)))
+$
+somecyclesBy 0.25 ((# legato 0.1) . (rev))
 $ stack [
-]
+  (|+ n "<0!6 7>")
+  $
+  n (scale "hexDorian" (unwrap $ fmap(["e'7sus2", "c'sus4", "~", "~"]!!) $ pattern)) # s "midi" # midichan 4 -- plaits
+  ,
+  (|- n (choose[0,7,12])) $ n (scale "hexDorian" (unwrap $ fmap(["~", "~", "as'min69?", "~"]!!) $ pattern)) 
+  # s "midi" # midichan 5 -- digits
+  ,
+  ccv (segment 25 $ range 0 127 $ slow 16 $ tri) # ccn 41 # s "midi" -- digits a/b
+  ,
+  n (unwrap $ fmap(["7", "~", "~", "0"]!!) $ pattern) # s "midi" # midichan 6 -- kick
+  ,
+  note (unwrap $ fmap(["0*2", "7*2", "1*2", "7*2"]!!) $ pattern) # s "midi" # midichan 7 -- tom
+] 
+  -- # cps (range (120/60/2) (80/60/2) $ slow 32 $ tri)
+  # cps (105/60/2)
 
+hush
 
 -----------------------------------
 --           part three          --
@@ -97,5 +124,29 @@ in
 d3
 $ stack [
 ] 
+
+hush
+
+-----------------------------------
+--           part four           --
+--                               --
+--   relevant note channels      --
+--      13,14,15,16              --
+--                               --
+--     relevant CC channels      --
+--     81-88: Vital kick         --
+-----------------------------------
+
+let pattern = "{0@4 1@2 0@6 2@2 1@4 2@10 1@4 0@10}%16"
+in 
+d4
+$ stack [
+  n (unwrap $ fmap(["-24", "~", "~"]!!) $ pattern) # s "midi" # midichan 13 -- kick
+  # legato 0.75
+  ,
+  ccv 0 # ccn 82 # s"midi" --kick phaser wetness
+  ,
+  ccv (segment 40 $ range 0 127 $ slow 2 $ perlin) # ccn 81 # s"midi" --kick phaser feedback
+] # cps(142/60/4)
 
 hush
