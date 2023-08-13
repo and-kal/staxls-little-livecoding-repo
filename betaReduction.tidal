@@ -113,10 +113,30 @@ hush
 --           part three          --
 --                               --
 --   relevant note channels      --
---      9,10,11,12               --
+--      8,9,10                   --
 --                               --
 --     relevant CC channels      --
 --     57-64:                    --
 --     65-72:                    --
 --     73-80:                    --
 -----------------------------------
+
+let how = (122/60/4)
+in
+-- d3
+interpolateIn 3 1
+$ stack [
+  someCycles (rev)
+  $ whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
+  $ whenmod 18 15 (|- n 24 )
+  $ whenmod 36 31 (linger (1/16))
+  $ sometimesBy (1/16) ((1/4) <~)
+  $ sometimes (|+ n 1) $ n ("[0..7]*2") # s "midi" # midichan 10
+  ,
+  someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
+  ,
+  whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
+]
+  # cps(how)
+
+hush
