@@ -28,20 +28,50 @@ setcps(165/60/4)
 --           part one            --
 --                               --
 --   relevant note channels      --
---      1,2,3,15,16              --
+--      1,2,3,4                  --
 --                               --
 --     relevant CC channels      --
---     1-8:                      --
---     9-16:                     --
---     17-24:                    --
---     25-32:                    --
+--     1-8: Dexed                --
+--     9-16: Opal                --
+--     17-24: Kick               --
+--     25-32: rings              --
 -----------------------------------
+
+let pattern = ascii "<sm as hc ap it al is m>"
+    melody = "[~ 0 [2 7]? 9 ~ 3]"
+in
+d1
+$ stack [
+    (|- note 12) 
+    $ plyWith 8 ((slow 4) . (|- note 4)) 
+    $ struct (pattern) 
+    $ s "midi" # note (scale "hexSus" melody) 
+    # midichan 0 -- dexed 
+    ,
+    (|+ note 7) 
+    $ plyWith 8 ((slow 3) . (|+ note 1)) 
+    $ struct (inv pattern) 
+    $ s "midi" # note (scale "hexSus" melody) 
+    # midichan 1 -- glänta
+    , 
+    s "midi/8" # n 0 # legato 0.25
+    # midichan 2
+    , 
+    ccv (segment 60 $ range 0 100 (slow 8 $ isaw)) # ccn "[26, 27]" # s "midi"
+    ,
+    s "midi" # n 0
+    # midichan 3 -- kick + exciter
+] # cps(87/60/4)
+
+hush 
+
+
 
 -----------------------------------
 --           part two            --
 --                               --
 --   relevant note channels      --
---      5,6,7,8,15               --
+--      5,6,7,8               --
 --                               --
 --     relevant CC channels      --
 --     33-40:                    --
@@ -49,6 +79,35 @@ setcps(165/60/4)
 --     49-56:                    --
 -----------------------------------
 
+let pattern = "{0@2 0@3 1@4 2@5 1@4 0@3 0@2}%16"
+in 
+  d2 
+  $ somecyclesBy (1/4) (rev)
+  -- $ whenmod 14 11 (linger "[0.125|0.0625|0.03125]")
+  $ stack [
+      someCyclesBy (1/8) (|- n 24)
+      $ n (scale "phrygian" (unwrap $ fmap (["ds'6by9","~","~"]!!) $ pattern)) 
+      # s "midi" # midichan 4 -- plaits
+      # legato 2
+      , 
+      n (scale "phrygian" (unwrap $ fmap (["~","-12","-7"]!!) $ pattern)) 
+      # s "midi" # midichan 5 -- vital
+      , n (unwrap $ fmap (["~","-24","-17"]!!) $ pattern) 
+      # s "midi" # midichan 14 -- laz
+      , 
+      somecyclesBy (0.25) ((|+ n (run 24)) . (fast 6))
+      $ n (unwrap $ fmap (["[0|1|2]","~","~"]!!) $ pattern) 
+      # s "midi" # midichan 15 -- snare
+      -- , somecyclesBy (1/4) (|+ n "[-2|12]")
+      -- $ n (scale "hirajoshi" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) # s "midi" # midichan "[4|5]" -- MI Plaits
+      -- , ccv (segment 100 $ range 80 120 $ slow 6 $ sine) # ccn "[33,41]" # s "midi"
+      , ccv (segment 100 $ range 60 120 $ slow 24 $ sine) # ccn "[34]" # s "midi"
+      , ccv (segment 100 $ range 60 120 $ slow 6 $ sine) # ccn "[35]" # s "midi"
+      -- , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- kick distortion
+  ]
+  # cps(150/60/4)
+
+hush
 
 -----------------------------------
 --           part three          --
