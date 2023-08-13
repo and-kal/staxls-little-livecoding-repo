@@ -123,15 +123,17 @@ hush
 
 let how = (122/60/4)
 in
--- d3
-interpolateIn 3 1
+d3
+-- interpolateIn 3 16
 $ stack [
-  someCycles (rev)
-  $ whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
+  -- someCycles (rev)
+   whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
   $ whenmod 18 15 (|- n 24 )
   $ whenmod 36 31 (linger (1/16))
   $ sometimesBy (1/16) ((1/4) <~)
-  $ sometimes (|+ n 1) $ n ("[0..7]*2") # s "midi" # midichan 10
+  $ sometimes (|+ n 1) 
+  $ every 8 (# amp 0.8) -- 'amp' to control velocity chain select
+  $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
   ,
   someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
   ,
