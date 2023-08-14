@@ -22,6 +22,8 @@
  `._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._,'
 
 
+hush
+
 setcps(165/60/4)
 
 -----------------------------------
@@ -63,15 +65,13 @@ $ stack [
     # midichan 3 -- kick + exciter
 ] # cps(87/60/4)
 
-hush 
-
-
+hush
 
 -----------------------------------
 --           part two            --
 --                               --
 --   relevant note channels      --
---      5,6,7,8               --
+--      5,6,7,8,15,16            --
 --                               --
 --     relevant CC channels      --
 --     33-40:                    --
@@ -81,9 +81,9 @@ hush
 
 let pattern = "{0@2 0@3 1@4 2@5 1@4 0@3 0@2}%16"
 in 
-  d2 
+  d2
   $ somecyclesBy (1/4) (rev)
-  -- $ whenmod 14 11 (linger "[0.125|0.0625|0.03125]")
+  $ whenmod 14 11 (linger "[0.125|0.0625]")
   $ stack [
       someCyclesBy (1/8) (|- n 24)
       $ n (scale "phrygian" (unwrap $ fmap (["ds'6by9","~","~"]!!) $ pattern)) 
@@ -98,16 +98,26 @@ in
       somecyclesBy (0.25) ((|+ n (run 24)) . (fast 6))
       $ n (unwrap $ fmap (["[0|1|2]","~","~"]!!) $ pattern) 
       # s "midi" # midichan 15 -- snare
-      -- , somecyclesBy (1/4) (|+ n "[-2|12]")
-      -- $ n (scale "hirajoshi" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) # s "midi" # midichan "[4|5]" -- MI Plaits
-      -- , ccv (segment 100 $ range 80 120 $ slow 6 $ sine) # ccn "[33,41]" # s "midi"
+      , somecyclesBy (1/4) (|+ n "[-2|12]")
+      $ n (scale "phrygian" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) 
+      # s "midi" # midichan "[4|5]" -- MI Plaits
+      , ccv (segment 100 $ range 80 120 $ slow 6 $ sine) # ccn "[33,41]" # s "midi"
       , ccv (segment 100 $ range 60 120 $ slow 24 $ sine) # ccn "[34]" # s "midi"
       , ccv (segment 100 $ range 60 120 $ slow 6 $ sine) # ccn "[35]" # s "midi"
       -- , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- kick distortion
+      , 
+      whenmod 32 27 (|+ n 48)
+      $ n (scale "phrygian" ("[-24|-12|-19]*1?")) # s "midi" # midichan 6 
+      # legato (range 0.2 1 $ slow 4 $ saw) -- fxkick
+      , ccv (segment 100 $ range 0 60 $ slow 6 $ sine) # ccn "49" # s "midi" -- flanger
+      , ccv (segment 100 $ range 0 60 $ slow 15 $ sine) # ccn "50" # s "midi" -- flanger
+      , ccv (segment 100 $ range 0 60 $ slow 12 $ sine) # ccn "51" # s "midi" -- grain
   ]
-  # cps(150/60/4)
+  -- # cps(150/60/4)
+  # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
 
 hush
+
 
 -----------------------------------
 --           part three          --
@@ -151,7 +161,7 @@ hush
 --      8,9,10                   --
 --                               --
 --     relevant CC channels      --
---     57-64:                    --
+--     57-64: vital              --
 --     65-72:                    --
 --     73-80: break              --
 -----------------------------------
@@ -175,3 +185,43 @@ $ stack [
   # cps(how)
 
 hush
+
+-----------------------------------
+--           part four           --
+--                               --
+--   relevant note channels      --
+--      11,12,13                 --
+--                               --
+--     relevant CC channels      --
+--     57-64: gemkick            --
+--     65-72: impact             --
+--     73-80:                    --
+-----------------------------------
+let 
+  mel = (scale "minPent" "[c4 e4 _ f4 _]")
+  kick = s "midi" # midichan 11
+  diva = s "midi" # midichan 12
+  alien = s "midi" # midichan 13
+in 
+d4 
+$
+whenmod 8 6 (rev)
+$ stack [
+  someCycles (|+ n 36)
+  $ cat [
+    n (mel) # diva
+    , 
+    (|+ note 2) $ n (mel) # up (3) # diva
+    ,
+    n (mel) # up (-3) # diva
+  ] 
+  ,
+  n "[-24 ~!4]" # kick
+  ,
+  n "[~!4 12|19|24]?" # alien
+]
+  # cps (145/60/2) 
+
+hush
+
+scaleList
