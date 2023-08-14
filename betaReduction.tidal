@@ -118,16 +118,16 @@ hush
 --     relevant CC channels      --
 --     57-64:                    --
 --     65-72:                    --
---     73-80:                    --
+--     73-80: break              --
 -----------------------------------
 
-let how = (122/60/4)
+let how = (132/60/4)
 in
 d3
 -- interpolateIn 3 16
 $ stack [
-  -- someCycles (rev)
-   whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
+  someCycles (rev)
+  $ whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
   $ whenmod 18 15 (|- n 24 )
   $ whenmod 36 31 (linger (1/16))
   $ sometimesBy (1/16) ((1/4) <~)
@@ -138,6 +138,39 @@ $ stack [
   someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
   ,
   whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
+]
+  # cps(how)
+
+hush
+
+
+-----------------------------------
+--           part three (alt.)   --
+--                               --
+--   relevant note channels      --
+--      8,9,10                   --
+--                               --
+--     relevant CC channels      --
+--     57-64:                    --
+--     65-72:                    --
+--     73-80: break              --
+-----------------------------------
+
+let how = (110/60/4)
+in
+d3
+$ stack [
+  slow 4 $ n ("gs4'6to9") # s "midi" # midichan 8 # legato 0.9 -- pad
+  , 
+  someCycles (rev)
+  $ whenmod 32 29 (# amp 1) -- 'amp' to control velocity chain select [1 = 127] 
+  $ someCycles (linger (1/16) . (|+ n (choose[0,5])))
+  $ rarely (|- n "[1|2]") 
+  $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
+  -- ,
+  -- someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
+  -- ,
+  -- whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
 ]
   # cps(how)
 
