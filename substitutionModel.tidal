@@ -103,13 +103,14 @@ hush
 --     relevant CC channels      --
 --     65-72: glänta             --
 --     73-80:                    --
---     81-88:                    --
+--     81-88: simpelr            --
 --     89-96:                    --
 -----------------------------------
 
 scaleList
 
-let repeater x = ((ply x) . (slow x))
+-- let repeater x = ((ply x) . (slow (x / 3)))
+let repeater x = ((ply x) . (slow x ))
 in
 d3 
 $
@@ -117,20 +118,37 @@ someCyclesBy (1/4) (rev)
 $
 whenmod 32 29 (slow (segment 64 $ range 1 6 $ saw))
 $
-someCyclesBy (1/16) (repeater 32)
+someCyclesBy (1/16) (repeater 64)
 $
 sometimesBy (1/4) ((1/12) <~)
 $
 stack [
-  sometimes (|+ n 19)
+  (|+ n (range 12 36 $ rand))
+  -- (|- n (36))
   $
   n (scale "octatonic" ("[~ [0 1 2]]!2")) # s "midi" # midichan 8 -- reaktor
-  -- ,
-  -- fast 3 $ ccn 65 # ccv (range 26 100 $ ((0.1 <~) $ rand)) # s "midi" -- reaktor 
+  # legato 0.125
   ,
-  n "[[0 1?!2 2!2 1?]!2 , 3*12]" # s "midi" # midichan 9 -- drums
+  ccn 65 # ccv (range 0 66 $ ((1 <~) $ rand)) # s "midi" -- reaktor flanger wet
+  ,  
+  ccn 66 # ccv (range 40 127 $ ((2 <~) $ rand)) # s "midi" -- reaktor flanger
+  ,
+  ccn 67 # ccv (segment 6 $ range 0 127 $ saw) # s "midi" -- reaktor pan
+  ,
+  n "[[0 ~!2 2!2 1?]!2 , 3*12]" # s "midi" # midichan 9 -- drums
+  ,
+  sometimes (|+ n 3)
+  $ 
+  degradeBy (3/4) $ n (run 2) # s "midi" # midichan 10 # legato 0.75 -- akaizer
+  ,
+  fast 2 $ ccn 81 # ccv (range 0 127 $ ((3 <~) $ rand)) # s "midi" -- loop start
+  ,
+  somecyclesBy (1/8) (|+ n "[12|24]")
+  $
+  loopAt 4 $ n ("[c'min|f'min'ii]") # s "midi" # midichan 11 -- pad surge
+  # legato 4
 ]
-  # cps (155/60/4)
+  # cps (125/60/4)
 
 hush
 
