@@ -82,7 +82,7 @@ hush
 --     57-64:                    --
 -----------------------------------
 
-d1 
+d2
 $ 
 -- sometimes ((slow 4) . (ply 8)) 
 someCyclesBy (1/8) (ply 2)
@@ -101,12 +101,38 @@ hush
 --      9,10,11,12               --
 --                               --
 --     relevant CC channels      --
---     65-72:                    --
+--     65-72: glänta             --
 --     73-80:                    --
 --     81-88:                    --
 --     89-96:                    --
 -----------------------------------
 
+scaleList
+
+let repeater x = ((ply x) . (slow x))
+in
+d3 
+$
+someCyclesBy (1/4) (rev)
+$
+whenmod 32 29 (slow (segment 64 $ range 1 6 $ saw))
+$
+someCyclesBy (1/16) (repeater 32)
+$
+sometimesBy (1/4) ((1/12) <~)
+$
+stack [
+  sometimes (|+ n 19)
+  $
+  n (scale "octatonic" ("[~ [0 2 5]]!2")) # s "midi" # midichan 8 -- reaktor
+  -- ,
+  -- fast 3 $ ccn 65 # ccv (range 26 100 $ ((0.1 <~) $ rand)) # s "midi" -- reaktor 
+  ,
+  n "[0 1!2 2!2 1]!2" # s "midi" # midichan 9 -- drums
+]
+  # cps (155/60/4)
+
+hush
 
 -----------------------------------
 --           part four           --
