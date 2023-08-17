@@ -112,6 +112,7 @@ scaleList
 -- let repeater x = ((ply x) . (slow (x / 3)))
 let repeater x = ((ply x) . (slow x ))
 in
+-- interpolateIn 3 8
 d3 
 $
 someCyclesBy (1/4) (rev)
@@ -159,8 +160,44 @@ hush
 --    13,14,15,16                --
 --                               --
 --     relevant CC channels      --
---     97-104:                   --
+--     97-104: break             --
 --     105-112:                  --
 --     113-120:                  --
 --     121-127:                  --
 -----------------------------------
+
+let 
+  repeater x = ((ply x) . (slow x ))
+  add13Chord = s "midi" # midichan 13 # legato 1
+  mel1 = "[0 ~ 2 _] 1"
+  mel2 = "[~ 0 1 ~] 2"
+in
+d4 
+$
+whenmod 13 11 (brak)
+$
+stack [
+  sometimesBy (1/16) (|+ n 2)
+  $
+  whenmod 15 13 (|+ n 7)
+  $
+  whenmod 16 14 (slow 2)
+  $
+  whenmod 19 16 (repeater 8)
+  $
+  someCyclesBy (1/4) (# amp (range 0.75 1 $ perlin))
+  $ n (run 8) # s "midi" # midichan 12 -- break
+  , 
+  cat [
+    n (scale "harmonicMajor" (fit 2 [0, 2, 12] (mel1))) # add13Chord -- add13
+    ,
+    n (scale "harmonicMajor" (fit 1 [0, 2, 19] (mel2))) # add13Chord -- add13
+    ,
+    n (scale "harmonicMajor" ("~ cs'6to9 _ _")) # add13Chord -- add13
+    -- ,
+    -- n "" # chordAdd13
+  ] 
+]
+  # cps(175/60/4)
+
+  hush
