@@ -24,7 +24,7 @@
 --           part one            --
 --                               --
 --   relevant note channels      --
---      1,2,3,4                  --
+--      0,1,2,3                  --
 --                               --
 --     relevant CC channels      --
 --     1-8                      --
@@ -55,7 +55,7 @@ in
       ,
       ccv (segment 127 $ range 30 60 $ slow 3 $ perlin ) # ccn 1 # s "midi" -- kick sweep
       ,
-      ccv (segment 127 $ range 1 126 $ slow 8 $ sine ) # ccn 9 # s "midi" -- hat pan
+      ccv (segment 127 $ range 1 126 $ slow 8 $ sine ) # ccn "[9, 10]" # s "midi" -- hat pan + morph
     ]
     ,
     someCyclesBy (1/4) (|- n 12)
@@ -67,13 +67,11 @@ in
   ]
   # cps(152/60/4)
 
-hush
-
 -----------------------------------
 --           part two            --
 --                               --
 --   relevant note channels      --
---      5,6,7,8                  --
+--      4,5,6,7                  --
 --                               --
 --     relevant CC channels      --
 --     33-40:                    --
@@ -87,6 +85,7 @@ in
 d2
 $ someCyclesBy (1/6) (ply 2)
 $ someCyclesBy (1/6) (0.25 <~)
+$ whenmod 30 26 (slow "<3 2>")
 $ stack [ 
   n (unwrap $ fmap (["0", "~", "2", "3"]!!) $ pattern)
   # s "midi" # midichan 4 -- k c s
@@ -101,20 +100,20 @@ $ stack [
   ,
   slow 4 $ ccn 42 # ccv (range 40 120 $ ((1 <~) $ rand)) # s "midi" -- digits flanger chorus
   ,
-  slow 4 $ n (scale "wholetone" "gs4")
+  sometimesBy (1/6) (|+ n "[24|-24]")
+  $
+  slow 4 $ n (scale "wholetone" "g4")
   # s "midi" # midichan 6 -- grain
 ]
-  # cps(180/60/4)
+  # cps(80/60/2)
 
 hush
-
-scaleList
 
 -----------------------------------
 --           part three          --
 --                               --
 --   relevant note channels      --
---      9,10,11,12               --
+--      8,9,10,11                --
 --                               --
 --     relevant CC channels      --
 --     65-72: glänta             --
@@ -125,8 +124,8 @@ scaleList
 
 scaleList
 
--- let repeater x = ((ply x) . (slow (x / 3)))
-let repeater x = ((ply x) . (slow x ))
+-- let repeater x = ((ply x) . (slow (x / 2)))
+let repeater x = ((ply x) . (slow x))
 in
 -- interpolateIn 3 8
 d3 
@@ -135,7 +134,7 @@ someCyclesBy (1/4) (rev)
 $
 whenmod 32 29 (slow (segment 64 $ range 1 6 $ saw))
 $
-someCyclesBy (1/16) (repeater 64)
+whenmod 40 36 (repeater 64)
 $
 sometimesBy (1/4) ((1/12) <~)
 $
@@ -167,19 +166,16 @@ stack [
 ]
   # cps (135/60/4)
 
-hush
-
 -----------------------------------
 --           part four           --
 --                               --
 --   relevant note channels      --
---    13,14,15,16                --
+--    12,13,14                   --
 --                               --
 --     relevant CC channels      --
 --     97-104: break             --
 --     105-112:                  --
 --     113-120:                  --
---     121-127:                  --
 -----------------------------------
 
 let 
@@ -224,3 +220,39 @@ stack [
   # cps(170/60/4)
 
 hush
+
+-----------------------------------
+--           bOoOoOnUs           --
+--                               --
+--   relevant note channels      --
+--             15                --
+--                               --
+--     relevant CC channels      --
+--     121-127:                  --
+-----------------------------------
+
+d5 
+  $ whenmod 8 6 (ply 2)
+  $ whenmod 11 9 (brak)
+  $ stack [
+    n "<[[0 1]!4]!11 3>" -- occasional bloop at 12
+    # s "midi" # midichan 15 -- gabber kick + tg
+    ,
+    n "2!8"
+    # s "midi" # midichan 15 -- hat
+    ,
+    ccn 121 # ccv "<66!5 74>" # s "midi" 
+    ,
+    fast 1 
+    $
+    randslice 8
+    $ 
+    s "gig-x:2" -- lain
+      # cut 1
+      # scram 0.25
+      # up (-7)
+      # amp 1.25
+  ]
+  # cps(178/60/4)
+
+  hush
