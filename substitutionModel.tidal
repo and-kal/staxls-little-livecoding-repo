@@ -83,31 +83,30 @@ in
 let pattern = "{0@6 1@5 1@5 1@5 1*2@5 0@8 2@8 3@6 3@2}%32"
 in
 d2
-$ someCyclesBy (1/6) (ply 2)
-$ someCyclesBy (1/6) (0.25 <~)
-$ whenmod 30 26 (slow "<3 2>")
+-- $ someCyclesBy (1/6) (ply 2)
+-- $ someCyclesBy (1/6) (0.25 <~)
+-- $ whenmod 30 26 (slow "<3 2>")
 $ stack [ 
-  n (unwrap $ fmap (["0", "~", "2", "3"]!!) $ pattern)
-  # s "midi" # midichan 4 -- k c s
-  , 
+  -- n (unwrap $ fmap (["0", "~", "2", "3"]!!) $ pattern)
+  -- # s "midi" # midichan 4 -- k c s
+  -- , 
   n (unwrap $ fmap (["1", "1", "1", "1"]!!) $ pattern) 
   # s "midi" # midichan 4 -- hat
-  ,
-  n (scale "wholetone" (unwrap $ fmap (["[22|24]", "~", "~", "~"]!!) $ pattern))
-  # s "midi" # midichan 5 # legato 1 -- digits
-  ,
-  ccn 41 # ccv (range 1 120 $ rand) # s "midi" -- digits chorus
-  ,
-  slow 4 $ ccn 42 # ccv (range 40 120 $ ((1 <~) $ rand)) # s "midi" -- digits flanger chorus
-  ,
-  sometimesBy (1/6) (|+ n "[24|-24]")
-  $
-  slow 4 $ n (scale "wholetone" "g4")
-  # s "midi" # midichan 6 -- grain
+  -- ,
+  -- n (scale "wholetone" (unwrap $ fmap (["[22|24]", "~", "~", "~"]!!) $ pattern))
+  -- # s "midi" # midichan 5 # legato 1 -- digits
+  -- ,
+  -- ccn 41 # ccv (range 1 120 $ rand) # s "midi" -- digits chorus
+  -- ,
+  -- slow 4 $ ccn 42 # ccv (range 40 120 $ ((1 <~) $ rand)) # s "midi" -- digits flanger chorus
+  -- ,
+  -- sometimesBy (1/6) (|+ n "[24|-24]")
+  -- $
+  -- slow 4 $ n (scale "wholetone" "g4")
+  -- # s "midi" # midichan 6 -- grain
 ]
   # cps(80/60/2)
 
-hush
 
 -----------------------------------
 --           part three          --
@@ -122,22 +121,20 @@ hush
 --     89-96:                    --
 -----------------------------------
 
-scaleList
-
 -- let repeater x = ((ply x) . (slow (x / 2)))
 let repeater x = ((ply x) . (slow x))
 in
 -- interpolateIn 3 8
 d3 
 $
-someCyclesBy (1/4) (rev)
-$
-whenmod 32 29 (slow (segment 64 $ range 1 6 $ saw))
-$
-whenmod 40 36 (repeater 64)
-$
-sometimesBy (1/4) ((1/12) <~)
-$
+-- someCyclesBy (1/4) (rev)
+-- $
+-- whenmod 32 29 (slow (segment 64 $ range 1 6 $ saw))
+-- $
+-- whenmod 40 36 (repeater 64)
+-- $
+-- sometimesBy (1/4) ((1/12) <~)
+-- $
 stack [
   (|+ n (range 12 36 $ rand))
   -- (|- n (36))
@@ -151,14 +148,14 @@ stack [
   ,
   ccn 67 # ccv (segment 6 $ range 0 127 $ saw) # s "midi" -- reaktor pan
   ,
-  n "[[0 ~!2 2!2 1?]!2 , 3*12]" # s "midi" # midichan 9 -- drums
-  ,
-  sometimes (|+ n 3)
-  $ 
-  degradeBy (3/4) $ n (run 2) # s "midi" # midichan 10 # legato 0.75 -- akaizer
-  ,
-  fast 2 $ ccn 81 # ccv (range 0 127 $ ((3 <~) $ rand)) # s "midi" -- loop start
-  ,
+  -- n "[[0 ~!2 2!2 1?]!2 , 3*12]" # s "midi" # midichan 9 -- drums
+  -- ,
+  -- sometimes (|+ n 3)
+  -- $ 
+  -- degradeBy (3/4) $ n (run 2) # s "midi" # midichan 10 # legato 0.75 -- akaizer
+  -- ,
+  -- fast 2 $ ccn 81 # ccv (range 0 127 $ ((3 <~) $ rand)) # s "midi" -- loop start
+  -- ,
   somecyclesBy (1/8) (|+ n "[12|24]")
   $
   loopAt 4 $ n ("[c'min|f'min'ii]") # s "midi" # midichan 11 -- pad surge
@@ -186,36 +183,34 @@ let
   mel2 = "[~ 0 1 ~] 2"
 in
 d4 
-$
-whenmod 16 14 (slow 2)
-$
-whenmod 19 16 (repeater 8)
-$
-whenmod 17 15 ((brak))
+-- $
+-- whenmod 16 14 (slow 2)
+-- $
+-- whenmod 19 16 (repeater 8)
+-- $
+-- whenmod 17 15 ((brak))
 $
 stack [
-  whenmod 48 42 ((sometimesBy (1/2) (|+ n 12)) . (# amp 0.0125)) -- alt. gabber break
-  $
-  sometimesBy (1/16) (|+ n 2)
-  $
-  whenmod 15 13 (|+ n 7)
-  $
+  -- whenmod 48 42 ((sometimesBy (1/2) (|+ n 12)) . (# amp 0.0125)) -- alt. gabber break
+  -- $
+  -- sometimesBy (1/16) (|+ n 2)
+  -- $
+  -- whenmod 15 13 (|+ n 7)
+  -- $
   someCyclesBy (1/4) (# amp (range 0.75 1 $ perlin))
   $ n (run 8) # s "midi" # midichan 12 -- break
   , 
   ccn 105 # ccv (range 1 120 $ rand) # s "midi" -- add13 detune
+  -- ,
+  -- slow 3 $ cat [
+  --   n (scale "harmonicMajor" (fit 2 [0, 2, 12] (mel1))) # add13Chord -- add13
+  --   ,
+  --   n (scale "harmonicMajor" (fit 1 [0, 2, 9] (mel2))) # add13Chord -- add13
+  --   ,
+  --   n (scale "harmonicMajor" ("~ cs'6to9")) # add13Chord -- add13
+  -- ]
   ,
-  slow 3 $ cat [
-    n (scale "harmonicMajor" (fit 2 [0, 2, 12] (mel1))) # add13Chord -- add13
-    ,
-    n (scale "harmonicMajor" (fit 1 [0, 2, 9] (mel2))) # add13Chord -- add13
-    ,
-    n (scale "harmonicMajor" ("~ cs'6to9")) # add13Chord -- add13
-  ]
-  ,
-  slow 6 $ cat [
-    n (scale "harmonicMajor" "-15 _ -12 -7 _ -12") # bass
-  ]
+  n (scale "harmonicMajor" "<-15 _ -12 -17 _ -12>") # bass
 ]
   # cps(170/60/4)
 
@@ -231,28 +226,33 @@ hush
 --     121-127:                  --
 -----------------------------------
 
+-- note to self: don't have all instruments on simultaneously
 d5 
   $ whenmod 8 6 (ply 2)
   $ whenmod 11 9 (brak)
+  $ whenmod 16 11 (linger (1/8))
   $ stack [
-    n "<[[0 1]!4]!11 3>" -- occasional bloop at 12
-    # s "midi" # midichan 15 -- gabber kick + tg
-    ,
-    n "2!8"
-    # s "midi" # midichan 15 -- hat
-    ,
-    ccn 121 # ccv "<66!5 74>" # s "midi" 
-    ,
-    fast 1 
+    -- n "<[[0 1]!4]!11 3>" -- occasional bloop at 12
+    -- # s "midi" # midichan 15 -- gabber kick + tg
+    -- # amp 0.4 -- (addressing it to 1st vel chain)
+    -- ,
+    -- ccn 121 # ccv "<66!5 74>" # s "midi" 
+    -- ,
+    fast 16
     $
-    randslice 8
+    randslice 128
     $ 
     s "gig-x:2" -- lain
       # cut 1
-      # scram 0.25
-      # up (-7)
-      # amp 1.25
+      # up (-3)
+      # amp 1.5
+    ,
+    often (|+ n 1)
+    $ n (run 8) 
+    # s "midi" # midichan 15 -- break
+    # amp 1 -- (addressing it to 2nd vel chain)
   ]
   # cps(178/60/4)
+
 
   hush

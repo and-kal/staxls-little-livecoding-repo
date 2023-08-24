@@ -72,8 +72,18 @@ if (~stopMidiToOsc != nil, {
 
 )
 
-MIDIIn.noteOn = { arg chan, note, vel;   [chan,note,vel].postln; }
+// print MIDI CC and note values
+(
+MIDIIn.noteOn = {
+	arg chan, note, vel;
+	fork {
+		[chan,note,vel].postln;
+		1.0.wait;
+	}
+};
+
 MIDIIn.control = { arg src, chan, num, val;   [chan,num,val/127].postln; }
+)
 
 // Evaluate the line below to stop it.
 ~stopMidiToOsc.value;
