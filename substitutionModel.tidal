@@ -27,35 +27,39 @@
 --      0,1,2,3                  --
 --                               --
 --     relevant CC channels      --
---     1-8                      --
---     9-16                     --
---     17-24                    --
---     25-32                    --
+--     1-8                       --
+--     9-16                      --
+--     17-24                     --
+--     25-32                     --
 -----------------------------------
 
-let pattern = "{0*2@10 1@12 1@10 1@1 1@6 1@4 1@3 1@2 [1@1]!8 1@6 1@6 2*8@5}%32"
+let pattern = "{0@10 1@10 1@1 1@5 1@4 1@3 1@2 [1@1]!8 1@6 1@6 2@8 2@6}%32"
 in 
   d1 
+  $
+  whenmod 27 23 (fast 3)
   $ 
   stack [
     stack [
-      somecyclesBy (1/8) (rev)
+      -- somecyclesBy (1/8) (rev)
+      -- $
+      -- whenmod 32 28 (linger (1/8))
+      -- $
+      -- whenmod 27 23 (fast 8)
+      -- $
+      -- sometimes (|+ note 7)
+      -- $
+      -- note (unwrap $ fmap (["-17","~","~"]!!) $ pattern) # s "midi" # midichan 0 -- kick
+      -- ,
+      -- note (unwrap $ fmap (["~","-12","~"]!!) $ pattern) # s "midi" # midichan 1 -- hat
+      -- ,
+      sometimes ((# amp 0.6) . (# legato 1) . (|+ note "[24|36]")) -- bloops
       $
-      whenmod 32 28 (linger (1/8))
-      $
-      sometimes (|+ note 7)
-      $
-      note (unwrap $ fmap (["-17","~","~"]!!) $ pattern) # s "midi" # midichan 0 -- kick
-      ,
-      note (unwrap $ fmap (["~","12","~"]!!) $ pattern) # s "midi" # midichan 1 -- hat
-      ,
-      sometimes ((# amp 0.6) . (# legato 1) . (|+ note 36)) -- bloops
-      $
-      note (unwrap $ fmap (["~","~","0"]!!) $ pattern) # s "midi" # midichan 2 -- snare
-      ,
-      ccv (segment 127 $ range 30 60 $ slow 3 $ perlin ) # ccn 1 # s "midi" -- kick sweep
-      ,
-      ccv (segment 127 $ range 1 126 $ slow 8 $ sine ) # ccn "[9, 10]" # s "midi" -- hat pan + morph
+      note (unwrap $ fmap (["~","~","-7"]!!) $ pattern) # s "midi" # midichan 2 -- snare
+      -- ,
+      -- ccv (segment 127 $ range 30 60 $ slow 3 $ perlin ) # ccn 1 # s "midi" -- kick sweep
+      -- ,
+      -- ccv (segment 127 $ range 1 126 $ slow 8 $ sine ) # ccn "[9, 10]" # s "midi" -- hat pan + morph
     ]
     ,
     someCyclesBy (1/4) (|- n 12)
@@ -65,7 +69,7 @@ in
     ,
     ccv (segment 127 $ range 1 60 $ slow 8 $ sine ) # ccn 25 # s "midi" -- pad start
   ]
-  # cps(152/60/4)
+  # cps(142/60/4)
 
 -----------------------------------
 --           part two            --
@@ -106,7 +110,6 @@ $ stack [
   -- # s "midi" # midichan 6 -- grain
 ]
   # cps(80/60/2)
-
 
 -----------------------------------
 --           part three          --
@@ -229,30 +232,29 @@ hush
 -- note to self: don't have all instruments on simultaneously
 d5 
   $ whenmod 8 6 (ply 2)
-  $ whenmod 11 9 (brak)
+  $ whenmod 20 17 (slow 2)
   $ whenmod 16 11 (linger (1/8))
   $ stack [
-    -- n "<[[0 1]!4]!11 3>" -- occasional bloop at 12
+    -- n "<[[0 1]!4]!7 ~*8>" -- occasional bloop at 12
     -- # s "midi" # midichan 15 -- gabber kick + tg
     -- # amp 0.4 -- (addressing it to 1st vel chain)
     -- ,
-    -- ccn 121 # ccv "<66!5 74>" # s "midi" 
+    -- ccn 121 # ccv "<66 74 55!7>" # s "midi" 
     -- ,
-    fast 16
+    fast 8
     $
-    randslice 128
+    randslice 64
     $ 
     s "gig-x:2" -- lain
       # cut 1
       # up (-3)
       # amp 1.5
-    ,
-    often (|+ n 1)
-    $ n (run 8) 
-    # s "midi" # midichan 15 -- break
-    # amp 1 -- (addressing it to 2nd vel chain)
+    -- ,
+    -- often (|+ n 1)
+    -- $ n (run 8) 
+    -- # s "midi" # midichan 15 -- break
+    -- # amp 1 -- (addressing it to 2nd vel chain)
   ]
-  # cps(178/60/4)
+  # cps(180/60/4)
 
-
-  hush
+hush
