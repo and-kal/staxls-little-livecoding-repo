@@ -131,27 +131,27 @@ hush
 --     73-80: break              --
 -----------------------------------
 
-let how = (132/60/4)
-in
-d3
--- interpolateIn 3 16
-$ stack [
-  someCycles (rev)
-  $ whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
-  $ whenmod 18 15 (|- n 24 )
-  $ whenmod 36 31 (linger (1/16))
-  $ sometimesBy (1/16) ((1/4) <~)
-  $ sometimes (|+ n 1) 
-  $ every 8 (# amp 0.8) -- 'amp' to control velocity chain select
-  $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
-  ,
-  someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
-  ,
-  whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
-]
-  # cps(how)
+-- let how = (132/60/4)
+-- in
+-- d3
+-- -- interpolateIn 3 16
+-- $ stack [
+--   someCycles (rev)
+--   $ whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
+--   $ whenmod 18 15 (|- n 24 )
+--   $ whenmod 36 31 (linger (1/16))
+--   $ sometimesBy (1/16) ((1/4) <~)
+--   $ sometimes (|+ n 1) 
+--   $ every 8 (# amp 0.8) -- 'amp' to control velocity chain select
+--   $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
+--   ,
+--   someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
+--   ,
+--   whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
+-- ]
+--   # cps(how)
 
-hush
+-- hush
 
 
 -----------------------------------
@@ -177,10 +177,10 @@ $ stack [
   $ someCycles (linger (1/16) . (|+ n (choose[0,5])))
   $ rarely (|- n "[1|2]") 
   $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
-  -- ,
-  -- someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
-  -- ,
-  -- whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
+  ,
+  someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
+  ,
+  whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
 ]
   # cps(how)
 
@@ -197,8 +197,9 @@ hush
 --     65-72: impact             --
 --     73-80:                    --
 -----------------------------------
+
 let 
-  mel = (scale "minPent" "[c4 e4 _ f4 _]")
+  mel = (scale "minPent" "[c4 e4 _ a3 _]")
   kick = s "midi" # midichan 11
   diva = s "midi" # midichan 12
   alien = s "midi" # midichan 13
@@ -206,6 +207,8 @@ in
 d4 
 $
 whenmod 8 6 (rev)
+$
+whenmod 11 7 (fast "1 3")
 $ stack [
   someCycles (|+ n 36)
   $ cat [
@@ -218,10 +221,8 @@ $ stack [
   ,
   n "[-24 ~!4]" # kick
   ,
-  n "[~!4 12|19|24]?" # alien
+  n "[~!4 12|19|31]?" # alien
 ]
   # cps (145/60/2) 
 
 hush
-
-scaleList
