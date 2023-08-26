@@ -20,8 +20,6 @@
  `._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._,'
 
 
--- in Winamp route audio via
--- `line://dev=-1`
 
 -----------------------------------
 --           part one            --
@@ -238,19 +236,19 @@ d5
   $ whenmod 20 17 (slow 2)
   $ whenmod 16 11 (linger (1/8))
   $ stack [
-    -- n "<[[0 1]!4]!7 ~*8>" -- occasional bloop at 12
+    -- n "<[[[0,4] 1]!4]!2 ~*8>" -- occasional amen particle on '3'
     -- # s "midi" # midichan 15 -- gabber kick + tg
     -- # amp 0.4 -- (addressing it to 1st vel chain)
     -- ,
     -- ccn 121 # ccv "<66 74 55!7>" # s "midi" 
     -- ,
-    fast 8
+    fast 4
     $
-    randslice 64
+    randslice 32
     $ 
     s "gig-x:2" -- lain
       # cut 1
-      # up (-3)
+      # up (2)
       # amp 1.5
     -- ,
     -- often (|+ n 1)
