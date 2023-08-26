@@ -4,13 +4,14 @@
 // Server.default.options.inDevice_("ASIO : JackRouter");
 // Server.default.options.outDevice_("Windows WASAPI : OUT (2- UA-25)");
 // Server.default.options.inDevice_("Windows WASAPI : IN (2- UA-25)");
-Server.default.options.outDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
-Server.default.options.inDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
+// Server.default.options.outDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
+// Server.default.options.inDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
+Server.default.options.outDevice_("ASIO : ZOOM U-24 ASIO Driver");
+Server.default.options.inDevice_("ASIO : ZOOM U-24 ASIO Driver");
 // Server.default.options.outDevice_("ASIO : UA-25");
 // Server.default.options.inDevice_("ASIO : UA-25");
 // Server.default.options.outDevice_("Windows WASAPI : Headphones (Senary Audio)");
 // Server.default.options.inDevice_("Windows WASAPI : Microphone Array (AMD Audio Device)");
-
 
 (
 s.reboot { // server options are only updated on reboot
@@ -46,6 +47,9 @@ s.reboot { // server options are only updated on reboot
 ~dirt.loadSoundFiles("C:/Users/Li/Desktop/LOLLTour/gig-x/*");
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
+// [Sometimes this won't work when Ableton is already running.
+// Make sure to disable all MIDI ports in Ableton except loopMIDI.]
+
 (
 var cc;
 var osc;
@@ -56,24 +60,38 @@ MIDIClient.init;
 MIDIIn.connectAll;
 
 cc = MIDIFunc.cc({ |val, num, chan, src|
-    osc.sendMsg("/ctrl", num.asString, val/127);
+	osc.sendMsg("/ctrl", num.asString, val/127);
 });
 
 if (~stopMidiToOsc != nil, {
-    ~stopMidiToOsc.value;
+	~stopMidiToOsc.value;
 });
 
 ~stopMidiToOsc = {
-    cc.free;
+	cc.free;
 };
 
 ~midiOut = MIDIOut.newByName("loopMIDI Port", "loopMIDI Port"); // substitute your own device here
 ~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
-
 )
 
-// test if CC messages arrive
-MIDIIn.control = { arg src, chan, num, val;   [chan,num,val/127].postln; }
+// print MIDI CC and note values
+(
+MIDIIn.noteOn = {
+	arg chan, note, vel;
+	fork {
+		[chan,note,vel].postln;
+		2.0.wait;
+	}
+};
+
+MIDIIn.control = { arg src, chan, num, val;
+	fork {
+		[chan,num,val/127].postln;
+		2.0.wait;
+	}
+};
+)
 
 // Evaluate the line below to stop it.
 ~stopMidiToOsc.value;
