@@ -85,16 +85,16 @@ in
   $ somecyclesBy (1/4) (rev)
   $ whenmod 14 11 (linger "[0.125|0.0625]")
   $ stack [
-      someCyclesBy (1/8) (|- n 24)
-      $ n (scale "phrygian" (unwrap $ fmap (["ds'6by9","~","~"]!!) $ pattern)) 
-      # s "midi" # midichan 4 -- plaits
-      # legato 2
-      , 
-      n (scale "phrygian" (unwrap $ fmap (["~","-12","-7"]!!) $ pattern)) 
-      # s "midi" # midichan 5 -- vital
-      , n (unwrap $ fmap (["~","-24","-17"]!!) $ pattern) 
-      # s "midi" # midichan 14 -- laz
-      , 
+      -- someCyclesBy (1/8) (|- n 24)
+      -- $ n (scale "phrygian" (unwrap $ fmap (["ds'6by9","~","~"]!!) $ pattern)) 
+      -- # s "midi" # midichan 4 -- plaits
+      -- # legato 2
+      -- , 
+      -- n (scale "phrygian" (unwrap $ fmap (["~","-12","-7"]!!) $ pattern)) 
+      -- # s "midi" # midichan 5 -- vital
+      -- , n (unwrap $ fmap (["~","-24","-17"]!!) $ pattern) 
+      -- # s "midi" # midichan 14 -- laz
+      -- , 
       somecyclesBy (0.25) ((|+ n (run 24)) . (fast 6))
       $ n (unwrap $ fmap (["[0|1|2]","~","~"]!!) $ pattern) 
       # s "midi" # midichan 15 -- snare
@@ -104,17 +104,17 @@ in
       , ccv (segment 100 $ range 80 120 $ slow 6 $ sine) # ccn "[33,41]" # s "midi"
       , ccv (segment 100 $ range 60 120 $ slow 24 $ sine) # ccn "[34]" # s "midi"
       , ccv (segment 100 $ range 60 120 $ slow 6 $ sine) # ccn "[35]" # s "midi"
-      -- , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- kick distortion
-      , 
-      whenmod 32 27 (|+ n 48)
-      $ n (scale "phrygian" ("[-24|-12|-19]*1?")) # s "midi" # midichan 6 
-      # legato (range 0.2 1 $ slow 4 $ saw) -- fxkick
-      , ccv (segment 100 $ range 0 60 $ slow 6 $ sine) # ccn "49" # s "midi" -- flanger
-      , ccv (segment 100 $ range 0 60 $ slow 15 $ sine) # ccn "50" # s "midi" -- flanger
-      , ccv (segment 100 $ range 0 60 $ slow 12 $ sine) # ccn "51" # s "midi" -- grain
+      , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- kick distortion
+      -- , 
+      -- whenmod 32 27 (|+ n 48)
+      -- $ n (scale "phrygian" ("[-24|-12|-19]*1?")) # s "midi" # midichan 6 
+      -- # legato (range 0.2 1 $ slow 4 $ saw) -- fxkick
+      -- , ccv (segment 100 $ range 0 60 $ slow 6 $ sine) # ccn "49" # s "midi" -- flanger
+      -- , ccv (segment 100 $ range 0 60 $ slow 15 $ sine) # ccn "50" # s "midi" -- flanger
+      -- , ccv (segment 100 $ range 0 60 $ slow 12 $ sine) # ccn "51" # s "midi" -- grain
   ]
-  -- # cps(150/60/4)
-  # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
+  # cps(150/60/4)
+  -- # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
 
 hush
 
@@ -170,14 +170,16 @@ let how = (110/60/4)
 in
 d3
 $ stack [
-  slow 4 $ n ("gs4'6to9") # s "midi" # midichan 8 # legato 0.9 -- pad
+  slow 4 $ n ("gs7'6to9") # s "midi" # midichan 8 # legato 0.9 -- pad
   , 
   someCycles (rev)
-  $ whenmod 32 29 (# amp 1) -- 'amp' to control velocity chain select [1 = 127] 
+  $ whenmod 28 24 (# amp 1) -- 'amp' to control velocity chain select [1 = 127] 
   $ someCycles (linger (1/16) . (|+ n (choose[0,5])))
   $ rarely (|- n "[1|2]") 
   $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
-  ,
+  , 
+  -- n ("-24") # s "midi" # midichan 9 -- heavy kick (too much here)
+  -- ,
   someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
   ,
   whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
