@@ -6,10 +6,10 @@
 // Server.default.options.inDevice_("Windows WASAPI : IN (2- UA-25)");
 // Server.default.options.outDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
 // Server.default.options.inDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
-Server.default.options.outDevice_("ASIO : ZOOM U-24 ASIO Driver");
-Server.default.options.inDevice_("ASIO : ZOOM U-24 ASIO Driver");
-// Server.default.options.outDevice_("ASIO : UA-25");
-// Server.default.options.inDevice_("ASIO : UA-25");
+// Server.default.options.outDevice_("ASIO : ZOOM U-24 ASIO Driver");
+// Server.default.options.inDevice_("ASIO : ZOOM U-24 ASIO Driver");
+Server.default.options.outDevice_("ASIO : UA-25");
+Server.default.options.inDevice_("ASIO : UA-25");
 // Server.default.options.outDevice_("Windows WASAPI : Headphones (Senary Audio)");
 // Server.default.options.inDevice_("Windows WASAPI : Microphone Array (AMD Audio Device)");
 
