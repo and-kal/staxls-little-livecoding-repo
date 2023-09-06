@@ -110,8 +110,6 @@ $
   -- note (run 8) # midiAddr 5 -- mainbreak 1
   slow 2 $ note (run 16) # midiAddr 5 # amp 0.8 -- mainbreak 2
   ,
-  s ""
-  ,
   midiCC 41 10  -- heavy panning
 ] # cps (170/60/4)
 
@@ -130,6 +128,14 @@ hush
 --     89-96:                    --
 -----------------------------------
 
+let melody = scale "ritusen" ("{0 3 1 2 3 4 2 2 0 1}%2")
+in
+d3 
+$ 
+note melody # s "midi" # midichan "[8,9]"
+# cps (145/60/4)
+
+hush
 
 -----------------------------------
 --           part four           --
