@@ -35,9 +35,12 @@
 -----------------------------------
 
 let 
-  pattern = "[0 1 0 1!2 0 1!3 0 1!4 0 1!5 0 1!6 2 1!7 3 1!8]"
+  tempo = (140/60/4)
+  pattern = "[0 1 0 1!2 0 1!3 1!4 0 1!5 0 1!6 2 1!7 3 1!8]"
+  -- pattern = "[0 1 3 1 0 1 2 0 1 0 1 2 1 3 1]"
   patAbstr x = note (unwrap $ fmap (x) $ pattern)
-  midiAddr chan = s "midi" # midichan chan
+  midiN chan = s "midi" # midichan chan
+  midiCC chan val = ccv val # ccn chan
 in 
   d1 
   $
@@ -46,16 +49,29 @@ in
     $
     whenmod 17 16 ((ply 2) . (slow 4))
     $
-    every 2 (rev)
-    $
-    patAbstr (["-24","~","-22","-21"]!!) # midiAddr 0 -- kick
+    -- whenmod 19 16 (degradeBy 0.5)
+    -- $
+    -- whenmod 48 24 (every 2 (rev))
+    -- $
+    patAbstr (["-24","~","-22","[-21|-23]"]!!) # midiN 0 -- kick, snare, clap
     ,
-    whenmod 9 8 (|+ note 12)
+    whenmod 9 7 (|+ note 12)
     $
-    note "<12 14>" # midiAddr 1 -- vital
+    note "<12 14>" # midiN 1 -- vital
     # legato 0.25
+    ,
+    midiCC 1 0  -- delay (set to 127 for transition)
+    ,
+    midiCC 3 (segment 20 $ fast 2 $ range 40 127 perlin) -- delay freq
+    ,
+    midiCC 4 70 -- delay bubbles
+    ,
+    midiCC 5 127  -- kick dry
   ]
-  # cps(140/60/4)
+  # s "midi"
+  # cps tempo
+
+  hush
 
 -----------------------------------
 --           part two            --
@@ -70,13 +86,36 @@ in
 --     57-64:                    --
 -----------------------------------
 
+scaleList
+
 let 
   midiAddr chan = s "midi" # midichan chan
+  midiCC chan val = ccv val # ccn chan # s "midi"
 in 
 d2 
 $
-  slow 6 $ note "c5'6by9 gs4'6by9 f4'6by9" # midiAddr 4 -- chords
+  stack [
+  slow 6 $ note ("c4'7sus4 a4'7sus4 f4'7sus4") # midiAddr 4 -- chords
   # legato 6
+  , 
+  whenmod 14 12 (# amp 1)
+  $
+  whenmod 12 10 (# amp 0.9)
+  $
+  someCyclesBy (1/4) (|+ note 8)
+  $
+  sometimesBy (1/8) (0.25 ~>)
+  $
+  -- slow 2 $ note (run 16) # midiAddr 5 # amp 0.85 -- mainbreak 3 (gabber)
+  -- note (run 8) # midiAddr 5 -- mainbreak 1
+  slow 2 $ note (run 16) # midiAddr 5 # amp 0.8 -- mainbreak 2
+  ,
+  s ""
+  ,
+  midiCC 41 10  -- heavy panning
+] # cps (170/60/4)
+
+hush
 
 -----------------------------------
 --           part three          --
