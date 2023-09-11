@@ -44,7 +44,7 @@ s.reboot { // server options are only updated on reboot
 );
 
 ~dirt.loadSoundFiles("C:/Users/Li/Desktop/LOLLTour/Staxl-sample-pack/*");
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/LOLLTour/gig-x/*");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/LOLLTour/gig-x");
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 // [Sometimes this won't work when Ableton is already running.

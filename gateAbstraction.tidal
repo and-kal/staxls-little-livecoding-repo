@@ -128,12 +128,29 @@ hush
 --     89-96:                    --
 -----------------------------------
 
-let melody = scale "ritusen" ("{0 3 1 2 3 4 2 2 0 1}%2")
+let melody = scale "ritusen" ("{0 3 1 2 3 4 2 2 0 1}%16")
 in
 d3 
 $ 
+-- sometimes (0.25 <~)
+-- $
 note melody # s "midi" # midichan "[8,9]"
-# cps (145/60/4)
+  # cps (165/60/4)
+
+d3 
+$ 
+somecyclesBy (1/8) rev
+$
+somecyclesBy (1/8) (slow 2)
+$
+stack [
+  n "0*4 ~ 0 0*2" # s "midi" # midichan "10" -- kick
+  ,
+  n "~ ~ 2*2 ~" # s "midi" # midichan "10" -- snare
+  ,
+  n "[14,15]*16" # s "midi" # midichan "10" -- metallic
+]
+  # cps (165/60/4)
 
 hush
 
@@ -149,5 +166,40 @@ hush
 --     113-120:                  --
 --     121-127:                  --
 -----------------------------------
+
+hush
+
+d4
+$
+every 4 (rev)
+$
+whenmod 16 12 (slow "<2 3 4 0.5>") 
+$
+whenmod 22 17 (linger (1/8)) 
+$
+stack [
+  sometimesBy (1/2) (|+ n (irand 16)) 
+  $
+  slow 2 $ n "~ 0 ~ 0!12 ~" # s "midi" # midichan "12" -- particle hihat
+  ,
+  ccv 0 # ccn 98 # s "midi" -- particle hihat pitch hack d/w
+  ,
+  someCyclesBy (1/6) (0.125 ~>) $ n "0 _ 0 _ _ 0 _" # s "midi" # midichan "13" -- kick
+  ,
+  n "~ 1 _ _ _ _ _" # s "midi" # midichan "13" -- snare
+  ,
+  n "<[~ _ 2 _ _ 2 _] ~!2>" # s "midi" # midichan "13" -- grain
+  , 
+  ccv (segment 60 (range 60 110 $ slow 4 $ sine)) # ccn 105 # s "midi" -- grain depth
+  ,
+  whenmod 25 21 (|+ ccv 127) $ ccn 106 # ccv 0 # s "midi" -- spectral freeze
+  ,
+  cat [
+    slow 6 $ n (scale "harmonicMajor" ("0 _ _ 2 _ 4 _ 2 _ _ _ 1 _")) # s "midi" # midichan "14"
+  ]
+  ,
+  ccn 113 # ccv (segment 20 (range 1 100 $ rand)) # s "midi" -- chord chorus (one val per cycle)
+]
+  # cps(165/60/4)
 
 hush
