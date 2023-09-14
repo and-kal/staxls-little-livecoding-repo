@@ -1,4 +1,4 @@
-// ServerOptions.devices.do({|dev| dev.postln});
+ServerOptions.devices.do({|dev| dev.postln});
 
 // Server.default.options.outDevice_("ASIO : JackRouter");
 // Server.default.options.inDevice_("ASIO : JackRouter");
@@ -8,8 +8,10 @@
 // Server.default.options.inDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
 // Server.default.options.outDevice_("ASIO : ZOOM U-24 ASIO Driver");
 // Server.default.options.inDevice_("ASIO : ZOOM U-24 ASIO Driver");
-Server.default.options.outDevice_("ASIO : UA-25");
-Server.default.options.inDevice_("ASIO : UA-25");
+// Server.default.options.outDevice_("ASIO : UA-25");
+// Server.default.options.inDevice_("ASIO : UA-25");
+Server.default.options.outDevice_("ASIO : Voicemeeter Virtual ASIO");
+Server.default.options.inDevice_("ASIO : Voicemeeter Virtual ASIO");
 // Server.default.options.outDevice_("Windows WASAPI : Headphones (Senary Audio)");
 // Server.default.options.inDevice_("Windows WASAPI : Microphone Array (AMD Audio Device)");
 
