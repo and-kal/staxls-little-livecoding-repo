@@ -29,6 +29,8 @@
 --     6-8-127:  rings           --
 -----------------------------------
 
+hush
+
 let pattern = ascii "<sm as hc ap it al is m>"
     melody = "[~ 0 [2 7]? 9 ~ 3]"
 in
@@ -45,18 +47,18 @@ $ stack [
     $ struct (inv pattern) 
     $ s "midi" # note (scale "hexSus" melody) 
     # midichan 13 -- glänta
-    , 
-    s "midi/8" # n 0 # legato 0.25
-    # midichan 14
-    , 
-    ccv (segment 60 $ range 0 100 (slow 8 $ isaw)) # ccn "[7, 8]" # s "midi"
-    ,
-    s "midi" # n 0
-    # midichan 15 -- kick + exciter
+    -- , 
+    -- s "midi/8" # n 0 # legato 0.25
+    -- # midichan 14
+    -- , 
+    -- ccv (segment 60 $ range 0 100 (slow 8 $ isaw)) # ccn "[7, 8]" # s "midi"
+    -- ,
+    -- s "midi" # n 0
+    -- # midichan 15 -- kick + exciter
 ] # cps(174/60/8)
 
 -- panic
-once $ ccv 0 # ccn "6" # s "midi"
+once $ ccv 0 # ccn "[6,123]" # s "midi"
 
 -----------------------------------
 --           part one            --
@@ -79,35 +81,36 @@ let
   midiN chan = s "midi" # midichan chan
   midiCC chan val = ccv val # ccn chan
 in 
-  d1
+  d2
   $
   stack [
-    whenmod 8 6 (0.125 <~)
-    $
-    whenmod 17 16 ((ply 2) . (slow 4))
-    $
+    -- whenmod 8 6 (0.125 <~)
+    -- $
+    -- whenmod 17 16 ((ply 2) . (slow 4))
+    -- $
     -- whenmod 19 16 (degradeBy 0.5)
     -- $
     -- whenmod 48 24 (every 2 (rev))
     -- $
     patAbstr (["-24","~","-22","[-21|-23]"]!!) # midiN 0 -- kick, snare, clap
-    ,
-    whenmod 9 7 (|+ note 12)
-    $
-    note "<12 14>" # midiN 1 -- vital
-    # legato 0.25
-    ,
-    ,
-    midiCC 3 (segment 20 $ fast 2 $ range 40 127 perlin) -- delay freq
-    ,
-    midiCC 4 70 -- delay bubbles
-    ,
-    midiCC 5 127  -- kick dry
-    ,
-    midiCC 1 127  -- delay (set to 127 for transition)
+    -- ,
+    -- whenmod 9 7 (|+ note 12)
+    -- $
+    -- note "<12 14>" # midiN 1 -- vital
+    -- # legato 0.25
+    -- ,
+    -- midiCC 3 (segment 20 $ fast 2 $ range 40 127 perlin) -- delay freq
+    -- ,
+    -- midiCC 4 70 -- delay bubbles
+    -- ,
+    -- midiCC 5 127  -- kick dry
+    -- ,
+    -- midiCC 1 127  -- delay (set to 127 for transition)
   ]
   # s "midi"
   # cps tempo
+
+hush
 
 -----------------------------------
 --           part two            --
@@ -124,35 +127,35 @@ in
 
 scaleList
 
+
 let 
   midiAddr chan = s "midi" # midichan chan
   midiCC chan val = ccv val # ccn chan # s "midi"
 in 
-d1
+d3
 $
   stack [
   slow 6 $ note ("c4'7sus4 a4'7sus4 f4'7sus4") # midiAddr 4 -- chords
   # legato 6
-  , 
-  whenmod 14 12 (# amp 1)
-  $
-  whenmod 12 10 (# amp 0.9)
-  $
-  someCyclesBy (1/4) (|+ note 8)
-  $
-  sometimesBy (1/8) (0.25 ~>)
-  $
+  -- , 
+  -- whenmod 14 12 (# amp 1)
+  -- $
+  -- whenmod 12 10 (# amp 0.9)
+  -- $
+  -- someCyclesBy (1/4) (|+ note 8)
+  -- $
+  -- sometimesBy (1/8) (0.25 ~>)
+  -- $
   -- slow 2 $ note (run 16) # midiAddr 5 # amp 0.85 -- mainbreak 3 (gabber)
   -- note (run 8) # midiAddr 5 -- mainbreak 1
-  slow 2 $ note (run 16) # midiAddr 5 # amp 0.8 -- mainbreak 2
-  ,
-  midiCC 41 10  -- heavy panning
-  ,
-  fast 2
-  $ whenmod 12 10 (|+ note "<7 11>")
-  $ note "<[c5'dom11 _ fs5'dom11 _ ds5'dom11] [c5'dom11 _ e5'dom11 _ gs5'dom11]>" # midiAddr 6 -- fm stab
-  ,
-  -- midiCC 49 127  -- fm stab nimbus
+  -- slow 2 $ note (run 16) # midiAddr 5 # amp 0.8 -- mainbreak 2
+  -- ,
+  -- midiCC 41 10  -- heavy panning
+  -- ,
+  -- whenmod 12 10 (|+ note "<7 11>")
+  -- $ note (scale "chromatic" "<[c5'maj7 _ gs5'maj7 _ f5'maj7] [c5'maj7 _ f5'maj7 _ c5'maj7]>") # midiAddr 6 -- fm stab
+  -- ,
+  -- midiCC 49 40  -- fm stab nimbus
 ] # cps (170/60/4)
 
 -----------------------------------
@@ -168,39 +171,48 @@ $
 --     89-96:                    --
 -----------------------------------
 
-let pattern = "{0*4 2*2 1 0*2 0*2 1 2*4}%4"
+let 
+  pattern = "{0*2 2*2 1 0*2 1 0 2*2}%8"
+  midiCC chan val = ccv val # ccn chan # s "midi"
 in
--- clutchIn 3 12
-d3 
+d4
 $ 
-somecyclesBy (1/8) rev
-$
-somecyclesBy (1/8) (linger (1/16))
-$
-sometimesBy (1/32) (0.125 <~)
-$
-somecyclesBy (1/8) (slow 2)
+-- whenmod 14 10 rev
+-- $
+-- whenmod 18 14 (linger (1/16))
+-- $
+-- sometimesBy (1/16) (0.125 <~)
+-- $
+-- whenmod 22 18 (slow 2)
 $
 stack [
-  n (unwrap $ fmap (["0", "~", "~"]!!) $ pattern) # s "midi" # midichan "10" -- kick
-  ,
-  n (unwrap $ fmap (["~", "~", "2"]!!) $ pattern) # s "midi" # midichan "10" -- snare
-  ,
-  slow 2 
-  $ 
-  n (unwrap $ fmap (["~", "3", "~"]!!) $ pattern) # s "midi" # midichan "10" -- fx
-  ,
-  ccv 127 # ccn 82 # s "midi" -- fx pitch hack d/w
-  ,
-  ccv (segment 24 $ range 60 90 $ slow 8 $ sine) # ccn 83 # s "midi" -- fx pitch hack transpose
-  ,
-  ccv (segment 60 $ range 40 90 $ slow 2 $ sine) # ccn 84 # s "midi" -- fx train text
-  ,
+  -- n (unwrap $ fmap (["0", "~", "~"]!!) $ pattern) # s "midi" # midichan "10" -- kick
+  -- ,
+  -- n (unwrap $ fmap (["~", "~", "2"]!!) $ pattern) # s "midi" # midichan "10" -- snare
+  -- ,
+  -- slow 2 
+  -- $ 
+  -- n (unwrap $ fmap (["~", "3", "~"]!!) $ pattern) # s "midi" # midichan "10" -- fx
+  -- ,
+  -- ccv 45 # ccn 81 # s "midi" -- delay snare (default: 45)
+  -- ,
+  -- ccv 127 # ccn 82 # s "midi" -- fx pitch hack d/w
+  -- ,
+  -- ccv (segment 24 $ range 60 90 $ slow 8 $ sine) # ccn 83 # s "midi" -- fx pitch hack transpose
+  -- ,
+  -- ccv (segment 60 $ range 40 90 $ slow 2 $ sine) # ccn 84 # s "midi" -- fx train text
+  -- ,
   n "[14,15]*16" # s "midi" # midichan "10" -- metallic
-  -- TODO: add synth
+  -- ,
+  -- rarely (|+ n 7)
+  -- $
+  -- n (scale "pelog" ("0 0 0 2 0 0 7 0 0 4 0 5 1 0 6 0")) # s "midi" # midichan "11" -- acid
+  -- ,
+  -- midiCC 89 40 -- acid decay
 ]
-  # cps (175/60/4)
+  # cps (172/60/4)
 
+hush
 
 --------------------------------------------
 --           part four                    --
@@ -219,10 +231,9 @@ stack [
 --------------------------------------------
 
 
-
 let pattern = "{0@2 0@3 1@4 2@5 1@4 0@3 0@2}%16"
 in 
-  d4
+  d5
   $ somecyclesBy (1/4) (rev)
   $ whenmod 14 11 (linger "[0.125|0.0625]")
   $ stack [
@@ -233,14 +244,18 @@ in
       , 
       n (scale "phrygian" (unwrap $ fmap (["~","-12","-7"]!!) $ pattern)) 
       # s "midi" # midichan 5 -- vital
-      , n (unwrap $ fmap (["~","-24","-17"]!!) $ pattern) 
+      , 
+      n (unwrap $ fmap (["~","-24","-17"]!!) $ pattern) 
       # s "midi" # midichan 6 -- laz
       , 
       somecyclesBy (0.25) ((|+ n (run 24)) . (fast 6))
-      $ n (unwrap $ fmap (["[0|1|2]","~","~"]!!) $ pattern) 
+      $ 
+      n (unwrap $ fmap (["[0|1|2]","~","~"]!!) $ pattern) 
       # s "midi" # midichan 15 -- snare
-      , somecyclesBy (1/4) (|+ n "[-2|12]")
-      $ n (scale "phrygian" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) 
+      , 
+      somecyclesBy (1/4) (|+ n "[-2|12]")
+      $ 
+      n (scale "phrygian" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) 
       # s "midi" # midichan "[4|5]" -- MI Plaits
       , ccv (segment 100 $ range 80 120 $ slow 6 $ sine) # ccn "[121]" # s "midi"
       , ccv (segment 100 $ range 60 120 $ slow 24 $ sine) # ccn "[122]" # s "midi"
@@ -248,17 +263,16 @@ in
       , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- kick distortion
       , 
       whenmod 32 27 (|+ n 48)
-      $ n (scale "phrygian" ("[-24|-12|-19]*1?")) # s "midi" # midichan 6 
+      $ 
+      n (scale "phrygian" ("[-24|-12|-19]*1?")) # s "midi" # midichan 6 
       # legato (range 0.2 1 $ slow 4 $ saw) -- fxkick
       , ccv (segment 100 $ range 0 60 $ slow 6 $ sine) # ccn "125" # s "midi" -- flanger
       , ccv (segment 100 $ range 0 60 $ slow 15 $ sine) # ccn "126" # s "midi" -- flanger
       , ccv (segment 100 $ range 0 60 $ slow 12 $ sine) # ccn "127" # s "midi" -- grain
   ]
-  # cps(150/60/4)
-  # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
+  # cps(150/60/8)
+  -- # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
 
-
-hush
 
 -----------------------------------
 --           outro               --
@@ -272,40 +286,38 @@ hush
 --     113-120:                  --
 -----------------------------------
 
-hush
-
-d5
+d6
 $
-every 4 (rev)
-$
-whenmod 16 12 (slow "<2 3 4 0.5>") 
-$
-whenmod 22 17 (linger (1/8)) 
-$
+-- every 4 (rev)
+-- $
+-- whenmod 16 12 (slow "<2 3 4 0.5>") 
+-- $
+-- whenmod 22 17 (linger (1/8)) 
+-- $
 stack [
-  sometimesBy (1/2) (|+ n (irand 16)) 
-  $
-  slow 2 $ n "~ 0 ~ 0!12 ~" # s "midi" # midichan "12"
-  # amp (range 0.4 0.6 $ slow 4 $ saw) -- particle hihat 
-  -- # amp 0.6 -- alt. arp
-  ,
-  ccv 0 # ccn 98 # s "midi" -- particle hihat pitch hack d/w
-  ,
-  someCyclesBy (1/6) (0.125 ~>) $ n "0 _ 0 _ _ 0 _" # s "midi" # midichan "13" -- kick
-  ,
-  n "~ 1 _ _ _ _ _" # s "midi" # midichan "13" -- snare
-  ,
-  n "<[~ _ 2 _ _ 2 _] ~!2>" # s "midi" # midichan "13" -- grain
-  , 
-  ccv (segment 60 (range 60 110 $ slow 4 $ sine)) # ccn 105 # s "midi" -- grain depth
-  ,
-  whenmod 25 21 (|+ ccv 127) $ ccn 106 # ccv 0 # s "midi" -- spectral freeze
-  ,
+  -- sometimesBy (1/2) (|+ n (irand 16)) 
+  -- $
+  -- slow 2 $ n "~ 0 ~ 0!12 ~" # s "midi" # midichan "12"
+  -- # amp (range 0.4 0.6 $ slow 4 $ saw) -- particle hihat 
+  -- -- # amp 0.6 -- alt. arp
+  -- ,
+  -- ccv 0 # ccn "[98,99]" # s "midi" -- particle hihat pitch hack d/w
+  -- ,
+  -- someCyclesBy (1/6) (0.125 ~>) $ n "0 _ 0 _ _ 0 _" # s "midi" # midichan "13" -- kick
+  -- ,
+  -- n "~ 1 _ _ _ _ _" # s "midi" # midichan "13" -- snare
+  -- ,
+  -- n "<[~ _ 2 _ _ 2 _] ~!2>" # s "midi" # midichan "13" -- grain
+  -- , 
+  -- ccv (segment 60 (range 60 110 $ slow 4 $ sine)) # ccn 105 # s "midi" -- grain depth
+  -- ,
+  -- whenmod 25 21 (|+ ccv 127) $ ccn 106 # ccv 0 # s "midi" -- spectral freeze
+  -- ,
   cat [
     slow 6 $ n (scale "harmonicMajor" ("0 _ _ 2 _ 4 _ 2 _ _ _ 1 _")) # s "midi" # midichan "14"
   ]
-  ,
-  ccn 113 # ccv (segment 20 (range 1 100 $ rand)) # s "midi" -- chord chorus (ccn first -> one val per cycle)
+  -- ,
+  -- ccn 113 # ccv (segment 20 (range 1 100 $ rand)) # s "midi" -- chord chorus (ccn first -> one val per cycle)
 ]
   # cps(165/60/4)
 
@@ -321,7 +333,9 @@ stack [
 let melody = scale "ritusen" ("{0 3 1 2 3 4 2 2 0 1}%8")
 in
 d3 
-$ 
+$
+-- degradeBy 0.75
+-- $ 
 sometimes (0.25 <~)
 $
 (|- note 24)
