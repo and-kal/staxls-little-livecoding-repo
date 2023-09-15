@@ -92,7 +92,7 @@ in
     -- $
     -- whenmod 48 24 (every 2 (rev))
     -- $
-    patAbstr (["-24","~","-22","[-21|-23]"]!!) # midiN 0 -- kick, snare, clap
+    patAbstr (["-24","~","-22","[-21|-23]"]!!) # midiN 0 -- kick, snare, clap|hat
     -- ,
     -- whenmod 9 7 (|+ note 12)
     -- $
@@ -105,7 +105,9 @@ in
     -- ,
     -- midiCC 5 127  -- kick dry
     -- ,
-    -- midiCC 1 127  -- delay (set to 127 for transition)
+    -- midiCC 6 (segment 60 $ fast 8 $ range 40 127 tri) -- hat tremolo speed
+    ,
+    midiCC 1 0 -- delay (set to 127 for transition)
   ]
   # s "midi"
   # cps tempo
