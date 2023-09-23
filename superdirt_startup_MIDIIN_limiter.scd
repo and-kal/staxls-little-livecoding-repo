@@ -2,16 +2,16 @@ ServerOptions.devices.do({|dev| dev.postln});
 
 // Server.default.options.outDevice_("ASIO : JackRouter");
 // Server.default.options.inDevice_("ASIO : JackRouter");
-// Server.default.options.outDevice_("Windows WASAPI : OUT (2- UA-25)");
-// Server.default.options.inDevice_("Windows WASAPI : IN (2- UA-25)");
+Server.default.options.outDevice_("Windows WASAPI : OUT (UA-25)");
+Server.default.options.inDevice_("Windows WASAPI : IN (UA-25)");
 // Server.default.options.outDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
 // Server.default.options.inDevice_("Windows WASAPI : Line (ZOOM U-24 Audio)");
 // Server.default.options.outDevice_("ASIO : ZOOM U-24 ASIO Driver");
 // Server.default.options.inDevice_("ASIO : ZOOM U-24 ASIO Driver");
 // Server.default.options.outDevice_("ASIO : UA-25");
 // Server.default.options.inDevice_("ASIO : UA-25");
-Server.default.options.outDevice_("ASIO : Voicemeeter Virtual ASIO");
-Server.default.options.inDevice_("ASIO : Voicemeeter Virtual ASIO");
+// Server.default.options.outDevice_("ASIO : Voicemeeter Virtual ASIO");
+// Server.default.options.inDevice_("ASIO : Voicemeeter Virtual ASIO");
 // Server.default.options.outDevice_("Windows WASAPI : Headphones (Senary Audio)");
 // Server.default.options.inDevice_("Windows WASAPI : Microphone Array (AMD Audio Device)");
 
@@ -25,7 +25,7 @@ s.reboot { // server options are only updated on reboot
 	s.options.maxNodes = 1024 * 32; // increase this if you are getting drop outs and the message "too many nodes"
 	s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 	s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
-	s.options.sampleRate = 48000; // ASIO on Windows defaults to 44100
+	s.options.sampleRate = 44100; // ASIO on Windows defaults to 44100
 	// boot the server and start SuperDirt
 	s.waitForBoot {
 		~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
@@ -41,7 +41,6 @@ s.reboot { // server options are only updated on reboot
 			~d10 = ~dirt.orbits[9]; ~d11 = ~dirt.orbits[10]; ~d12 = ~dirt.orbits[11];
 		);
 	};
-
 	s.latency = 0.3; // increase this if you get "late" messages
 };
 );
