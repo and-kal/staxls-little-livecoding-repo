@@ -8,17 +8,17 @@
 --     1-6:                      --
 --     7-12: digits chorus       --
 --     13-18:                    --
---     19-24:                    --
+--     19-24: kick               --
 -----------------------------------
 
 let pattern = "{0@6 1@5 1@5 1@5 1*2@5 0@8 2@8 3@6 3@2}%32"
 in
-d2
+d8
 $ someCyclesBy (1/6) (ply 2)
 $ someCyclesBy (1/6) (0.25 <~)
 $ whenmod 30 26 (slow "<3 2>")
 $ stack [ 
-  n (unwrap $ fmap (["0", "~", "2", "3"]!!) $ pattern)
+  n (unwrap $ fmap (["~", "0", "2", "3"]!!) $ pattern)
   # s "midi" # midichan 0 -- k c s
   , 
   n (unwrap $ fmap (["1", "1", "1", "1"]!!) $ pattern) 
@@ -35,12 +35,15 @@ $ stack [
   $
   slow 4 $ n (scale "wholetone" "g4")
   # s "midi" # midichan 2 -- grain
-  -- ,
-  -- n (unwrap $ fmap (["~", "~", "0", "~"]!!) $ pattern) 
-  -- # s "midi" # midichan 3 -- 808k
+  ,
+  n (unwrap $ fmap (["[0,1]", "~", "~", "~"]!!) $ pattern) 
+  # s "midi" # midichan 3 -- 808k
+  ,
+  ccv (segment 40 $ range 0 120 $ slow 8 $ saw) # ccn "[19,20]" # s "midi" -- kick layer saturator d/w & depth
 ]
   # cps(80/60/2)
 
+hush
 
 -----------------------------------
 --           part six            --
@@ -58,7 +61,7 @@ $ stack [
 -- let repeater x = ((ply x) . (slow (x / 2)))
 let repeater x = ((ply x) . (slow x))
 in
-d7
+d9
 $
 someCyclesBy (1/4) (rev)
 $
@@ -116,7 +119,7 @@ let
   mel1 = "[0 ~ 2 _] 1"
   mel2 = "[~ 0 1 ~] 2"
 in
-d4 
+d10
 $
 whenmod 16 14 (slow 2)
 $
@@ -160,9 +163,7 @@ stack [
 --     85-90: phase dist. synth  --
 -----------------------------------
 
-hush
-
-d6
+d11
 $
 every 4 (rev)
 $

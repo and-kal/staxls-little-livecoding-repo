@@ -8,8 +8,3 @@
 27.09. Chemnitz @ B41 w/ Cesar Palace & Dilian
 
 28.09. Berlin @ KuLe w/ Ixchel Mendoza Hernandez & Cesar Palace
-
-
-##### TODO
-
-Create a synth in Supercollider that can be played via TidalCycles as an interlude when opening the second Ableton Live file, which will take a few seconds to load.
