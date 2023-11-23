@@ -1,10 +1,9 @@
-##### dedicated branch for tour in September
+##### upcoming gigs in December '23
 
-----
-15.09. Strasbourg @ Diamant d'Or w/ Kevin Diesel, SAMUEL GEAI, PAPÍROVE HOUBY, NAAWAKXXX
+---
 
-26.09. Bremen @ Kultur im Bunker e.V. w/ Cesar Palace & Dilian
+01.12. [BINARY BLAST algorave @ Hitness Club](http://binaryblast.glitch.me)
 
-27.09. Chemnitz @ B41 w/ Cesar Palace & Dilian
+12.12. [Weihnachtsvorlesung: Lerne die Welt des Live-Codings kennen! @ SAXEED Zwickau](https://www.saxeed.net/veranstaltungen/saxeed-weihnachtsvorlesung-2/)
 
-28.09. Berlin @ KuLe w/ Ixchel Mendoza Hernandez & Cesar Palace
+𝑠̥̊⃝𝑒̥̊⃝𝑒̥̊⃝ 𝑦̥̊⃝𝑜̥̊⃝𝑢̥̊⃝ 𝑡̥̊⃝ℎ̥̊⃝𝑒̥̊⃝𝑟̥̊⃝𝑒̥̊⃝
