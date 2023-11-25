@@ -30,10 +30,10 @@ $ stack [
   ccDisrand1 6 0 127, -- delaymode
   ccSeg 7 (range 80 30 $ slow 32 $ sine), -- attack
   ccSeg 8 (range 100 120 $ slow 32 $ sine) -- decay
-  , 
-  n "[-24,-23,-22]" # midiN 2 # legato 0.125, -- kick+perc
-  ccDis 9 ("[20|40|60|90]"), -- perc release
-  ccSeg 10 (range 60 120 $ perlin) -- perc detune
+  -- , 
+  -- n "[-24,-23,-22]" # midiN 2 # legato 0.125, -- kick+perc
+  -- ccDis 9 ("[20|40|60|90]"), -- perc release
+  -- ccSeg 10 (range 60 120 $ perlin) -- perc detune
 ]
  # speedvari 
 
@@ -54,10 +54,12 @@ hush
 --     31-36: mel                --
 -----------------------------------
 
+scaleList
+
 let 
-  -- pattern = "{0@6 1@5 1@5 1@5 1*2@5 0@8 2@8 3@6 3@2}%32"
-  pattern = "[ [0 _ 0 [0 1] ] , 2*16] "
-  mike x = note (unwrap $ fmap (x) $ pattern) -- ripped off from Mike Hodnick's tutorials
+  pattern1 = "{0@6 1@5 1@5 1@5 1*2@5 0@8 2@8}%32"
+  pattern2 = "[ [0 _ 0 [0 1] ] , 2*16] "
+  mike x = note (scale "locrian" (unwrap $ fmap (x) $ pattern2)) -- ripped off from Mike Hodnick's tutorials
   midiN chan = s "midi" # midichan (chan - 1) 
   ccDis chan val = ccv val # ccn chan # s "midi" 
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
@@ -66,36 +68,36 @@ d1
 $
 whenmod 8 7 (0.125 <~)
 $
-whenmod 26 24 (linger (1/12))
-$
+-- whenmod 26 24 (linger (1/12))
+-- $
 whenmod 12 9 (slow 2)
 $ stack [ 
   someCyclesBy(1/4) (|+ note "[3,7,9,12]")
-  $ mike (["[[0,5,7]|[1,6,8]]", "~","~"]!!)  
+  $ mike (["[[0,3,7]|[2,3,7]]", "~","~"]!!)  
   # midiN 3 -- vital
   # legato 0.125
-  ,
-  whenmod 8 5 (|+ ccv 50)
-  $ ccDis 13 0 -- vital noise
-  ,
-  (|- note 12) $ mike (["0", "~","~"]!!)  
-  # midiN 4 -- kick
-  ,
-  ccSeg 19 (range 0 127 $ slow 8 $ tri ) -- kick redux filter
-  ,
-  whenmod 20 17 (|+ ccv 127)
-  $
-  ccDis 20 0 -- kick redux d/w
-  ,
-  mike (["~", "0","~"]!!)  
-  # midiN 5 -- snare
-  ,
-  mike (["~", "~","1"]!!)  
-  # midiN 5 -- hat
-  ,
-  ccSeg 25 (range 0 127 $ slow 4 $ perlin) -- hat det
-  ,
-  ccSeg 26 (range 0 127  $ perlin) -- hat pan
+  -- ,
+  -- whenmod 8 5 (|+ ccv 50)
+  -- $ ccDis 13 0 -- vital noise
+  -- ,
+  -- (|- note 12) $ mike (["0", "~","~"]!!)  
+  -- # midiN 4 -- kick
+  -- ,
+  -- ccSeg 19 (range 0 127 $ slow 8 $ tri ) -- kick redux filter
+  -- ,
+  -- whenmod 20 17 (|+ ccv 127)
+  -- $
+  -- ccDis 20 0 -- kick redux d/w
+  -- ,
+  -- mike (["~", "0","~"]!!)  
+  -- # midiN 5 -- snare
+  -- ,
+  -- mike (["~", "~","1"]!!)  
+  -- # midiN 5 -- hat
+  -- ,
+  -- ccSeg 25 (range 0 127 $ slow 4 $ perlin) -- hat det
+  -- ,
+  -- ccSeg 26 (range 0 127  $ perlin) -- hat pan
 ]
   # cps(166/60/4)
 
@@ -123,36 +125,40 @@ let
 in
 d2
 $
+someCyclesBy (1/8) (slow "4 0.5")
+$
 someCyclesBy (1/4) (rev)
 $ 
 stack [ 
   mike (["2", "~", "~"]!!)  
   # midiN 7 -- kick
-  ,
-  mike (["~", "3*4", "~"]!!)  
-  # midiN 7 -- snare
-  ,
-  mike (["~", "~", "4"]!!)  
-  # midiN 7 -- clap
-  ,
-  degradeBy 0.05 
-  $
-  note "1*16"  
-  # midiN 7 -- hat
-  ,
-  ccDis 37 127 -- drums dist sum
-  ,
-  whenmod 5 3 (|- note 2) 
-  $
-  whenmod 3 2 (|+ note 5) 
-  $
-  someCyclesBy (1/6) (|+ note 6)
-  $
-  mike (["ds5'6by9", "~", "~"]!!)  
-  # midiN 8 -- pad
-  # legato 0.5
+  -- ,
+  -- mike (["~", "3*4", "~"]!!)  
+  -- # midiN 7 -- snare
+  -- ,
+  -- ccSeg 38 (range 0 100 $ slow 12 $ saw) -- drums dist sum
+  -- ,
+  -- mike (["~", "~", "4"]!!)  
+  -- # midiN 7 -- clap
+  -- ,
+  -- degradeBy 0.05 
+  -- $
+  -- note "1*16"  
+  -- # midiN 7 -- hat
+  -- ,
+  -- ccDis 37 0 -- drums dist sum
+  -- ,
+  -- whenmod 5 3 (|- note 2) 
+  -- $
+  -- whenmod 3 2 (|+ note "[5|7]") 
+  -- $
+  -- someCyclesBy (1/6) (|+ note 6)
+  -- $
+  -- mike (["ds5'6by9", "~", "~"]!!)  
+  -- # midiN 8 -- pad
+  -- # legato 0.5
 ]
-  # cps(175/60/4)
+  # cps(185/60/4)
 
 hush
 
@@ -183,33 +189,35 @@ $
 whenmod 26 21 (linger (1/16))
 $ 
 stack [ 
-  mike (["0", "~"]!!)  
-  # midiN 11 -- kick
-  ,
-  sometimes (|+ n (choose[1,2,5]))
-  $
-  n (scale "hexAeolian" "-12!16")
-  # midiN 13 -- 303
-  ,
-  whenmod 16 11 (|+ ccv 100)
-  $
-  ccDis 61 0 -- kick dist
-  ,
-  whenmod 8 6 (|- ccv 10)
-  $
-  ccDis 62 68 -- kick transpose
-  ,
-  mike (["~", "1"]!!)  
-  # midiN 11 -- snare
-  ,
+  -- mike (["0", "~"]!!)  
+  -- # midiN 11 -- kick
+  -- ,
+  -- sometimes (|+ n (choose[1,2,5]))
+  -- $
+  -- n (scale "hexAeolian" "-12!16")
+  -- # midiN 13 -- 303
+  -- ,
+  -- ccDis 73 105 -- 303 cutoff (90-120)
+  -- ,
+  -- whenmod 16 11 (|+ ccv 100)
+  -- $
+  -- ccDis 61 0 -- kick dist
+  -- ,
+  -- whenmod 8 6 (|- ccv 10)
+  -- $
+  -- ccDis 62 68 -- kick transpose
+  -- ,
+  -- mike (["~", "1"]!!)  
+  -- # midiN 11 -- snare
+  -- ,
   sometimes (|+ n (irand 15))
   $
   n "1!16"
   # midiN 12 -- particles
-  , 
-  whenmod 16 10 (|+ ccv 45)
-  $
-  ccDis 67 70 -- kick dist
+  -- , 
+  -- whenmod 16 10 (|+ ccv 45)
+  -- $
+  -- ccDis 67 70 -- particles transpose
 ]
   # cps(135/60/4)
 

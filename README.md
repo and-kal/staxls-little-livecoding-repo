@@ -1,6 +1,8 @@
-##### upcoming gigs in December '23
+##### upcoming gigs in November/December '23
 
 ---
+
+25.11. ????? @ KTS, Freiburg/Breisgau
 
 01.12. [BINARY BLAST algorave @ Hitness Club](http://binaryblast.glitch.me)
 
