@@ -1,0 +1,44 @@
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      3,4,5,6                  --
+--                               --
+--     relevant CC channels      --
+--     13-18: vitalkick          --
+--     19-24: hat                --
+--     25-30: percs              --
+--     31-36: mel                --
+-----------------------------------
+
+let 
+  structure = mask "[10010 11100 10101 00101 01110]/2"
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d1
+$
+every 2 (rev)
+$
+someCyclesBy (1/4) (rev)
+$
+someCyclesBy (1/4) ((1/4) <~)
+$
+whenmod 18 16 ((slow 2) . (brak))
+$
+stack 
+[
+  structure $ s "midi*12" # note "0" # midichan (3-1) -- kick
+  ,
+  n "~ ~ ~ ~ 2 ~  " # midiN 5 -- clap
+  ,
+  n "1*12" # midiN 5 -- hat
+  ,
+  ccSeg 14 (range 0 120 $ slow 8 $ sine) -- kick bloop dist
+  ,
+  ccDis 25 "[10|120]" -- clap chorus
+]
+  # cps(165/60/4)
+
+hush

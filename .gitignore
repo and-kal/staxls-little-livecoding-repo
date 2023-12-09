@@ -1,4 +1,5 @@
 *.asd
+.env
 Desktop.ini
 /_temp
 /.vscode
