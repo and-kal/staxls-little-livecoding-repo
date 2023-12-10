@@ -19,9 +19,13 @@ let
 in
 d1
 $
-every 2 (rev)
+somecyclesBy (1/3) (rev)
 $
 someCyclesBy (1/4) (rev)
+$
+someCyclesBy (1/6) (zoom (0, 0.875))
+$
+whenmod 18 15 (fastSqueeze "1 0.75")
 $
 someCyclesBy (1/4) ((1/4) <~)
 $
@@ -29,16 +33,27 @@ whenmod 18 16 ((slow 2) . (brak))
 $
 stack 
 [
-  structure $ s "midi*12" # note "0" # midichan (3-1) -- kick
+  structure $ s "midi*12" # note "<0!2 -5!2 0!2 -7!2>" # midichan (3-1) -- kick
   ,
-  n "~ ~ ~ ~ 2 ~  " # midiN 5 -- clap
+  mask "fffftf" $ n "2*6" # midiN 5 -- clap
   ,
   n "1*12" # midiN 5 -- hat
   ,
+  n "0/12" # midiN 5 -- sfx
+  ,
+  slow 4 
+  $
+  n (scale "yu" "<0 4 9 4 0 9>") # midiN 4 -- fm
+  # legato 1
+  ,
+  ccSeg 13 (range 0 120 $ slow 8 $ sine) -- kick osc3
+  ,
   ccSeg 14 (range 0 120 $ slow 8 $ sine) -- kick bloop dist
+  ,
+  ccDis 15 "<0 20 70 80 90>" -- kick warp
   ,
   ccDis 25 "[10|120]" -- clap chorus
 ]
-  # cps(165/60/4)
+  # cps(162/60/4)
 
 hush

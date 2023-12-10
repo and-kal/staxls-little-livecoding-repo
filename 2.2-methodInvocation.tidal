@@ -21,31 +21,37 @@ let
   ccDis chan val = ccv val # ccn chan # s "midi" 
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
 in
-d5
+d1
 $
 somecyclesBy (1/8) (brak)
 $
 whenmod 30 22 (slow "4 2 0.5 0.25")
 $ 
 stack [ 
-  -- (|- note "<41!3 36!3 29!3 24!3 12!3 0!3 7!3 12!3>")
-  -- $
-  -- note (scale "hirajoshi" melody)
-  -- # s "midi" # midiN 1
-  -- ,
-  -- (|- note 24)
-  -- $
-  -- note (pattern <> hat)
-  -- # s "midi" # midiN 2
-  -- ,
-  (|- note 21)
+  (|- note "<41!3 36!3 29!3 24!3 12!3 0!3 7!3 12!3>")
+  $
+  never (|- note "7")
+  $
+  note (scale "hirajoshi" melody)
+  # s "midi" # midiN 1
+  ,
+  (|- note 24)
+  $
+  note (pattern <> hat)
+  # s "midi" # midiN 2
+  ,
+  (|- note "21")
   $
   whenmod 10 7 (fast 2)
   $
   note ("0*12")
   # s "midi" # midiN 2
+  ,
+  whenmod 11 9 (|- ccv 60) 
+  $
+  ccDis 10 "90"
 ]
-  # cps(160/60/4)
+  # cps(152/60/4)
 
 hush
 
@@ -94,7 +100,7 @@ stack [
     ccDisrand1 108 0 100, -- FX amount
     ccDisrand1 109 0 100, -- FX wetness
     ccv (segment 50 $ range 0 90 $ slow 16 $ (0.25 <~) $ sine) # ccn 110 # s "midi", -- attack
-    ccv (segment 50 $ range 75 110 $ slow 16 $ sine) # ccn 111 # s "midi" -- decay
+    ccv (segment 50 $ range 95 120 $ slow 16 $ sine) # ccn 111 # s "midi" -- decay
     ,
     ((3/6) ~>) $ n "-22" # midiN 5
 ]
@@ -110,6 +116,7 @@ hush
 --     CC channels               --
 --     112-115                   --
 --     116-119                   --
+--   don't forget to Ableton Link--
 -----------------------------------
 
 let 
@@ -124,15 +131,20 @@ $
 someCyclesBy (1/8) rev
 $
 stack [
-    -- sometimes (|+ n 4)
-    -- $
-    -- n "[0..3]" # midiN 6 -- breaks
-    -- ,
-    -- fast 4 
-    -- $ 
-    -- ccn 112 # ccv (segment 80 (range 0 30 $ rand)) 
-    -- # s "midi"    
-    -- ,
+    sometimes (|+ n 4)
+    $
+    n "[3..0]" # midiN 6 -- breaks
+    ,
+    fast 4 
+    $ 
+    ccn 112 # ccv (segment 80 (range 20 30 $ rand)) 
+    # s "midi" -- chain select
+    ,
+    every 8 (|+ ccv 127)
+    $
+    ccn 113 # ccv 0
+    # s "midi" -- pitch hack
+    ,
     whenmod 12 10 (|- n 12)
     $
     somecyclesBy (1/4) (|- n "[7|12]")
