@@ -131,28 +131,28 @@ $
 someCyclesBy (1/8) rev
 $
 stack [
-    sometimes (|+ n 4)
-    $
-    n "[3..0]" # midiN 6 -- breaks
-    ,
-    fast 4 
-    $ 
-    ccn 112 # ccv (segment 80 (range 20 30 $ rand)) 
-    # s "midi" -- chain select
-    ,
-    every 8 (|+ ccv 127)
-    $
-    ccn 113 # ccv 0
-    # s "midi" -- pitch hack
-    ,
-    whenmod 12 10 (|- n 12)
-    $
-    somecyclesBy (1/4) (|- n "[7|12]")
-    $
-    somecyclesBy (1/3) (|+ n "12")
-    $
-    whenmod 17 13 ((slow 4 . (# legato 4)))
-    $
+    -- sometimes (|+ n 4)
+    -- $
+    -- n "[3..0]" # midiN 6 -- breaks
+    -- ,
+    -- fast 4 
+    -- $ 
+    -- ccn 112 # ccv (segment 80 (range 20 30 $ rand)) 
+    -- # s "midi" -- chain select
+    -- ,
+    -- every 8 (|+ ccv 127)
+    -- $
+    -- ccn 113 # ccv 0
+    -- # s "midi" -- pitch hack
+    -- ,
+    -- whenmod 12 10 (|- n 12)
+    -- $
+    -- somecyclesBy (1/4) (|- n "[7|12]")
+    -- $
+    -- somecyclesBy (1/3) (|+ n "12")
+    -- $
+    -- whenmod 17 13 ((slow 4 . (# legato 4)))
+    -- $
     n ("[0,1,4,7,9,11]*8") # legato 0.125
     -- n ("[[0,1,4,7,9,11] ~ ~ [0,1,4,7,9,11] ~ ~ [0,1,4,7,9,11] ~] * 2")
     # midiN 7
@@ -161,23 +161,6 @@ stack [
 
 hush
 
-
-let
- cfilt = pF "cfilt"
- ampdist = pF "ampdist"
- durdist = pF "durdist"
-in
-d7 $
- whenmod 3 2 (bite 4 "[3 1 2 0]") $
- whenmod 20 15 (hurry 1.5) $
- (hurry 0.25) . (# room 0.2) . (# size 0.2) $
- someCycles (jux rev) $
- whenmod 5 3 (# fshift (range (-400) 10000 $ cosine)) $
- whenmod 3 2 (|+ note "<12 24 36>") $ note (scale "hungarianMinor" ("[1 2 [16 7] 4*8 [10*3, 11]  1*4]")) 
- # s "gendy3" 
- # cfilt (range 2000 18000 $ slow 4 $ sine)
- # shape (1/3)
- # ampdist "[0.1 0.5 1]" # durdist "[0.2 1]"
 
 -----------------------------------
 --           part six            --
@@ -287,3 +270,26 @@ in
   -- # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
 
   hush
+
+--------------------------------------------
+--           outro                        --
+--                                        --
+--   custom SC synth only                 --
+--------------------------------------------
+
+let
+ cfilt = pF "cfilt"
+ ampdist = pF "ampdist"
+ durdist = pF "durdist"
+in
+d7 $
+ whenmod 3 2 (bite 4 "[3 1 2 0]") $
+ whenmod 20 15 (hurry 1.5) $
+ (hurry 0.25) . (# room 0.2) . (# size 0.2) $
+ someCycles (jux rev) $
+ whenmod 5 3 (# fshift (range (-400) 10000 $ cosine)) $
+ whenmod 3 2 (|+ note "<12 24 36>") $ note (scale "hungarianMinor" ("[1 2 [16 7] 4*8 [10*3, 11]  1*4]")) 
+ # s "gendy3" 
+ # cfilt (range 2000 18000 $ slow 4 $ sine)
+ # shape (1/3)
+ # ampdist "[0.1 0.5 1]" # durdist "[0.2 1]"
