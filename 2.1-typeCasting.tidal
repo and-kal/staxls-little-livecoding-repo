@@ -30,16 +30,14 @@ $ stack [
   ccDisrand1 6 0 127, -- delaymode
   ccSeg 7 (range 80 30 $ slow 32 $ sine), -- attack
   ccSeg 8 (range 100 120 $ slow 32 $ sine) -- decay
-  -- , 
-  -- n "[-24,-23,-22]" # midiN 2 # legato 0.125, -- kick+perc
-  -- ccDis 9 ("[20|40|60|90]"), -- perc release
-  -- ccSeg 10 (range 60 120 $ perlin) -- perc detune
+  , 
+  n "[-24,-23,-22]" # midiN 2 # legato 0.125, -- kick+perc
+  ccDis 9 ("[20|40|60|90]"), -- perc release
+  ccSeg 10 (range 60 120 $ perlin) -- perc detune
 ]
  # speedvari 
 
 hush
-
-
 
 -----------------------------------
 --           part one            --
