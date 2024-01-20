@@ -25,7 +25,7 @@ s.reboot { // server options are only updated on reboot
 	s.options.maxNodes = 1024 * 32; // increase this if you are getting drop outs and the message "too many nodes"
 	s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 	s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
-	s.options.sampleRate = 48000; // some interfaces might need other values like 48000 (ASIO on Windows defaults to 44100)
+	s.options.sampleRate = 44100; // some interfaces might need other values like 48000 (ASIO on Windows defaults to 44100)
 	// boot the server and start SuperDirt
 	s.waitForBoot {
 		~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
