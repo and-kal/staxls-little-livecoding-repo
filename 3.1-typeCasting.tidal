@@ -1,0 +1,267 @@
+-----------------------------------
+--           intro               --
+--                               --
+--   relevant note channels      --
+--      1,2                      --
+--                               --
+--     relevant CC channels      --
+--     1-8: impactor             --
+--     9-12: kick                --
+-----------------------------------
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
+  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccDisrand1 chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+  speedvari = cps ( range (120/60/1) (120/60/4) $ slow 16 $ tri)
+in
+d1
+$ stack [ 
+  n "-24" # midiN 1, -- impactor
+  ccDisrand1 1 40 100, -- pitch
+  ccDisrand1 2 0 127, -- pan
+  ccDisrand1 3 30 90, -- vol
+  ccDisrand1 4 0 127, -- reverse
+  ccDisrand1 5 0 127, -- delay
+  ccDisrand1 6 0 127, -- delaymode
+  ccSeg 7 (range 80 30 $ slow 32 $ sine), -- attack
+  ccSeg 8 (range 100 120 $ slow 32 $ sine) -- decay
+  , 
+  n "[-24,-23,-22]" # midiN 2 # legato 0.125, -- kick+perc
+  ccDis 9 ("[20|40|60|90]"), -- perc release
+  ccSeg 10 (range 60 120 $ perlin) -- perc detune
+]
+ # speedvari 
+
+hush
+
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      3,4,5,6                  --
+--                               --
+--     relevant CC channels      --
+--     13-18: vitalkick          --
+--     19-24: hat                --
+--     25-30: percs              --
+--     31-36: mel                --
+-----------------------------------
+
+let 
+  structure = mask "[10010 11100 10101 00101 01110]/2"
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d1
+$
+somecyclesBy (1/3) (rev)
+$
+someCyclesBy (1/4) (rev)
+$
+someCyclesBy (1/6) (zoom (0, 0.875))
+$
+whenmod 18 15 (fastSqueeze "1 0.75")
+$
+someCyclesBy (1/4) ((1/4) <~)
+$
+whenmod 18 16 ((slow 2) . (brak))
+$
+stack 
+[
+  -- structure $ s "midi*12" # note "<0!2 -5!2 0!2 -7!2>" # midichan (3-1) -- kick
+  -- ,
+  -- mask "fffftf" $ n "2*6" # midiN 5 -- clap
+  -- ,
+  n "1*12" # midiN 5 -- hat
+  ,
+  n "0/12" # midiN 5 -- sfx
+  -- ,
+  -- slow 4 
+  -- $
+  -- n (scale "yu" "<0 4 9 4 0 9>") # midiN 4 -- fm
+  -- # legato 1
+  -- ,
+  -- ccSeg 13 (range 0 120 $ slow 8 $ sine) -- kick osc3
+  -- ,
+  -- ccSeg 14 (range 0 120 $ slow 8 $ sine) -- kick bloop dist
+  -- ,
+  -- ccDis 15 "<0 20 70 80 90>" -- kick warp
+  -- ,
+  -- ccDis 25 "[10|120]" -- clap chorus
+]
+  # cps(162/60/4)
+
+hush
+
+{- BONUS
+
+-----------------------------------
+--           part two            --
+--                               --
+--  relevant note channels       --
+--      7,8,9,10                 --
+--                               --
+--     relevant CC channels      --
+--     37-42:                    --
+--     43-48:                    --
+--     49-54:                    --
+--     55-60:                    --
+-----------------------------------
+
+let 
+  pattern = "[0 _ 0 1 _ 0 0 2 0 _ 2 0 _ 1 0 _ ] / 2"
+  mike x = note (unwrap $ fmap (x) $ pattern) 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+in
+d2
+$
+someCyclesBy (1/8) (slow "4 0.5")
+$
+someCyclesBy (1/4) (rev)
+$ 
+stack [ 
+  mike (["2", "~", "~"]!!)  
+  # midiN 7 -- kick
+  ,
+  mike (["~", "3*4", "~"]!!)  
+  # midiN 7 -- snare
+  ,
+  ccSeg 38 (range 0 100 $ slow 12 $ saw) -- drums dist sum
+  ,
+  mike (["~", "~", "4"]!!)  
+  # midiN 7 -- clap
+  ,
+  degradeBy 0.05 
+  $
+  note "1*16"  
+  # midiN 7 -- hat
+  ,
+  ccDis 37 0 -- drums dist sum
+  ,
+  whenmod 5 3 (|- note 2) 
+  $
+  whenmod 3 2 (|+ note "[5|7]") 
+  $
+  someCyclesBy (1/6) (|+ note 6)
+  $
+  mike (["ds5'6by9", "~", "~"]!!)  
+  # midiN 8 -- pad
+  # legato 0.5
+]
+  # cps(185/60/4)
+
+hush
+
+-----------------------------------
+--           part three          --
+--                               --
+--  relevant note channels       --
+--      11,12,13,14              --
+--                               --
+--   61-66: kick                 --
+--   67-72: drums                --
+--   73-78: 303                  --
+--   79-84:                      --
+-----------------------------------
+
+
+let 
+  pattern = "{0@3 _ 0@3 _ 1@2}%16"
+  mike x = note (unwrap $ fmap (x) $ pattern) 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+in
+d3
+$
+someCyclesBy (1/4) (rev)
+$
+whenmod 26 21 (linger (1/16))
+$ 
+stack [ 
+  -- mike (["0", "~"]!!)  
+  -- # midiN 11 -- kick
+  -- ,
+  -- sometimes (|+ n (choose[1,2,5]))
+  -- $
+  -- n (scale "hexAeolian" "-12!16")
+  -- # midiN 13 -- 303
+  -- ,
+  -- ccDis 73 105 -- 303 cutoff (90-120)
+  -- ,
+  -- whenmod 16 11 (|+ ccv 100)
+  -- $
+  -- ccDis 61 0 -- kick dist
+  -- ,
+  -- whenmod 8 6 (|- ccv 10)
+  -- $
+  -- ccDis 62 68 -- kick transpose
+  -- ,
+  -- mike (["~", "1"]!!)  
+  -- # midiN 11 -- snare
+  -- ,
+  sometimes (|+ n (irand 15))
+  $
+  n "1!16"
+  # midiN 12 -- particles
+  -- , 
+  -- whenmod 16 10 (|+ ccv 45)
+  -- $
+  -- ccDis 67 70 -- particles transpose
+]
+  # cps(135/60/4)
+
+hush
+
+-}
+
+-----------------------------------
+--           intermission        --
+--                               --
+--  relevant note channels       --
+--      15,16                    --
+--                               --
+--   85-90: bass                 --
+--   91-96: piano                --
+-----------------------------------
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+in
+d4
+$
+somecyclesBy (1/4) (bite 4 ("[3..0]"))
+$
+somecyclesBy (1/4) (brak)
+$
+someCyclesBy (1/3) (|+ n (choose[12,24]))
+$
+stack [ 
+  (|- n 24)
+  $
+  n (scale "wholetone" "[0 3 9 6 0 1 6 3] / 2")
+  # midiN 15 -- bass
+  ,
+  (|+ n (choose[0,7,12,19]))
+  $
+  n (scale "wholetone" "[[0,3,6,9] [0,1,3,6]]/ 2")
+  # midiN 16 -- cmi
+  # legato 0.25
+  ,
+  sometimesBy (1/8) (|+ val 10)
+  $
+  ccDis 92 2 -- delaytime
+]
+  # cps(85/60/4)
+
+hush
