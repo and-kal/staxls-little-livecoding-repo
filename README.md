@@ -2,11 +2,10 @@
 
 ---
 
-1̶6̶.0̶1̶.2̶0̶2̶4̶
-L̶i̶v̶e̶ s̶e̶t̶ w̶i̶t̶h̶ w̶/ S̶o̶l̶ S̶a̶r̶r̶a̶t̶e̶a̶ a̶t̶ H̶i̶t̶n̶e̶s̶s̶ C̶l̶u̶b̶ ↩ postponed
+2̵7̵.̵0̵1̵.̵2̵0̵2̵4̵
+L̵i̵v̵e̵ ̵s̵e̵t̵ ̵a̵t̵ ̵[G̵I̵F̵G̵R̵O̵N̵D̵,̵ ̵T̵i̵l̵b̵u̵r̵g̵](http://gifgrond.nl/) ̵w̵/̵ ̵D̵J̵ ̵R̵o̵s̵a̵,̵ ̵M̵o̵n̵t̵a̵g̵n̵e̵ ̵R̵o̵u̵g̵e̵ ̵a̵n̵d̵ ̵V̵i̵v̵e̵ ̵l̵a̵ ̵P̵o̵p̵ ↩ postponed
 
-27.01.2024
-Live set at [GIFGROND, Tilburg](http://gifgrond.nl/) w/ DJ Rosa, Montagne Rouge and Vive la Pop
+25.02.2024: [Fim de Emissão #34](https://www.facebook.com/events/1576115033210332) w/ [Sal Grosso](https://combustaolenta.bandcamp.com/album/love-is-fine), [Edvina Fahlqvist](https://edvinafahlqvist.bandcamp.com/), [eemitu](https://soundcloud.com/eemitu) an [Rita Silva](https://ritasilva.bandcamp.com/)
 
 𝑠̥̊⃝𝑒̥̊⃝𝑒̥̊⃝ 𝑦̥̊⃝𝑜̥̊⃝𝑢̥̊⃝ 𝑡̥̊⃝ℎ̥̊⃝𝑒̥̊⃝𝑟̥̊⃝𝑒̥̊⃝
 
