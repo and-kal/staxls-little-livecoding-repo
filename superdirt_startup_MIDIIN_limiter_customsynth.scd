@@ -45,13 +45,12 @@ s.reboot { // server options are only updated on reboot
 };
 );
 
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/Staxl-sample-pack/*");
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/gig-x");
+// ~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/Staxl-sample-pack/*");
+// ~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/gig-x");
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 // [Sometimes this won't work when Ableton is already running.
 // Make sure to disable all MIDI ports in Ableton except loopMIDI.]
-
 (
 var cc;
 var osc;
@@ -78,6 +77,7 @@ if (~stopMidiToOsc != nil, {
 )
 
 // print MIDI CC and note values
+// TODO: throttle
 (
 MIDIIn.noteOn = {
 	arg chan, note, vel;

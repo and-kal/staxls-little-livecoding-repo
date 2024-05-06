@@ -24,14 +24,14 @@ $ stack [
   n "-24" # midiN 1, -- impactor
   ccDisrand1 1 40 100, -- pitch
   ccDisrand1 2 0 127, -- pan
-  ccDisrand1 3 30 90, -- vol
+  -- ccDisrand1 3 30 90, -- vol
   ccDisrand1 4 0 127, -- reverse
   ccDisrand1 5 0 127, -- delay
   ccDisrand1 6 0 127, -- delaymode
   ccSeg 7 (range 80 30 $ slow 32 $ sine), -- attack
   ccSeg 8 (range 100 120 $ slow 32 $ sine) -- decay
   , 
-  n "[-24,-23,-22]" # midiN 2 # legato 0.125, -- kick+perc
+  n "[-24,-23,-22,-21]" # midiN 2 # legato 0.125, -- kick+perc
   ccDis 9 ("[20|40|60|90]"), -- perc release
   ccSeg 10 (range 60 120 $ perlin) -- perc detune
 ]
@@ -60,28 +60,30 @@ let
 in
 d1
 $
--- somecyclesBy (1/3) (rev)
--- $
--- someCyclesBy (1/4) (rev)
--- $
--- someCyclesBy (1/6) (zoom (0, 0.875))
--- $
--- whenmod 18 15 (fastSqueeze "1 0.75")
--- $
--- someCyclesBy (1/4) ((1/4) <~)
--- $
--- whenmod 18 16 ((slow 2) . (brak))
--- $
+somecyclesBy (1/3) (rev)
+$
+someCyclesBy (1/4) (rev)
+$
+someCyclesBy (1/6) (zoom (0, 0.875))
+$
+whenmod 18 15 (fastSqueeze "1 0.75")
+$
+someCyclesBy (1/4) ((1/4) <~)
+$
+whenmod 18 16 ((slow 2) . (brak))
+$
 stack 
 [
-  -- structure $ s "midi*12" # note "<0!2 -5!2 0!2 -7!2>" # midichan (3-1) -- kick
-  -- ,
-  -- mask "fffftf" $ n "2*6" # midiN 5 -- clap
-  -- ,
-  -- n "1*12" # midiN 5 -- hat
-  -- ,
-  -- n "0/12" # midiN 5 -- sfx
-  -- ,
+  structure $ s "midi*12" # note "<0!2 -5!2 0!2 -7!2>" # midichan (3-1) -- kick
+  ,
+  degradeBy 0.5 $ mask "fffftf" $ n "2*6" # midiN 5 -- swoosh
+  ,
+  mask "fffftf" $ n "3*6" # midiN 5 -- clap
+  ,
+  n "1*12" # midiN 5 -- hat
+  ,
+  n "0/12" # midiN 5 -- sfx
+  ,
   slow 4 
   $
   n (scale "yu" "<0 4 9 4 0 9>") # midiN 4 -- fm
@@ -99,8 +101,6 @@ stack
 
 hush
 
-{- BONUS
-
 -----------------------------------
 --           part two            --
 --                               --
@@ -115,46 +115,26 @@ hush
 -----------------------------------
 
 let 
-  pattern = "[0 _ 0 1 _ 0 0 2 0 _ 2 0 _ 1 0 _ ] / 2"
-  mike x = note (unwrap $ fmap (x) $ pattern) 
   midiN chan = s "midi" # midichan (chan - 1) 
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
   ccDis chan val = ccv val # ccn chan # s "midi" 
-in
+  -- | creating a polyrhythm in TidalCycles mini-notation 
+  -- | using numbers from The On-Line Encyclopedia of Integer Sequences!
+  integerSequence = [1, 1, 2, 2, 5, 4, 7, 7, 11, 9, 8, 6, 9, 4, 6] -- Number of primitive permutation groups of degree n
+  integerSequenceHalf1 = [1, 1, 2, 2, 5, 4, 7, 7] -- Number of primitive permutation groups of degree n
+  integerSequenceHalf2 = [11, 9, 8, 6, 9, 4, 6] -- Number of primitive permutation groups of degree n
+  notesPoly0 = map (\x -> "1@" ++ show (x)) integerSequence
+  notesPoly1 = map (\x -> "0@" ++ show (x)) integerSequenceHalf2
+  rhythmDivider = (*) (maximum integerSequence) 3
+  integerRhythm0 = parseBP_E("{" ++ (unwords $ notesPoly0) ++ "}%" ++ show (rhythmDivider))
+  integerRhythm1 = parseBP_E("{" ++ (unwords $ notesPoly1) ++ "}%" ++ show (rhythmDivider))
+  in
 d2
 $
-someCyclesBy (1/8) (slow "4 0.5")
-$
-someCyclesBy (1/4) (rev)
-$ 
-stack [ 
-  mike (["2", "~", "~"]!!)  
-  # midiN 7 -- kick
+stack [
+  n integerRhythm0 # midiN 7 
   ,
-  mike (["~", "3*4", "~"]!!)  
-  # midiN 7 -- snare
-  ,
-  ccSeg 38 (range 0 100 $ slow 12 $ saw) -- drums dist sum
-  ,
-  mike (["~", "~", "4"]!!)  
-  # midiN 7 -- clap
-  ,
-  degradeBy 0.05 
-  $
-  note "1*16"  
-  # midiN 7 -- hat
-  ,
-  ccDis 37 0 -- drums dist sum
-  ,
-  whenmod 5 3 (|- note 2) 
-  $
-  whenmod 3 2 (|+ note "[5|7]") 
-  $
-  someCyclesBy (1/6) (|+ note 6)
-  $
-  mike (["ds5'6by9", "~", "~"]!!)  
-  # midiN 8 -- pad
-  # legato 0.5
+  n integerRhythm1 # midiN 7
 ]
   # cps(185/60/4)
 
@@ -166,15 +146,15 @@ hush
 --  relevant note channels       --
 --      11,12,13,14              --
 --                               --
---   61-66: kick                 --
---   67-72: drums                --
---   73-78: 303                  --
+--   61-66:                      --
+--   67-72:                      --
+--   73-78:                      --
 --   79-84:                      --
 -----------------------------------
 
 
 let 
-  pattern = "{0@3 _ 0@3 _ 1@2}%16"
+  pattern = "{0@5 1@3 0@4 0@7 1@3 0@7}%16"
   mike x = note (unwrap $ fmap (x) $ pattern) 
   midiN chan = s "midi" # midichan (chan - 1) 
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
@@ -182,46 +162,24 @@ let
 in
 d3
 $
-someCyclesBy (1/4) (rev)
+every 4 ((rev) . (fast 1.5))
 $
-whenmod 26 21 (linger (1/16))
+whenmod 24 21 (linger (1/12))
+$ 
+whenmod 26 22 (fast (range 0.25 1.5 $ slow 4 $ saw))
 $ 
 stack [ 
-  -- mike (["0", "~"]!!)  
-  -- # midiN 11 -- kick
-  -- ,
-  -- sometimes (|+ n (choose[1,2,5]))
-  -- $
-  -- n (scale "hexAeolian" "-12!16")
-  -- # midiN 13 -- 303
-  -- ,
-  -- ccDis 73 105 -- 303 cutoff (90-120)
-  -- ,
-  -- whenmod 16 11 (|+ ccv 100)
-  -- $
-  -- ccDis 61 0 -- kick dist
-  -- ,
-  -- whenmod 8 6 (|- ccv 10)
-  -- $
-  -- ccDis 62 68 -- kick transpose
-  -- ,
-  -- mike (["~", "1"]!!)  
-  -- # midiN 11 -- snare
-  -- ,
-  sometimes (|+ n (irand 15))
+  mike (["0", "1", "~"]!!) # midiN 11 -- kick+snare
+  ,
+  every 3 (|+ note (choose[12,24,36])) $ slow 2 $ note "-24 ~" # midiN 12 -- growl
+  ,
+  somecyclesBy (1/3) (|+ note (choose[5,7,9]))
   $
-  n "1!16"
-  # midiN 12 -- particles
-  -- , 
-  -- whenmod 16 10 (|+ ccv 45)
-  -- $
-  -- ccDis 67 70 -- particles transpose
+  mike (["0*8", "0*8", "~"]!!) # midiN 13 -- hat
 ]
-  # cps(135/60/4)
+  # cps(97/60/2)
 
 hush
-
--}
 
 -----------------------------------
 --           intermission        --
