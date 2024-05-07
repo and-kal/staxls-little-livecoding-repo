@@ -45,8 +45,8 @@ s.reboot { // server options are only updated on reboot
 };
 );
 
-// ~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/Staxl-sample-pack/*");
-// ~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/gig-x");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/Staxl-sample-pack/*");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/gig-x");
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 // [Sometimes this won't work when Ableton is already running.
@@ -95,6 +95,7 @@ MIDIIn.control = { arg src, chan, num, val;
 };
 )
 
+// chaos synth
 (
 SynthDef(\gendy3, {
 	| out, sustain=1, freq=440, max, speed=1, begin=0, end=1, pan, accelerate, offset, volume, ampdist, durdist, cfilt = 20000|
@@ -105,6 +106,29 @@ SynthDef(\gendy3, {
 	OffsetOut.ar(out,DirtPan.ar(osc, ~dirt.numChannels, pan, env))
 }).add;
 )
+
+// play new WIP track
+
+(
+~buf = Buffer.readChannel(
+	s,
+	thisProcess.nowExecutingPath.dirname +/+ "gig-x" +/+ "Basada_en_un_motete_de_Guerrero.prefinal.wav",
+	channels: [0,1]
+);
+)
+
+(
+SynthDef(\playStereo, {
+	arg outBus = 0, buf, rate = 1, loop = 0, amp = 1;
+	var sig = PlayBuf.ar(2, buf, rate: rate, loop: loop, doneAction: 2);
+	Out.ar(outBus, sig * amp);
+}).add;
+)
+
+x = Synth.new(\playStereo, ["buf", ~buf]);
+
+// panic
+x.free;
 
 // Evaluate the line below to stop it.
 ~stopMidiToOsc.value;
