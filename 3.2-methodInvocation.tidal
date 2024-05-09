@@ -130,6 +130,8 @@ $
 stack [
     sometimes (|+ n 4)
     $
+    whenmod 20 16 (linger (1/4))
+    $
     n "[3..0]" # midiN 6 -- breaks
     ,
     fast 4 

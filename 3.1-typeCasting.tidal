@@ -101,6 +101,9 @@ stack
 
 hush
 
+{-
+
+WIPWIPWIP
 -----------------------------------
 --           part two            --
 --                               --
@@ -135,10 +138,16 @@ stack [
   n integerRhythm0 # midiN 7 
   ,
   n integerRhythm1 # midiN 7
+  ,
+  n "<0 1 0 2>" # midiN 8 -- ^ clap
+  ,
+  n (scale "enigmatic" "<0 1 7 4 5>") # midiN 9 -- ^ digits
 ]
   # cps(185/60/4)
 
 hush
+-}
+
 
 -----------------------------------
 --           part three          --
@@ -186,25 +195,50 @@ stack [
 hush
 
 -----------------------------------
---           intermission        --
+--           part 4              --
 --                               --
 --  relevant note channels       --
 --      15,16                    --
 --                               --
---   85-90:                      --
---   91-96:                      --
+--   85-90: drums                --
+--   91-96: pad                  --
 -----------------------------------
 
 let 
+  pattern1 = "{1@6 1@9 0@5 1@7 2@5}%32"
+  pattern2 = "{1@8 0@3 1@5 1@2 0@6 2@8}%32"
   midiN chan = s "midi" # midichan (chan - 1) 
+  add val = (|+ note val)
+  mike x = note (unwrap $ fmap (x) $ pattern1) 
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
   ccDis chan val = ccv val # ccn chan # s "midi" 
 in
 d4
 $
+somecyclesBy (1/5) (bite 4 "3 0 2 1")
+$
+every 2 (rev)
+$
+whenmod 12 9 (sometimes (fast 1.5))
+$
+somecyclesBy (1/5) ((degradeBy 0.5) . (fast 2))
+$
 stack [ 
-  
+  (|- note 24) $ mike (["0", "1", "2"]!!) # midiN 15
+  ,
+  sometimes (fast 2) $ (|- note 24) $ note "3?*4" # midiN 15
+  ,
+  add ("[0|5]") $ slow 4 $ mike ([scale "minPent" "[[0,3,5]|[0,7,9]]", "~", scale "minPent" "[[1,4,5]|[-1,3,5]]"]!!) # midiN 16 
+  # legato 2
+  ,
+  ccSeg 85 (range 62 100 $ slow 16 $ sine) -- ^ kick dist
+  ,
+  whenmod 12 9 (|+ ccv 120) $ ccDis 86 0 -- ^ HF delay snare
+  ,
+  whenmod 14 12 (|+ ccv 127) $ ccDis 87 0 -- ^ clean delay snare
+  ,
+  every 4 (|+ ccv 127) $ ccDis 88 0 -- ^ snare glitchshifter
 ]
-  # cps(85/60/4)
+  # cps(89/60/2)
 
 hush
