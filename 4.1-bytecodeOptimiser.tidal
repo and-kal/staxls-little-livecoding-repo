@@ -18,16 +18,16 @@ let
 in
 d1
 $
--- someCyclesBy (1/2) ((1/8) ~>)
--- $
--- someCyclesBy (1/3) ((1/4) <~)
--- $
--- someCyclesBy (1/4) (rev)
--- $
--- someCyclesBy (1/6) (zoom (0, 0.875))
--- $
--- someCyclesBy (1/12) (zoom (0.125, 0.25))
--- $
+someCyclesBy (1/2) ((1/8) ~>)
+$
+someCyclesBy (1/3) ((1/4) <~)
+$
+someCyclesBy (1/4) (rev)
+$
+someCyclesBy (1/6) (zoom (0, 0.875))
+$
+someCyclesBy (1/12) (zoom (0.125, 0.25))
+$
 stack 
 [
   someCyclesBy (1/3) (|+ n "[5]")
@@ -46,26 +46,26 @@ stack
   degradeBy((1/3))
   $ (|- n 24)
   $ n "[2|3]*16" # midiN 2 -- ^ hect
-  ,
-  (|+ n (negate 24))
-  $ n "<~!4 4*2>" # midiN 2 -- ^ graineffclap
-  ,
-  always (|+ n (choose[0,3..12]))
-  $ n "-24?*8" # midiN 3 -- ^ gated 
-  ,
-  (|+ n (negate 24))
-  $
-  superimpose (|+ n "[+12, +24, +36, -7]")
-  $
-  n (scale "marva" "[0 4 5 7 3 2]/6") # midiN 4 # legato 2 -- ^ bass 
-  ,
-  ccDis 13 "<15!6 90!2>" -- ^ rev
-  ,
-  ccDis 25 "<0!7 64!2>" -- ^ delay on/off
-  , 
-  ccDis 26 "<0!7 [43]!2>" -- ^ delay time
-  , 
-  ccDis 27 "<127!2 0!6>" -- ^ grain d/w
+  -- ,
+  -- (|+ n (negate 24))
+  -- $ n "<~!4 4*2>" # midiN 2 -- ^ graineffclap
+  -- ,
+  -- always (|+ n (choose[0,3..12]))
+  -- $ n "-24?*8" # midiN 3 -- ^ gated 
+  -- ,
+  -- (|+ n (negate 24))
+  -- $
+  -- superimpose (|+ n "[+12, +24, +36, -7]")
+  -- $
+  -- n (scale "marva" "[0 4 5 7 3 2]/6") # midiN 4 # legato 2 -- ^ bass 
+  -- ,
+  -- ccDis 13 "<15!6 90!2>" -- ^ rev
+  -- ,
+  -- ccDis 25 "<0!7 64!2>" -- ^ delay on/off
+  -- , 
+  -- ccDis 26 "<0!7 [43]!2>" -- ^ delay time
+  -- , 
+  -- ccDis 27 "<127!2 0!6>" -- ^ grain d/w
 ]
   # cps(187/60/4)
 
@@ -90,14 +90,14 @@ let
   ccDis chan val = ccv val # ccn chan # s "midi" 
 in
 d2
-$
-somecyclesBy (1/4) (rev)
-$
-whenmod 20 16 (fast 2)
-$
-somecyclesBy (1/8) ((degradeBy (0.75)) . (fast 2))
-$
-whenmod 20 18 (slow "4 0.5 4 0.5")
+-- $
+-- somecyclesBy (1/4) (rev)
+-- $
+-- whenmod 20 16 (fast 2)
+-- $
+-- somecyclesBy (1/8) ((degradeBy (0.75)) . (fast 2))
+-- $
+-- whenmod 20 18 (slow "4 0.5 4 0.5")
 $
 stack [ 
   (|- n 24) $ 
@@ -106,31 +106,31 @@ stack [
   , n "~ 2" -- ^ clap
   , somecyclesBy (1/4) (fast "[[0.5 2]|2]") $ n "3*16" -- ^ hat
   ] # midiN 5 
-  , 
-  sometimesBy (1/3) (+ n "[2|4|6]")
-  $
-  whenmod 8 4 ((slow 2) . (# legato 2))
-  $
-  slow 2
-  $
-  (0.125 ~>) $ n (scale "leadingWhole" "~ [0,3,6] _ [0,1,4]") 
-  # midiN 6 -- ^ sampler 
-  , 
-  sometimesBy (1/4) (|- n "[2|7]") $
-  n "~ [7 ~ 7 _ _ 7 _ _]" -- ^ distkick
-  # midiN 7
-  ,
-  whenmod 11 9 (|+ ccv 100)
-  $
-  ccDis 37 0 -- ^ 808 rdx
-  ,
-  whenmod 13 12 (|+ ccv 127)
-  $
-  ccDis 38 0 -- ^ hats grain 
-  ,
-  whenmod 17 15 (|+ ccv 127)
-  $
-  ccDis 49 0 -- ^ kick glitchshift
+  -- , 
+  -- sometimesBy (1/3) (+ n "[2|4|6]")
+  -- $
+  -- whenmod 8 4 ((slow 2) . (# legato 2))
+  -- $
+  -- slow 2
+  -- $
+  -- (0.125 ~>) $ n (scale "leadingWhole" "~ [0,3,6] _ [0,1,4]") 
+  -- # midiN 6 -- ^ sampler 
+  -- , 
+  -- sometimesBy (1/4) (|- n "[2|7]") $
+  -- n "~ [7 ~ 7 _ _ 7 _ _]" -- ^ distkick
+  -- # midiN 7
+  -- ,
+  -- whenmod 11 9 (|+ ccv 100)
+  -- $
+  -- ccDis 37 0 -- ^ 808 rdx
+  -- ,
+  -- whenmod 13 12 (|+ ccv 127)
+  -- $
+  -- ccDis 38 0 -- ^ hats grain 
+  -- ,
+  -- whenmod 17 15 (|+ ccv 127)
+  -- $
+  -- ccDis 49 0 -- ^ kick glitchshift
 ]
   # cps(97/60/4)
 
@@ -152,18 +152,18 @@ let
   pattern = "{0@2 0@3 1@4 0@5 1@4 0@6 2@2}%16"
   midiN chan = s "midi" # midichan (chan - 1) 
 in 
-d3
-$ somecyclesBy (1/4) (rev)
+d2
+-- $ somecyclesBy (1/4) (rev)
 -- $ whenmod 14 11 (linger (choose[(1/16),(1/8),(1/4)]))
 $ stack [
     someCyclesBy (1/8) (|+ n "[7|-7]")
     $ n (unwrap $ fmap (["c3","d3","~"]!!) $ pattern) # s "midi" # midiN 9 -- ^ kick
-    , ccv "<120 0!7>" # ccn 67 # s "midi" -- ^ dist
-    , ccv "<42!8 120>" # ccn 68 # s "midi" -- ^ transpose (default: 42)
-    , n (unwrap $ fmap (["~","[[c5 ~]*16, [~ c4]*16]","~"]!!) $ pattern) # s "midi" # midiN 10 -- ^ hihat
-    , n (unwrap $ fmap (["0","0","0*16"]!!) $ pattern) # s "midi" # midiN 11 -- ^ snare
-    , somecyclesBy (1/4) (|+ n "[-2|12]")
-    $ n (scale "hirajoshi" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) # s "midi" # midiN 12 -- ^ plaits
+    -- , ccv "<120 0!7>" # ccn 67 # s "midi" -- ^ dist
+    -- , ccv "<42!8 120>" # ccn 68 # s "midi" -- ^ transpose (default: 42)
+    -- , n (unwrap $ fmap (["~","[[c5 ~]*16, [~ c4]*16]","~"]!!) $ pattern) # s "midi" # midiN 10 -- ^ hihat
+    -- , n (unwrap $ fmap (["0","0","0*16"]!!) $ pattern) # s "midi" # midiN 11 -- ^ snare
+    -- , somecyclesBy (1/4) (|+ n "[-2|12]") $ 
+    n (scale "hirajoshi" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) # s "midi" # midiN 12 -- ^ plaits
     , ccv (segment 100 $ range 30 80 $ slow 6 $ sine) # ccn 79 # s "midi" -- ^ harmonics
     , ccv (segment 100 $ range 0 100 $ slow 12 $ sine) # ccn 80 # s "midi" -- ^ timbre
     , ccv (segment 100 $ range 30 60 $ slow 6 $ sine) # ccn 81 # s "midi" -- ^ morph
@@ -192,22 +192,22 @@ d4
 $ whenmod 32 28 ((ply 6) . (slow 2)) 
 -- $ always ((#end 0.1) . (# legato 0.2))
 $ stack [
-    sometimes (|+ n 6) $ n (scale "messiaen2" (unwrap $ fmap(["c'add9", "e'maj9", "c'maj9", "f'maj9"]!!) $ pattern)) 
-    # s "midi" # midiN 13 -- ^ xylo
-    ,
-    ccv (segment 100 $ range 0 120 $ slow 2 $ perlin) # ccn 83 # s "midi" -- ^ osc1
-    , 
-    ccv (segment 100 $ range 1 126 $ slow 2 $ cosine) # ccn 84 # s "midi" -- ^ panning 
-    , 
-    ccv (segment 100 $ range 1 126 $ slow 2 $ sine) # ccn 85 # s "midi" -- ^ panning 
-    ,
-    ccv (segment 100 $ range 30 120 $ perlin) # ccn 86 # s "midi" -- ^ osc2
-    ,
-    someCyclesBy (1/8) (+| n (run "[8|16|32]")) $
-    n (unwrap $ fmap(["c3", "e3", "~", "~"]!!) $ pattern) # s "midi" # midiN 14 -- ^ kick
-    ,
-    somecyclesBy(1/8) (plyWith 3 (|+ n 2)) $ 
-    n (scale "messiaen2" (unwrap $ fmap(["~", "~", "~", "0"]!!) $ pattern)) # s "midi" # midiN 15 -- ^ clap
+    -- sometimes (|+ n 6) $ n (scale "messiaen2" (unwrap $ fmap(["c'add9", "e'maj9", "c'maj9", "f'maj9"]!!) $ pattern)) 
+    -- # s "midi" # midiN 13 -- ^ xylo
+    -- ,
+    -- ccv (segment 100 $ range 0 120 $ slow 2 $ perlin) # ccn 83 # s "midi" -- ^ osc1
+    -- , 
+    -- ccv (segment 100 $ range 1 126 $ slow 2 $ cosine) # ccn 84 # s "midi" -- ^ panning 
+    -- , 
+    -- ccv (segment 100 $ range 1 126 $ slow 2 $ sine) # ccn 85 # s "midi" -- ^ panning 
+    -- ,
+    -- ccv (segment 100 $ range 30 120 $ perlin) # ccn 86 # s "midi" -- ^ osc2
+    -- ,
+    -- someCyclesBy (1/8) (+| n (run "[8|16|32]")) $
+    -- n (unwrap $ fmap(["c3", "e3", "~", "~"]!!) $ pattern) # s "midi" # midiN 14 -- ^ kick
+    -- ,
+    -- somecyclesBy(1/8) (plyWith 3 (|+ n 2)) $ 
+    -- n (scale "messiaen2" (unwrap $ fmap(["~", "~", "~", "0"]!!) $ pattern)) # s "midi" # midiN 15 -- ^ clap
     ,
     plyWith 4 (|- n 2) $ 
     n (scale "messiaen2" (unwrap $ fmap(["0", "0", "0", "0"]!!) $ pattern)) # s "midi" # midiN 16 -- ^ hihat
