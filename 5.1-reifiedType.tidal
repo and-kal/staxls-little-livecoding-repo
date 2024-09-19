@@ -1,0 +1,112 @@
+
+-------------------------------------------------
+--           part one                          --
+--                                             --
+--   relevant note channels                    --
+--      1,2,3,4                                --
+--                                             --
+--     relevant CC channels                    --
+--     1-24:                                   --
+-- inspired by Mike Hodnick once again         --  
+-- https://www.youtube.com/watch?v=E_8lIIg2iJQ --
+-------------------------------------------------
+
+-- TODO: swap out bass (chan 4)
+
+let 
+  pattern = (
+    -- ((segment 1 $ choose[(1/16),(1/8)..(1/1)]) ~>) $ 
+    "{1 0 1 0 1 1 1 1 0 0 0 0 1 0 0 }%8") 
+    -- :: Pattern Bool
+  rest = 
+    -- (slow "<1 2 3 5 4>" $ 
+    "{1!6 0}%8"
+    -- ) :: Pattern Bool
+  hatsMask = (sometimes rev) $ "0 1 0 1"
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccDisrand1 chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d1
+$
+whenmod 50 45 (slow "[3!3 0.5]")
+$
+whenmod 65 50 ((slow "6") . (ply 8))
+$
+whenmod 40 35 ((linger (1/12)) . (0.5 ~>))
+$
+mask rest
+$
+while "[1 0!7]" (fast (3/4))
+$
+stack [
+    mask pattern $ struct "1*8" $ note 0 # midiN 1 -- ^ kick
+    -- , whenmod 30 25 (|+ ccv 127) $ ccDis 2 0 -- ^ kick ultracompression
+    , ccv "<20!4 100>" # ccn 3 # s "midi" -- kick OD transients
+    , mask (inv pattern) $ struct "1*8" $ note 1 # midiN 1 -- ^ snare
+    , sometimes (rev) $ struct "1*8" $ note "[2 3]" # midiN 1 -- ^ hats
+    , degradeBy 0.75 $ mask hatsMask $ struct "1*4" $ note 4 # midiN 1 -- ^ fm
+    , ccDisrand1 1 60 100
+    , degradeBy 0.75 $ mask (inv hatsMask) $ struct "1*4" $ note 5 # midiN 1 -- ^ blib (CZ)
+    , degradeBy 0.5 $ slow 2 $ note "[6|7]" # midiN 1 -- ^ Murakami 
+    , slow 2 $ n (scale "minPent" "[0|2] [3|4] [3|5] [4|5]") # midiN "[2 3]" -- ^ jupiter + diva
+    , n (scale "minPent" "0..7") # midiN 4 -- ^ bass  
+]
+  # cps(158/60/2)
+
+  hush
+
+-------------------------------------------------
+--           part two                          --
+--                                             --
+--   relevant note channels                    --
+--      5,6,7,8                                --
+--                                             --
+--     relevant CC channels                    --
+--     25-48:                                  --
+-------------------------------------------------
+
+-------------------------------------------------
+--           part three                        --
+--                                             --
+--   relevant note channels                    --
+--      9,10,11,12                             --
+--                                             --
+--     relevant CC channels                    --
+--     49-72:                                  --
+-------------------------------------------------
+
+-------------------------------------------------
+--           part four                         --
+--                                             --
+--   relevant note channels                    --
+--      13,14,15,16                            --
+--                                             --
+--     relevant CC channels                    --
+--     73-96:                                  --
+-------------------------------------------------
+
+-------------------------------------------------
+--           part five                         --
+--                                             --
+--   relevant note channels                    --
+--      1,2,3,4                                --
+--                                             --
+--     relevant CC channels                    --
+--     97-112:                                 --
+-------------------------------------------------
+
+---------------------------------------------------------------
+--                         part six                          --
+--                                                           --
+--                 relevant note channels                    --
+--                    5,6,7,8                                --
+--                                                           --
+--                   relevant CC channels                    --
+--                   113-127:                                --
+-- keep in mind, that #123 is reserved and can't be assigned --
+---------------------------------------------------------------
