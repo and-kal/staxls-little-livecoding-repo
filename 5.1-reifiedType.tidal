@@ -70,6 +70,45 @@ stack [
 --     25-48:                                  --
 -------------------------------------------------
 
+-- TODO: introduce more variation
+-- + something melodic
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccDisrand1 chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d1
+$
+whenmod 36 33 (zoom (1/4, 4)) 
+$
+whenmod 12 9 (fast "<1.25*2 1.5*2>")
+$
+stack [
+  somecyclesBy (1/6) (rev)
+  $ 
+  n (fit 1 [0..3] "<0 [4 3] 1 [4 2 2]>*4") # midiN 5 -- kick + FX
+  , 
+  whenmod 6 8 (fast (3/4))
+  $ 
+  every 3 rev $ n "[0!3 ~ 2!4]*2" # midiN 6 -- ^ hat
+  ,
+  whenmod 32 16 (|+ ccv 90) -- ^ add clicks half of the time
+  $
+  ccn 31 # ccv 0 # s "midi" 
+  , ("[1|0]" <~) -- ^ introducing another randomness geenrator here, otherwise the two `choose` will always be in sync
+  $
+  ccn 27 # ccv (cycleChoose [0, 105]) # s "midi" -- ^ grain pitch
+  , ccn 30 # ccv (cycleChoose [30, 120]) # s "midi" -- ^ grain freq
+]
+# cps (165/60/4)
+
+hush
+
 -------------------------------------------------
 --           part three                        --
 --                                             --
