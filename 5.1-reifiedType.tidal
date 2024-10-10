@@ -169,6 +169,31 @@ hush
 --     73-96:                                  --
 -------------------------------------------------
 
+let 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccDisrand1 chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+  basePat = "{0 1!4 1!3 0 0/2 1 ~ 0/2 0 1!5 ~}%16"
+in
+d4 
+$
+whenmod 18 16 (fast "1.5 1 1.5") 
+$
+stack [
+  sometimesBy (1/16) (|+ note "[4|5]") $ struct basePat $ note (-7) # midiN 13 -- ^ synth
+  ,
+  struct (inv basePat) $ note (0) # midiN 14 # legato 2 -- ^ kick
+  , ccv "<0!4 40!4 115!4 127!4>" # ccn "79" # s "midi" -- ^ kick distort
+  , n "0 ~!3 [-14 -13] ~!3" # midiN 15
+]
+# cps (175/60/4)
+
+hush
+
 -------------------------------------------------
 --           part five                         --
 --                                             --
