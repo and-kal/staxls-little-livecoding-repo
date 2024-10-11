@@ -177,18 +177,32 @@ let
     ccn chan 
     # ccv (segment 50 (range val1 val2 $ rand)) 
     # s "midi" -- ^ this one is for sending one random value per cycle
-  basePat = "{0 1!4 1!3 0 0/2 1 ~ 0/2 0 1!5 ~}%16"
+  basePat = 
+    -- stretch -- ^ degrades everything
+    "{0 1!4 1!3 0 0/2 1 ~ 0/2 0 1!5 ~}%16"
+  var1 = whenmod 26 21 ((plyWith 16 (|+ n 1)) . (slow "16 8")) 
+  var2 = whenmod 18 16 (fast "1.5 1 1.5") 
+  var3 = every 8 (rev) 
+  var4 = every 7 (zoom (0.25, 0.75)) 
 in
 d4 
 $
-whenmod 18 16 (fast "1.5 1 1.5") 
-$
-stack [
-  sometimesBy (1/16) (|+ note "[4|5]") $ struct basePat $ note (-7) # midiN 13 -- ^ synth
+seqPLoop [
+  -- pat 1 --
+  (0,5, stack [ var1 $ var2 $ var3 $ (|- n 7) $ struct basePat $ n (scale "minPent" "[1,3,5,7,9]") # midiN 16 -- ^ saw
+  , ccv "<0!3 127!2>" # ccn "91" # s "midi" -- ^ saw redux
+  ])
   ,
-  struct (inv basePat) $ note (0) # midiN 14 # legato 2 -- ^ kick
-  , ccv "<0!4 40!4 115!4 127!4>" # ccn "79" # s "midi" -- ^ kick distort
-  , n "0 ~!3 [-14 -13] ~!3" # midiN 15
+  -- pat 2 --
+  (6,64, var2 $ var3 $ var4 $ stack [
+    var1 $ sometimesBy (1/16) (|+ n "[4|5]") $ struct basePat $ n (-7) # midiN 13 -- ^ synth
+    ,
+    var1 $ struct (inv basePat) $ n (0) # midiN 14 # legato 2 -- ^ kick
+    , ccv "<0!4 40!4 115!4 127!4>" # ccn "[79,80]" # s "midi" -- ^ kick distort
+    , ccSeg "81" (slow 12 $ range 50 127 $ saw) # s "midi" -- ^ kick tonality
+    , 
+    var1 $ n "0 ~!3 [-14 -13] ~!3" # midiN 15 -- ^ metal
+  ])
 ]
 # cps (175/60/4)
 
