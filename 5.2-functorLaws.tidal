@@ -1,0 +1,40 @@
+-------------------------------------------------
+--           part five                         --
+--    rather calm                              --
+--                                             --
+--   relevant note channels                    --
+--      1,2,3,4                                --
+--                                             --
+--     relevant CC channels                    --
+--     97-112:                                 --
+-------------------------------------------------
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  cc chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d5 $ stack [
+    note "[0|3|-1]" # midiN 1 # legato 2 -- ^ 808 shards
+    ,
+    every 8 (|+ note 7) $ every 12 (|- note 19) $ note (overlay "[0,4,7,9,14]" ("[4,9]" |+ 12)) # midiN 2 # legato 2 -- ^ pad
+    ,
+    degrade $ sometimes (fast "[2 4]") $ (|- note 12) $ scramble 8 $ note "[0..7]" # midiN 3  -- ^ miniglitches
+    , 
+    cc 105 (slow 12 $ range 0 100 $ sine) -- ^ panning
+    , 
+    cc 106 (range 70 127 $ rand) -- ^ pitch
+]
+# cps (75/60/4)
+
+hush
+
+---------------------------------------------------------------
+--                         part six                          --
+--                                                           --
+--                 relevant note channels                    --
+--                    5,6,7,8                                --
+--                                                           --
+--                   relevant CC channels                    --
+--                   113-127:                                --
+-- keep in mind, that #123 is reserved and can't be assigned --
+---------------------------------------------------------------
