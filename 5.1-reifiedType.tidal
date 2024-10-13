@@ -16,11 +16,11 @@
 let 
   pattern = (
     -- ((segment 1 $ choose[(1/16),(1/8)..(1/1)]) ~>) $ 
-    "{1 0 1 0 1 1 1 1 0 0 0 0 1 0 0 }%8") 
+    "{1 0 1 0 1 1 1 1 0 0 0 0 1 0 0 }%16") 
     -- :: Pattern Bool
   rest = 
-    -- (slow "<1 2 3 5 4>" $ 
-    "{1!6 0}%8"
+    -- (slow "<1..5>" $ 
+    "{1!7 0}%8"
     -- ) :: Pattern Bool
   hatsMask = (sometimes rev) $ "0 1 0 1"
   midiN chan = s "midi" # midichan (chan - 1) 
@@ -30,18 +30,15 @@ let
     # ccv (segment 50 (range val1 val2 $ rand)) 
     # s "midi" -- ^ this one is for sending one random value per cycle
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  var1 = whenmod 50 45 (slow "[3!3 0.5]")
+  var2 = whenmod 65 50 ((slow "6") . (ply 8))
+  var3 = whenmod 40 35 ((linger (1/12)) . (0.5 ~>))
+  var4 = whenmod 10 12 (fast (3/4))
 in
-d1
-$
-whenmod 50 45 (slow "[3!3 0.5]")
-$
-whenmod 65 50 ((slow "6") . (ply 8))
-$
-whenmod 40 35 ((linger (1/12)) . (0.5 ~>))
+d1 
+-- $ var1 $ var2 $ var3 $ var4
 $
 mask rest
-$
-while "[1 0!7]" (fast (3/4))
 $
 stack [
     mask pattern $ struct "1*8" $ note 0 # midiN 1 -- ^ kick
@@ -53,8 +50,8 @@ stack [
     , ccDisrand1 1 60 100
     , degradeBy 0.75 $ mask (inv hatsMask) $ struct "1*4" $ note 5 # midiN 1 -- ^ blib (CZ)
     , degradeBy 0.5 $ slow 2 $ note "[6|7]" # midiN 1 -- ^ Murakami 
-    , slow 2 $ n (scale "minPent" "[0|2] [3|4] [3|5] [4|5]") # midiN "[2 3]" -- ^ jupiter + diva
-    -- , n (scale "minPent" "0..7") # midiN 4 -- ^ bass  
+    , slow 2 $ n (scale "chinese" "[0|2] [3|4] [3|5] [4|5]") # midiN "[2 3]" -- ^ jupiter + diva
+    , slow 6 $ n 0 # midiN 4 # legato 2 -- ^ bass  
 ]
   # cps(158/60/2)
 
