@@ -2,8 +2,6 @@
 -------------------------------------------------
 --           part one                          --
 --                                             --
---    rather jolly                             --
---                                             --
 --   relevant note channels                    --
 --      1,2,3,4                                --
 --                                             --
@@ -13,7 +11,17 @@
 -- https://www.youtube.com/watch?v=E_8lIIg2iJQ --
 -------------------------------------------------
 
--- TODO: swap out bass (chan 4)
+let
+  midiN chan = s "midi" # midichan (chan - 1) 
+in d1 $ 
+stack [
+  every 6 (|+ n 2) $ slow 3 $ n (scale "chinese" "[21,22,24,27]" - 36) # midiN 4 # legato 2 -- ^ pad + grains  
+  , ccv 120 # ccn 19 # s "midi" -- ^ reverb d/w 
+  , ccv 100 # ccn 20 # s "midi" -- ^ reverb shimmer
+  , ccv (segment 50 $ slow 5 $ range 25 50 $ tri) # ccn 21 # s "midi" -- ^ grain shimmer
+] # cps(158/60/4)
+
+hush
 
 let 
   pattern = (
@@ -37,23 +45,24 @@ let
   var3 = whenmod 40 35 ((linger (1/12)) . (0.5 ~>))
   var4 = whenmod 10 12 (fast (3/4))
 in
-d1 
--- $ var1 $ var2 $ var3 $ var4
+d1
+$ var4 
+-- $ var3 $ var2 $ var1
 $
 mask rest
 $
 stack [
     mask pattern $ struct "1*8" $ note 0 # midiN 1 -- ^ kick
-    , whenmod 8 5 (|+ ccv 127) $ ccDis 2 0 -- ^ kick ultracompression
-    , ccv "<20!4 100>" # ccn 3 # s "midi" -- kick OD transients
-    , mask (inv pattern) $ struct "1*8" $ note 1 # midiN 1 -- ^ snare
-    , sometimes (rev) $ struct "1*8" $ note "[2 3]" # midiN 1 -- ^ hats
+    , whenmod 11 9 (|+ ccv 127) $ ccDis 2 0 -- ^ kick ultracompression
+    , ccDisrand1 3 60 127 -- ^ kick ultracompression
+    -- , ccv "<20!7 100>" # ccn 3 # s "midi" -- kick OD transients
+    -- , mask (inv pattern) $ struct "1*8" $ note 1 # midiN 1 -- ^ snare
+    -- , sometimes (rev) $ struct "1*8" $ note "[2 3]" # midiN 1 -- ^ hats
     , degradeBy 0.75 $ mask hatsMask $ struct "1*4" $ note 4 # midiN 1 -- ^ fm
-    , ccDisrand1 1 60 100
-    , degradeBy 0.75 $ mask (inv hatsMask) $ struct "1*4" $ note 5 # midiN 1 -- ^ blib (CZ)
-    , degradeBy 0.5 $ slow 2 $ note "[6|7]" # midiN 1 -- ^ Murakami 
-    , slow 2 $ n (scale "chinese" "[0|2] [3|4] [3|5] [4|5]") # midiN "[2 3]" -- ^ jupiter + diva
-    , slow 6 $ n 0 # midiN 4 # legato 2 -- ^ bass  
+    -- , ccDisrand1 1 60 100
+    -- , degradeBy 0.75 $ mask (inv hatsMask) $ struct "1*4" $ note 5 # midiN 1 -- ^ blib (CZ)
+    -- , degradeBy 0.75 $ slow 2 $ note "[6|7]" # midiN 1 -- ^ Murakami 
+    -- , slow 2 $ n (scale "chinese" "[0|2] [3|4] [3|5] [4|5]") # midiN "[2 3]" -- ^ jupiter + diva
 ]
   # cps(158/60/2)
 
@@ -69,9 +78,6 @@ hush
 --     25-48:                                  --
 -------------------------------------------------
 
--- TODO: introduce more variation
--- + something melodic
-
 let 
   midiN chan = s "midi" # midichan (chan - 1) 
   ccDis chan val = ccv val # ccn chan # s "midi" 
@@ -81,39 +87,42 @@ let
     # s "midi" -- ^ this one is for sending one random value per cycle
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
   basePat = "<0 [1 2] 2 [1 2 0] 1 2 [2 1]>*4"
+  var1 = whenmod 36 33 (zoom (1/4, 4)) 
+  var2 = whenmod 12 9 (fast "<1.25 1.5>")
+  var3 = whenmod 50 45 ((slow 8) . (ply 8))
 in
 d2
 $
-whenmod 36 33 (zoom (1/4, 4)) 
-$
-whenmod 12 9 (fast "<1.25 1.5>")
-$
-whenmod 50 45 ((slow 8) . (ply 8))
-$
+-- var1
+-- $
+-- var2
+-- $
+-- var3
+-- $
 somecyclesBy (1/6) (rev)
 $ 
 stack [
-  whenmod 42 38 (degradeBy 1)
-  $
-  n (fit 1 [0..2] basePat) # midiN 5 -- 0..2=kick + FX
-  , 
+  -- whenmod 42 38 (degradeBy 1)
+  -- $
+  -- n (fit 1 [0..2] basePat) # midiN 5 -- 0..2=kick + FX
+  -- , 
   (0.5 <~) $ n "<~ 12 ~ 17>" # midiN 5 -- 12=snare
   , 
   whenmod 6 8 (fast (3/4))
   $ 
   every 3 rev $ n "[0!3 ~ 2!4]*2" # midiN 6 -- ^ hat
-  ,
-  whenmod 32 16 (|+ ccv 90) -- ^ add clicks half of the time
-  $
-  ccn 31 # ccv 0 # s "midi" 
-  , ("[1|0]" <~) -- ^ introducing another randomness generator here, otherwise the two `choose` will always be in sync
-  $
-  ccn 27 # ccv (cycleChoose [0, 105]) # s "midi" -- ^ grain pitch
-  , ccn 30 # ccv (cycleChoose [30, 120]) # s "midi" -- ^ grain freq
-  ,
-  n (scale "harmonicMajor" $ (unwrap $ fit 0 ["c'min9", "gs'min9", "fs'min9"] basePat)) # midiN 8 -- synth
-  ,
-  every 4 ((fast 4) . (|+ ccv (segment 32 $ range 10 127 $ rand))) $ ccn 43 # ccv 0 # s "midi" -- ^ grain freq
+  -- ,
+  -- whenmod 32 16 (|+ ccv 90) -- ^ add clicks half of the time
+  -- $
+  -- ccn 31 # ccv 0 # s "midi" 
+  -- , ("[1|0]" <~) -- ^ introducing another randomness generator here, otherwise the two `choose` will always be in sync
+  -- $
+  -- ccn 27 # ccv (cycleChoose [0, 105]) # s "midi" -- ^ grain pitch
+  -- , ccn 30 # ccv (cycleChoose [30, 120]) # s "midi" -- ^ grain freq
+  -- ,
+  -- n (scale "harmonicMajor" $ (unwrap $ fit 0 ["c'min9", "gs'min9", "fs'min9"] basePat)) # midiN 8 -- synth
+  -- ,
+  -- every 4 ((fast 4) . (|+ ccv (segment 32 $ range 10 127 $ rand))) $ ccn 43 # ccv 0 # s "midi" -- ^ grain freq
 ]
 # cps (161/60/4)
 
@@ -134,25 +143,29 @@ let
   ccDis chan val = ccv val # ccn chan # s "midi" 
   ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
   basePat = "~@2 1@3 0@5 1@5 ~@4 0@6 1 0@5 1@9 ~@3"
-  bpm = (165/60/4)
+  bpm = (169/60/4)
   varBpm1 = [bpm*1.5, bpm/1.5]
   varBpm2 = [bpm, bpm*2]
   varBpm3 = [bpm, bpm*1.25]
 in
 d3 
--- $
--- every 2 (rev)
 $
+-- every 2 ((rev) . (degradeBy 0))
+-- $
 whenmod 10 8 ((rev) . (fast "0.75 1.25"))
 $ stack [
-  struct basePat $ note (-24) # midiN 9 -- ^ kick
-  , struct (inv basePat) $ note (-22) # midiN 9 -- ^ clap
-  , note "-21" # midiN 9 -- ^ snare
-  , note "-20*16" # midiN 9 -- ^ hat
-  , sometimesBy (1/32) rev $ struct (basePat) $ slow 12 $ (note (scale "lydianMinor" ("[1..12]"))) # midiN 10 -- ^ synth
-  , (|+ n (irand 5)) $ n "<~!3 -24>" # midiN 11 -- ^ snare
-  , ccDis "[61,62]" "<10 40 60 120 90>" -- ^ snare
-] 
+  -- struct basePat $ note (-24) # midiN 9 -- ^ kick
+  -- , 
+  struct (inv basePat) $ note (-22) # midiN 9 -- ^ clap
+  , 
+  note "-21" # midiN 9 -- ^ snare
+  -- , note "-20*16" # midiN 9 -- ^ hat
+  -- , ccDis "55" "<0!7 20 40 60 90 127>" -- ^ hat chorus mod
+  -- , sometimesBy (1/32) rev $ struct (basePat) $ slow 12 $ (note (scale "lydianMinor" ("[1..12]"))) # midiN 10 -- ^ synth
+  -- , 
+  -- (|+ n (irand 10)) $ n "<~!3 -24>" # midiN 11 -- ^ fx
+  -- , ccDis "[61,62]" "<10 40 60 120 90>" -- ^ fx fx
+  ] 
 -- # cps (slow 4 $ listToPat varBpm3)
 # cps (bpm)
 
@@ -180,27 +193,29 @@ let
     -- stretch -- ^ degrades everything
     "{0 1!4 1!3 0 0/2 1 ~ 0/2 0 1!5 ~}%16"
   var1 = whenmod 26 21 ((plyWith 16 (|+ n 1)) . (slow "16 8")) 
-  var2 = whenmod 18 16 (fast "1.5 1 1.5") 
+  var2 = whenmod 34 31 ((plyWith 12 (|- n 1)) . (slow "6 12")) 
   var3 = every 8 (rev) 
   var4 = every 7 (zoom (0.25, 0.75)) 
+  var5 = whenmod 18 16 (fast "1.5 1 1.5") 
 in
 d4 
 $
+-- qtrigger $
 seqPLoop [
   -- pat 1 --
-  (0,5, stack [ var1 $ var2 $ var3 $ (|- n 7) $ struct basePat $ n (scale "minPent" "[1,3,5,7,9]") # midiN 16 -- ^ saw
+  (0,32, stack [ var3 $ var4 $ var5 $ (|- n 7) $ struct basePat $ n (scale "minPent" "[1,3,5,7,9]") # midiN 16 -- ^ saw
   , ccv "<0!3 127!2>" # ccn "91" # s "midi" -- ^ saw redux
   ])
   ,
   -- pat 2 --
-  (6,64, var2 $ var3 $ var4 $ stack [
-    var1 $ sometimesBy (1/16) (|+ n "[4|5]") $ struct basePat $ n (-7) # midiN 13 -- ^ synth
-    ,
-    var1 $ struct (inv basePat) $ n (0) # midiN 14 # legato 2 -- ^ kick
-    , ccv "<0!4 40!4 115!4 127!4>" # ccn "[79,80]" # s "midi" -- ^ kick distort
-    , ccSeg "81" (slow 12 $ range 50 127 $ saw) # s "midi" -- ^ kick tonality
-    , 
-    var1 $ n "0 ~!3 [-14 -13] ~!3" # midiN 15 -- ^ metal
+  (0,0, var3 $ var4 $ var5 $ stack [
+    var1 $ var2 $ sometimesBy (1/16) (|+ n "[4|5]") $ struct basePat $ n (-7) # midiN 13 -- ^ synth
+    -- ,
+    -- var1 $ var2 $ struct (inv basePat) $ n (0) # midiN 14 # legato 2 -- ^ kick
+    -- , ccv "<0!2 40!2 115!2 127!2>" # ccn "[79,80]" # s "midi" -- ^ kick distort
+    -- , ccSeg "81" (slow 12 $ range 50 127 $ saw) # s "midi" -- ^ kick tonality
+    -- , 
+    -- var1 $ n "0 ~!3 [-14 -13] ~!3" # midiN 15 -- ^ metal
   ])
 ]
 # cps (175/60/4)

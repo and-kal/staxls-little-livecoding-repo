@@ -16,9 +16,11 @@ in
 d5 $ stack [
     note "[0|3|-1]" # midiN 1 # legato 2 -- ^ 808 shards
     ,
-    every 8 (|+ note 7) $ every 12 (|- note 19) $ note (overlay "[0,4,7,9,14]" ("[4,9]" |+ 12)) # midiN 2 # legato 2 -- ^ pad
+    every 6 (|+ note 7) $ every 7 (|- note 19) $ note (overlay "[0,4,7,9,14]" ("[4,9]" |+ 12)) # midiN 2 # legato 2 -- ^ pad
     ,
     degrade $ sometimes (fast "[2 4]") $ (|- note 12) $ scramble 8 $ note "[0..7]" # midiN 3  -- ^ miniglitches
+    , 
+    cc 97 "<0!5 60>" -- ^ kick distortion 
     , 
     cc 105 (slow 12 $ range 0 100 $ sine) -- ^ panning
     , 
@@ -38,3 +40,24 @@ hush
 --                   113-127:                                --
 -- keep in mind, that #123 is reserved and can't be assigned --
 ---------------------------------------------------------------
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  cc chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d6 
+-- $ whenmod 28 24 (fast "0.5 1.5")
+-- $ whenmod 30 24 (linger (1/8))
+$ stack [
+  shuffle 4 $ note (scale "wholetone" "[1..16]") # midiN 5 -- ^ microsounds 
+  -- ,
+  -- note "1 ~!3 0!3 ~ 0!2 ~ [2,3/4]" # midiN 6 -- ^ drums
+  , slow 3 $ note (scale "wholetone" "~ <0 3 4 8>") # midiN 7 -- ^ gamelan
+  -- ,
+  -- cc 113 (range 40 100 $ rand) -- ^ clap trsp
+  -- ,
+  -- cc 117 (range 60 100 $ rand) -- ^ clap trsp
+]
+# cps (175/60/4)
+
+hush
