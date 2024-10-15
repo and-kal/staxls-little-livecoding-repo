@@ -46,13 +46,13 @@ let
   cc chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
 in
 d6 
--- $ whenmod 28 24 (fast "0.5 1.5")
+-- $ whenmod 28 24 ((fast "0.5 1.5") . (scramble 4))
 -- $ whenmod 30 24 (linger (1/8))
 $ stack [
   shuffle 4 $ note (scale "wholetone" "[1..16]") # midiN 5 -- ^ microsounds 
   -- ,
-  -- note "1 ~!3 0!3 ~ 0!2 ~ [2,3/4]" # midiN 6 -- ^ drums
-  , slow 3 $ note (scale "wholetone" "~ <0 3 4 8>") # midiN 7 -- ^ gamelan
+  -- someCyclesBy (1/6) (scramble 4) $ note "1 ~!3 0!3 ~ 0!2 ~ [2,3/6]" # midiN 6 -- ^ drums
+  -- , slow 3 $ note (scale "wholetone" "~ <0 3 4 8>") # midiN 7 -- ^ gamelan
   -- ,
   -- cc 113 (range 40 100 $ rand) -- ^ clap trsp
   -- ,
