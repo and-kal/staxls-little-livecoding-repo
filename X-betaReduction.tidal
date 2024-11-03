@@ -1,0 +1,232 @@
+   _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._
+ ,'_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._`.
+( (                                                         ) )
+ ) )                                                       ( (
+( (        Thank you all for coming out!                    ) )
+ ) )                                                       ( (
+( (                                                         ) )
+ ) )                My name is S t a x l                    ( (
+( (                                                         ) )
+ ) )                                                       ( (
+( (                                                         ) )
+ ) )     I will play a little set of livecoded music now   ( (
+( (                                                         ) )
+ ) )           using a language/tool called                ( (
+( (                         T i d a l C y c l e s           ) )
+ ) )                                                       ( (
+( (                                                         ) )
+--  ) )       The visual part is done with                    ( (
+-- ( (              M i l k d r o p                            ) )
+ ) )                                                       ( (
+( (_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._) )
+ `._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._,'
+
+
+hush
+
+setcps(165/60/4)
+
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      1,2,3,4                  --
+--                               --
+--     relevant CC channels      --
+--     1-8: Dexed                --
+--     9-16: Opal                --
+--     17-24: Kick               --
+--     25-32: rings              --
+-----------------------------------
+
+let pattern = ascii "<sm as hc ap it al is m>"
+    melody = "[~ 0 [2 7]? 9 ~ 3]"
+in
+d1
+$ stack [
+    (|- note 12) 
+    $ plyWith 8 ((slow 4) . (|- note 4)) 
+    $ struct (pattern) 
+    $ s "midi" # note (scale "hexSus" melody) 
+    # midichan 0 -- dexed 
+    ,
+    (|+ note 7) 
+    $ plyWith 8 ((slow 3) . (|+ note 1)) 
+    $ struct (inv pattern) 
+    $ s "midi" # note (scale "hexSus" melody) 
+    # midichan 1 -- glänta
+    , 
+    s "midi/8" # n 0 # legato 0.25
+    # midichan 2
+    , 
+    ccv (segment 60 $ range 0 100 (slow 8 $ isaw)) # ccn "[26, 27]" # s "midi"
+    ,
+    s "midi" # n 0
+    # midichan 3 -- kick + exciter
+] # cps(87/60/4)
+
+hush
+
+-----------------------------------
+--           part two            --
+--                               --
+--   relevant note channels      --
+--      5,6,7,8,15,16            --
+--                               --
+--     relevant CC channels      --
+--     33-40:                    --
+--     41-48:                    --
+--     49-56:                    --
+-----------------------------------
+
+let pattern = "{0@2 0@3 1@4 2@5 1@4 0@3 0@2}%16"
+in 
+  d2
+  $ somecyclesBy (1/4) (rev)
+  $ whenmod 14 11 (linger "[0.125|0.0625]")
+  $ stack [
+      -- someCyclesBy (1/8) (|- n 24)
+      -- $ n (scale "phrygian" (unwrap $ fmap (["ds'6by9","~","~"]!!) $ pattern)) 
+      -- # s "midi" # midichan 4 -- plaits
+      -- # legato 2
+      -- , 
+      -- n (scale "phrygian" (unwrap $ fmap (["~","-12","-7"]!!) $ pattern)) 
+      -- # s "midi" # midichan 5 -- vital
+      -- , n (unwrap $ fmap (["~","-24","-17"]!!) $ pattern) 
+      -- # s "midi" # midichan 14 -- laz
+      -- , 
+      somecyclesBy (0.25) ((|+ n (run 24)) . (fast 6))
+      $ n (unwrap $ fmap (["[0|1|2]","~","~"]!!) $ pattern) 
+      # s "midi" # midichan 15 -- snare
+      , somecyclesBy (1/4) (|+ n "[-2|12]")
+      $ n (scale "phrygian" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) 
+      # s "midi" # midichan "[4|5]" -- MI Plaits
+      , ccv (segment 100 $ range 80 120 $ slow 6 $ sine) # ccn "[33,41]" # s "midi"
+      , ccv (segment 100 $ range 60 120 $ slow 24 $ sine) # ccn "[34]" # s "midi"
+      , ccv (segment 100 $ range 60 120 $ slow 6 $ sine) # ccn "[35]" # s "midi"
+      , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- kick distortion
+      -- , 
+      -- whenmod 32 27 (|+ n 48)
+      -- $ n (scale "phrygian" ("[-24|-12|-19]*1?")) # s "midi" # midichan 6 
+      -- # legato (range 0.2 1 $ slow 4 $ saw) -- fxkick
+      -- , ccv (segment 100 $ range 0 60 $ slow 6 $ sine) # ccn "49" # s "midi" -- flanger
+      -- , ccv (segment 100 $ range 0 60 $ slow 15 $ sine) # ccn "50" # s "midi" -- flanger
+      -- , ccv (segment 100 $ range 0 60 $ slow 12 $ sine) # ccn "51" # s "midi" -- grain
+  ]
+  # cps(150/60/4)
+  -- # cps (range (150/60/4) (150/60/8) $ slow 4 $ sine)
+
+hush
+
+
+-----------------------------------
+--           part three          --
+--                               --
+--   relevant note channels      --
+--      8,9,10                   --
+--                               --
+--     relevant CC channels      --
+--     57-64:                    --
+--     65-72:                    --
+--     73-80: break              --
+-----------------------------------
+
+-- let how = (132/60/4)
+-- in
+-- d3
+-- -- interpolateIn 3 16
+-- $ stack [
+--   someCycles (rev)
+--   $ whenmod 48 45 ((slow (how * 4)) . (|+ n 36 ))
+--   $ whenmod 18 15 (|- n 24 )
+--   $ whenmod 36 31 (linger (1/16))
+--   $ sometimesBy (1/16) ((1/4) <~)
+--   $ sometimes (|+ n 1) 
+--   $ every 8 (# amp 0.8) -- 'amp' to control velocity chain select
+--   $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
+--   ,
+--   someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
+--   ,
+--   whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
+-- ]
+--   # cps(how)
+
+-- hush
+
+
+-----------------------------------
+--           part three (alt.)   --
+--                               --
+--   relevant note channels      --
+--      8,9,10                   --
+--                               --
+--     relevant CC channels      --
+--     57-64: vital              --
+--     65-72:                    --
+--     73-80: break              --
+-----------------------------------
+
+let how = (110/60/4)
+in
+d3
+$ stack [
+  slow 4 $ n ("gs7'6to9") # s "midi" # midichan 8 # legato 0.9 -- pad
+  , 
+  someCycles (rev)
+  $ whenmod 28 24 (# amp 1) -- 'amp' to control velocity chain select [1 = 127] 
+  $ someCycles (linger (1/16) . (|+ n (choose[0,5])))
+  $ rarely (|- n "[1|2]") 
+  $ n ("[0..7]*2") # s "midi" # midichan 10 # amp 0.4
+  , 
+  -- n ("-24") # s "midi" # midichan 9 -- heavy kick (too much here)
+  -- ,
+  someCycles (|+ ccv 80) $ ccv 0 # ccn 73 # s "midi" -- fattener
+  ,
+  whenmod 24 20 (|- ccv 120) $ ccv 120 # ccn 74 # s "midi" -- transpose main break
+]
+  # cps(how)
+
+hush
+
+-----------------------------------
+--           part four           --
+--                               --
+--   relevant note channels      --
+--      11,12,13                 --
+--                               --
+--     relevant CC channels      --
+--     81-88: gemkick            --
+--     89-96: impact             --
+--     97-104:                   --
+-----------------------------------
+
+let 
+  mel = (scale "minPent" "[c4 e4 _ a3 _]")
+  kick = s "midi" # midichan 11
+  diva = s "midi" # midichan 12
+  alien = s "midi" # midichan 13
+in 
+d4 
+$
+whenmod 8 6 (rev)
+$
+whenmod 11 7 (fast "1 3")
+$ stack [
+  someCycles (|+ n 36)
+  $ cat [
+    n (mel) # diva
+    , 
+    (|+ note 2) $ n (mel) # up (3) # diva
+    ,
+    n (mel) # up (-3) # diva
+  ] 
+  ,
+  n "[[-19|-11] ~]" # kick
+  ,
+  ccv "[30|70|120]" # ccn "83" # s "midi" -- kick attack
+  ,
+  whenmod 14 11 (|+ n 48) $ n "[~!4 12|19|31]?" # alien
+]
+  # cps (145/60/2) 
+
+hush
