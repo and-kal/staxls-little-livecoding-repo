@@ -1,0 +1,3 @@
+[submodule "staxl-sample-pack"]
+	path = staxl-sample-pack
+	url = git@github.com:and-kal/staxl-sample-pack.git
