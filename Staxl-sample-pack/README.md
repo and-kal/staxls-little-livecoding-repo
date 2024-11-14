@@ -1,1 +1,0 @@
-A bunch of samples and sound designs I use for my livecoding. They're all my own creations and you're free to download and use them. Only the ones in the "notmine" folder are sounds I sampled from external sources and they're not mine.
