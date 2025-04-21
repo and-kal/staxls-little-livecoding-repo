@@ -31,7 +31,7 @@ s.reboot { // server options are only updated on reboot
 		~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
 		~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
 		// s.sync; // optionally: wait for samples to be read
-		~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
+		~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create 12 busses each sending audio to channel 0
 
 		// optional, needed for convenient access from sclang:
 		(
@@ -45,8 +45,14 @@ s.reboot { // server options are only updated on reboot
 };
 );
 
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/Staxl-sample-pack/*");
-~dirt.loadSoundFiles("C:/Users/Li/Desktop/Solstice2023/gig-x");
+(
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Livecoding-Repo2024/Staxl-sample-pack/*");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Livecoding-Repo2024/gig-x");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Livecoding-Repo2024/gig-x/Pikmin/");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Livecoding-Repo2024/gig-x/AcdBrnOut/");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Livecoding-Repo2024/gig-x/BBC/");
+~dirt.loadSoundFiles("C:/Users/Li/Desktop/Livecoding-Repo2024/gig-x/null/");
+)
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 // [Sometimes this won't work when Ableton is already running.
