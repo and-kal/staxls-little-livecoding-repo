@@ -78,25 +78,6 @@ if (~stopMidiToOsc != nil, {
 ~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 )
 
-// print MIDI CC and note values
-// TODO: throttle
-(
-MIDIIn.noteOn = {
-	arg chan, note, vel;
-	fork {
-		[chan,note,vel].postln;
-		2.0.wait;
-	}
-};
-
-MIDIIn.control = { arg src, chan, num, val;
-	fork {
-		[chan,num,val/127].postln;
-		2.0.wait;
-	}
-};
-)
-
 // post TidalCycles parameters for fun
 (
 ~dirt.addModule('post',
