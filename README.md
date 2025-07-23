@@ -21,7 +21,7 @@ Experimental ensemble
 [LADGHA](https://soundcloud.com/ladgha)
 Sentimental exemple
 
-[ah_mult(ahabzutun(https://soundcloud.com/ahabzutun) & Multimedia Schneider](https://soundcloud.com/mmschneider))
+ah_mult ([ahabzutun](https://soundcloud.com/ahabzutun) & [Multimedia Schneider](https://soundcloud.com/mmschneider))
 Modulated tape loops contrasting with the clarity of the duo's modular synthesizers
 
 [Nuance d’engrais](https://soundcloud.com/nuancesdengrais)
