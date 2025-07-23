@@ -155,3 +155,28 @@ stack [
   # cps (115/60/4)
 
 hush
+
+-------------------------------------------------
+--           encore                            --
+--                                             --
+--   relevant note channels                    --
+--      1,2,3,4                                --
+-- fader 7: melody                             --
+-- might use f. 1 and 5, too                   --
+-------------------------------------------------
+
+d6
+$
+stack [
+  whenmod 12 9 (# up (-3)) $ 
+  -- whenmod 20 13 (ply 2) $
+  whenmod 20 13 (fast 2) $
+  n "0*4" # s "midi" # midichan 0
+  , 
+  whenmod 24 16 (|+ n 5) $ n (scale "neapolitanMinor" "<4 5 4 3 2 3 2 0 4 5 4 3 2 3 4 0>*2") # s "midi"  # midichan 1 
+  , n "-24/8" # s "midi"  # midichan 2
+  , n "[-23*2]" # s "midi"  # midichan 2
+]
+  # cps (215/60/2)
+
+hush
