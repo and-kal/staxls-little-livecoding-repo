@@ -1,10 +1,4 @@
-##### upcoming gigs in Fall/Winter 2024
+collected TidalCycles codes and Ableton project files from 2023 and 2024
 
----
+to be released 2025 on [𝖎𝖓𝖉𝖚𝖘𝖙𝖗𝖎𝖊 𝖒𝖚𝖘𝖎𝖈𝖆𝖑𝖊](http://industriemusicale.org)
 
-15.10.2024
-Livecoding set at [Aquarium](https://prepaidrecords.bandcamp.com/)—together with [Javier Areal Velez](https://www.javierarealvelez.com.ar/)
-
-𝑠̥̊⃝𝑒̥̊⃝𝑒̥̊⃝ 𝑦̥̊⃝𝑜̥̊⃝𝑢̥̊⃝ 𝑡̥̊⃝ℎ̥̊⃝𝑒̥̊⃝𝑟̥̊⃝𝑒̥̊⃝
-
-<!-- IDEA: implement Kaprekar's constant algorithm as a pattern generator in TidalCycles -->
