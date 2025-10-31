@@ -1,0 +1,200 @@
+   _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._
+ ,'_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._`.
+( (                                                         ) )
+ ) )                                                       ( (
+( (        Thank you all for coming out!                    ) )
+ ) )                                                       ( (
+( (                                                         ) )
+ ) )                My name is S t a x l                    ( (
+( (                                                         ) )
+ ) )                                                       ( (
+( (                                                         ) )
+ ) )     I will play a little set of livecoded music now   ( (
+( (                                                         ) )
+ ) )           using a language/tool called                ( (
+( (                         T i d a l C y c l e s           ) )
+ ) )                                                       ( (
+( (                                                         ) )
+ ) )                                                       ( (
+( (_.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._) )
+ `._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._,'
+
+
+
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      0,1,2,3                  --
+--                               --
+--     relevant CC channels      --
+--     1-8:                      --
+--     9-16:                     --
+--     17-24:                    --
+--     25-32:                    --
+-----------------------------------
+
+let 
+  melody = "<[0 1 _ 2]/4 [0 3 1 [2 _]]/4>"
+  pattern = ascii "<Gi f g r o n d>"
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
+  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccRand chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+in
+d1
+$ stack [
+    struct (pattern) 
+    $ note 0
+    # midiN 1 -- kick
+    , struct (inv pattern) 
+    $ note 0
+    # midiN 2 -- snare
+    , 
+    often (|+ n "[0|1|2|3]")
+    $
+    (|- n 24)
+    $ n "0*16"
+    # midiN 3 -- particles
+    ,
+    fast 1.5 $ ccRand 13 0 127
+    ,
+    fast 2 $ ccRand 14 30 100
+    -- ,
+    -- slow 3 $ n (scale "augmented2" "[fs4'dim7'i|cs4'dim7'ii|gs4'5]")
+    # midiN 4
+] # cps(170/60/4)
+ 
+scaleList
+
+hush
+
+-----------------------------------
+--           part two            --
+--                               --
+--   relevant note channels      --
+--      4,5,6,7                  --
+--                               --
+--     relevant CC channels      --
+--     33-40:                    --
+--     41-48:                    --
+--     49-56:                    --
+--     57-64:                    --
+-----------------------------------
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
+  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccRand chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+in
+d2
+$ 
+every 6 rev
+$
+every 7 (slow 2 . ply 2)
+$
+stack [
+  every 4 (|- n 3) $ 
+  every 5 (|+ n 6) $ 
+  beat "[3,4.2,9,11,12,14]" 16 $ n "-24" # midiN 5 -- kick
+  ,
+  ccDis 25 (segment 32 $ slow 8 $ range 0 100 tri)
+  ,
+  ccDis 31 (segment 32 $ slow 3 $ range 60 127 tri) -- snare delay
+  ,
+  beat "[4.9,15.3]" 16 $ n "1" # midiN 6 -- snare
+  ,
+  beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 7
+]
+# cps (154/60/4)
+
+hush
+
+-----------------------------------
+--           part three          --
+--                               --
+--   relevant note channels      --
+--      8,9,10,11                --
+--                               --
+--     relevant CC channels      --
+--     65-72:                    --
+--     73-80:                    --
+--     81-88:                    --
+--     89-96:                    --
+-----------------------------------
+
+
+
+-----------------------------------
+--           part four           --
+--                               --
+--   relevant note channels      --
+--    12,13,14,15                --
+--                               --
+--     relevant CC channels      --
+--     97-104:                   --
+--     105-112:                  --
+--     113-120:                  --
+--     121-127:                  --
+-----------------------------------
+
+{-
+↘↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↙
+→some ideas for the next tracks/patterns←
+↗↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↖
+-}
+
+d4
+-- $
+-- every 6 (slow 4 . rev)
+$ 
+soak 12 (fast 1.2) $ s "[808hc, bd sd/2 <cp? [cp/4]!3>]"
+# cps (166/60/4)
+
+hush
+
+d1 $ note ( scale "aeolian"
+          $ snowball 8 (+) (slow 2 . rev) "0 3 _ -1 _ 5 7 4 _ ~ -2"
+          )
+   # s "gtr"
+
+  hush
+
+d1 $ sometimes loopFirst $ s "<<[bd*2 ~!2 sd:6*2] 808sd:3*8> cp*4>" # cps (151/60/2)
+
+d1 $ timeLoop 7 $ s "<bd sn cp hh>"
+
+d3 
+$ spaceOut [(5/3), 1.5, (4/3), 1.25, 1, (7/8), 0.75, (2/3)]
+  $ s (fmap (["bd:18", "sd"]!!) 
+  $ markovPat 16 0 [ 
+    [3, 5], 
+    [3, 8] 
+  ])
+# cps (160/60/4)
+
+hush
+
+d3 
+
+$ stack [
+  palindrome $ stutter 6 (1/16) $ s "bd cp" 
+  , stutter 12 (1/16) $ s "808hc" 
+]
+# cps (165/60/4)
+
+hush
+
+d1 
+$ substruct (ascii "<T C>") $ s "bd sd"
+
+d1 $ sometimesBy (1/4) ((1/4) <~) $ revArc (0.25, 0.75) $ s "[bd*4 sd*4] sd"
+
+hush
