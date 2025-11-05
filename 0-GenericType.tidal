@@ -25,7 +25,7 @@
 --           part one            --
 --                               --
 --   relevant note channels      --
---      0,1,2,3                  --
+--      1,2,3,4                  --
 --                               --
 --     relevant CC channels      --
 --     1-8:                      --
@@ -35,7 +35,7 @@
 -----------------------------------
 
 let 
-  melody = "<[0 1 _ 2]/4 [0 3 1 [2 _]]/4>"
+  melody = "0 7 5 7 5 2 11 1 0 7 5 9 12 2 11 1"
   pattern = ascii "<Gi f g r o n d>"
   midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
   ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
@@ -48,7 +48,7 @@ in
 d1
 $ stack [
     struct (pattern) 
-    $ note 0
+    $note 0
     # midiN 1 -- kick
     , struct (inv pattern) 
     $ note 0
@@ -63,20 +63,18 @@ $ stack [
     fast 1.5 $ ccRand 13 0 127
     ,
     fast 2 $ ccRand 14 30 100
-    -- ,
-    -- slow 3 $ n (scale "augmented2" "[fs4'dim7'i|cs4'dim7'ii|gs4'5]")
+    ,
+    someCyclesBy (1/8) (fast 1.5 . (bite 2 "1 0")) $ n (scale "jiao" melody)
     # midiN 4
 ] # cps(170/60/4)
  
-scaleList
-
 hush
 
 -----------------------------------
 --           part two            --
 --                               --
 --   relevant note channels      --
---      4,5,6,7                  --
+--      5,6,7,8                  --
 --                               --
 --     relevant CC channels      --
 --     33-40:                    --
@@ -100,20 +98,32 @@ every 6 rev
 $
 every 7 (slow 2 . ply 2)
 $
+whenmod 11 6 (ply 3 . slow 2.5) 
+$
 stack [
   every 4 (|- n 3) $ 
   every 5 (|+ n 6) $ 
   beat "[3,4.2,9,11,12,14]" 16 $ n "-24" # midiN 5 -- kick
   ,
-  ccDis 25 (segment 32 $ slow 8 $ range 0 100 tri)
+  ccDis 25 (segment 32 $ slow 8 $ range 0 50 tri) -- kickfmfeedb
+  ,
+  -- ccDis 26 (segment 32 $ slow 7 $ range 0 50 tri) -- kickdecay
+  -- ,
+  whenmod 9 6 (|+ ccv 25) $ ccn 27 # ccv 0 # s "midi" -- kickfmlevel
   ,
   ccDis 31 (segment 32 $ slow 3 $ range 60 127 tri) -- snare delay
   ,
   beat "[4.9,15.3]" 16 $ n "1" # midiN 6 -- snare
   ,
-  beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 7
+  beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 7 -- hat
+  ,
+  slow 2 $ note (scale "hexSus" "<fs'min9 gs5'min6'o d5'min6'ii>") -- # legato 4 
+  # midiN 8 -- too cheesy?
+  -- might have to kill this channel manually, when note gets stuck
 ]
 # cps (154/60/4)
+
+chordList
 
 hush
 
@@ -121,7 +131,7 @@ hush
 --           part three          --
 --                               --
 --   relevant note channels      --
---      8,9,10,11                --
+--      9,10,11,12               --
 --                               --
 --     relevant CC channels      --
 --     65-72:                    --
@@ -130,13 +140,33 @@ hush
 --     89-96:                    --
 -----------------------------------
 
+let 
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
+  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccRand chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+in
+d3
+$
+whenmod 20 17 (plyWith 4 (rev)) 
+$ stack [
+  palindrome $ stutter 6 (1/16) $ n "0 1" # midiN 9
+  , stutter 12 (1/16) $ n "2" # midiN 9 -- hats
+  , ((1/3) <~) $ slow 2 $ n "3" # midiN 9 -- clap 
+  -- , degradeBy 0.9 $ stutter 16 (1/13) $ n "3" # midiN 9
+]
+# cps (185/60/4)
 
+hush
 
 -----------------------------------
 --           part four           --
 --                               --
 --   relevant note channels      --
---    12,13,14,15                --
+--    13,14,15,16                --
 --                               --
 --     relevant CC channels      --
 --     97-104:                   --
@@ -182,13 +212,7 @@ $ spaceOut [(5/3), 1.5, (4/3), 1.25, 1, (7/8), 0.75, (2/3)]
 
 hush
 
-d3 
 
-$ stack [
-  palindrome $ stutter 6 (1/16) $ s "bd cp" 
-  , stutter 12 (1/16) $ s "808hc" 
-]
-# cps (165/60/4)
 
 hush
 
