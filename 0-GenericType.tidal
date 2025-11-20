@@ -230,7 +230,7 @@ $ trigger
 $ (|- note 24) 
 $ superimpose (|+ note "[7,12,17]") 
 $ note (scale "aeolian" 
-  $ snowball 7 (+) (slow 2 . rev) "0 3 _ -1 _ 5 7 4 _ ~ -2"
+  $ snowball 10 (+) (slow 2 . rev) "0 3 _ -1 _ 5 7 4 _ ~ -2"
 )
 # midiN 16
 # cps (125/60/4)
@@ -258,23 +258,79 @@ in
 d5 $ whenmod 12 8 (sometimes loopFirst) $ 
 stack [
   (|- n 24) $ n "<<[2*2 ~!2 1*2] 0*8> [3*2 4*5]>" # midiN 1 -- drums
-  ,
-  every 4 (|+ n 11) 
-  $
-  every 13 (|+ n 5) 
-  $ n "0" # midiN 2 -- stab *use elsewhere mazbe_
 ]
   # cps (156/60/2)
 
 hush
 
-d1 $ sometimesBy (1/4) ((1/4) <~) $ revArc (0.25, 0.75) $ s "[bd*4 sd*4] sd"
+-----------------------------------
+--           part six            --
+--                               --
+--   relevant note channels      --
+--      5,6,7,8                  --
+-----------------------------------
+
+let 
+  basePat = "0 ~!2 0 ~!2 1 ~"
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
+  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccRand chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+in
+d6
+$
+whenmod 12 9 (slow 3)
+$
+whenmod 17 13 (soak 2 (fast (4/3)))
+$
+-- degradeBy 0.8
+-- $
+stack [
+  fast 2 $ n basePat # midiN 5 -- bass
+  ,
+  stack [
+    fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ticks
+    ,
+    n "~ 4*8" # midiN 6 -- shaker
+    ,
+    slow 2 
+    $
+    every 2 (0.125 <~)
+    $
+    every 3 (fast "0.5 2")
+    $
+    whenmod 6 3 (fast "2")
+    $
+    n "~ 1 ~*2 2" # midiN 6 -- snares
+    ,
+    whenmod 12 9 (const $ n "0*3 1*3") $ fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- kick
+    ,
+    fast 2 $ n basePat # midiN 7 -- voc 
+    # silence
+    ,
+    ccDis 121 "[0|127]" -- voc selector
+    ,
+    every 4 (|+ n 11) 
+    $
+    every 13 (|+ n 5) 
+    $ n "-5" # legato 0.3
+    # midiN 8 -- stab
+    -- # silence
+  ]
+]
+# cps (160/60/4)
+
+hush
 
 {-
 ↘↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↙
 →some ideas for the next tracks/patterns←
 ↗↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↖
 -}
+d1 $ sometimesBy (1/4) ((1/4) <~) $ revArc (0.25, 0.75) $ s "[bd*4 sd*4] sd"
 
 d1
 -- $
