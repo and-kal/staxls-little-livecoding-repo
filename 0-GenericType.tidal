@@ -44,30 +44,30 @@ let
 in
 d2
 $ 
-every 6 rev
-$
-every 7 (slow 2 . ply 2)
-$
-whenmod 11 6 (ply 3 . slow 2.5) 
-$
+-- every 6 rev
+-- $
+-- every 7 (slow 2 . ply 2)
+-- $
+-- whenmod 11 6 (ply 3 . slow 2.5) 
+-- $
 stack [
-  every 4 (|- n 3) $ 
-  every 5 (|+ n 6) $ 
-  beat "[3,4.2,9,11,12,14]" 16 $ n "-24" # midiN 5 -- kick
-  ,
-  ccDis 25 (segment 32 $ slow 8 $ range 0 50 tri) -- kickfmfeedb
-  ,
+  -- every 4 (|- n 3) $ 
+  -- every 5 (|+ n 6) $ 
+  -- beat "[3,4.2,9,11,12,14]" 16 $ n "-24" # midiN 5 -- kick
+  -- ,
+  -- ccDis 25 (segment 32 $ slow 8 $ range 0 50 tri) -- kickfmfeedb
+  -- ,
   -- ccDis 26 (segment 32 $ slow 7 $ range 0 50 tri) -- kickdecay
   -- ,
-  whenmod 9 6 (|+ ccv 25) $ ccn 27 # ccv 0 # s "midi" -- kickfmlevel
-  ,
-  ccDis 31 (segment 32 $ slow 3 $ range 60 127 tri) -- snare delay
-  ,
-  beat "[4.9,15.3]" 16 $ n "1" # midiN 6 -- snare
-  ,
-  beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 7 -- hat
-  ,
-  slow 2 $ note (scale "hexSus" "<fs'min9 gs5'min6'o d5'min6'ii>") -- # legato 4 
+  -- whenmod 9 6 (|+ ccv 25) $ ccn 27 # ccv 0 # s "midi" -- kickfmlevel
+  -- ,
+  -- ccDis 31 (segment 32 $ slow 3 $ range 60 127 tri) -- snare delay
+  -- ,
+  -- beat "[4.9,15.3]" 16 $ n "1" # midiN 6 -- snare
+  -- ,
+  -- beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 7 -- hat
+  -- ,
+  slow 2 $ somecyclesBy(1/5) (|+ n 12) $ note (scale "hexSus" "<fs'min9 gs5'min6'o d5'min6'ii>") # legato 4 
   # midiN 8 -- too cheesy?
   -- might have to kill this channel manually, when note gets stuck
 ]
@@ -92,8 +92,6 @@ let
   melody = "[0 7 5 7 5 2 11 1 0 7 5 9 12 2 11 1]"
   pattern = ascii "<Gi f g r o n d>"
   midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
-  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
-  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
   ccRand chan val1 val2 = 
     ccn chan 
     # ccv (segment 50 (range val1 val2 $ rand)) 
@@ -108,20 +106,20 @@ $ stack [
     , struct (inv pattern) 
     $ note 0
     # midiN 2 -- snare
-    , 
-    often (|+ n "[0|1|2|3]")
-    $
-    (|- n 24)
-    $ n "0*16"
-    # midiN 3 -- particles
-    ,
-    fast 1.5 $ ccRand 13 0 127
-    ,
-    fast 2 $ ccRand 14 30 100
-    ,
-    every 8 (|- n 17) $ 
-    someCyclesBy (1/4) (fast "[1|1.5]" . (bite 2 "1 0")) $ n (scale "kumai" melody)
-    # midiN 4
+    -- , 
+    -- often (|+ n "[0|1|2|3]")
+    -- $
+    -- (|- n 24)
+    -- $ n "0*16"
+    -- # midiN 3 -- particles
+    -- ,
+    -- fast 1.5 $ ccRand 13 0 127
+    -- ,
+    -- fast 2 $ ccRand 14 30 100
+    -- ,
+    -- every 8 (|- n 17) $ 
+    -- someCyclesBy (1/4) (fast "[1|1.5]" . (bite 2 "1 0")) $ n (scale "kumai" melody)
+    -- # midiN 4
 ] # cps(170/60/4)
  
 hush
@@ -141,26 +139,20 @@ hush
 
 let 
   midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
-  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
-  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
-  ccRand chan val1 val2 = 
-    ccn chan 
-    # ccv (segment 50 (range val1 val2 $ rand)) 
-    # s "midi" -- ^ this one is for sending one random value per cycle
 in
 d3
 $ palindrome 
 $ whenmod 24 21 (slow "2 1.5 1.25") 
 $ whenmod 23 17 (linger (1/16))
 $ stack [
- whenmod 23 17
- (const $ (n "[fs6'min11]*9" # midiN "0" # legato 0.4)) 
- $ silence -- occassional synth
-  , stutter 10 (1/16) $ n "0 1" # midiN "9" -- kick
+--  whenmod 23 17
+--  (const $ (n "[fs6'min11]*9" # midiN "0" # legato 0.4)) 
+--  $ silence -- occassional synth
+--   , stutter 10 (1/16) $ n "0 1" # midiN "9" -- kick
   , stutter 12 (1/16) $ n "2" # midiN 9 -- hats
-  , whenmod 6 4 (bite 4 "3 2 0 1") 
-  $ fast 2 $ struct (binary "1110110" ) $ n (run 32) # midiN 11 -- clap 
-  , stutter 24 (1/16) $ n "[12|7] [14|5] -7 _" # midiN 12 -- synth
+  -- , whenmod 6 4 (bite 4 "3 2 0 1") 
+  -- $ fast 2 $ struct (binary "1110110" ) $ n (run 32) # midiN 11 -- clap 
+  -- , stutter 24 (1/16) $ n "[12|7] [14|5] -7 _" # midiN 12 -- synth
 ]
 # cps (185/60/4)
 
@@ -182,27 +174,27 @@ hush
 let 
   midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
   ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
-  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
-  ccRand chan val1 val2 = 
-    ccn chan 
-    # ccv (segment 50 (range val1 val2 $ rand)) 
-    # s "midi" -- ^ this one is for sending one random value per cycle
+  lfo chan val1 val2 = ccv (segment 50 $ range val1 val2 $ slow 2 $ perlin) # ccn chan # s "midi" 
 in
 d4
 $ every 8 rev 
 $ stack [
-  whenmod 17 14 (degradeBy 1) $
-  substruct (inv (ascii "<t c ß>")) $ n "0" # midiN 13 -- kick
-  ,
-  whenmod 24 21 (degradeBy 1) $
-  substruct (ascii "<t c ß>") $ n "[2]" # midiN 13 -- weirdhit
-  ,
-  whenmod 8 6 (degradeBy 1) $ n "1" # midiN 13 -- snarey
-  ,
-  sometimes (|+ n "2") $ substruct (ascii "<t c ß>")
-  $ n "0" # midiN "[15]" -- glitchy
-  ,
-  sometimes (|+ n "2") $ n "0!8" # midiN "[14]" -- glitchy
+  -- whenmod 17 14 (degradeBy 1) $
+  -- substruct (inv (ascii "<t c ß>")) $ n "0" # midiN 13 -- kick
+  -- ,
+  -- whenmod 24 21 (degradeBy 1) $
+  -- substruct (ascii "<t c ß>") $ n "[2]" # midiN 13 -- weirdhit
+  -- ,
+  -- whenmod 8 6 (degradeBy 1) $ n "1" # midiN 13 -- snarey
+  -- ,
+  -- sometimes (|+ n "2") $ substruct (ascii "<t c ß>")
+  -- $ n "0" # midiN "[15]" -- glitchy
+  -- ,
+  -- lfo 79 0 99 -- delay feedback
+  -- ,
+  -- ccDis 80 0 -- delay d/w
+  -- ,
+  sometimes (|+ n "2") $ n "0!8" # midiN 14 -- "hats"
 ]
 # cps (142/60/2)
 
@@ -218,12 +210,6 @@ hush
 
 let 
   midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
-  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
-  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
-  ccRand chan val1 val2 = 
-    ccn chan 
-    # ccv (segment 50 (range val1 val2 $ rand)) 
-    # s "midi" -- ^ this one is for sending one random value per cycle
 in
 d5 
 $ trigger
@@ -245,7 +231,6 @@ hush
 --                               --
 -----------------------------------
 
-
 let 
   midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
   ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
@@ -255,11 +240,19 @@ let
     # ccv (segment 50 (range val1 val2 $ rand)) 
     # s "midi" -- ^ this one is for sending one random value per cycle
 in
-d5 $ whenmod 12 8 (sometimes loopFirst) $ 
+d5 $ whenmod 12 8 (sometimes loopFirst) 
+$ whenmod 18 12 (sometimesBy (1/4) ((1/4) <~) . revArc (0.25, 0.75))
+$
 stack [
-  (|- n 24) $ n "<<[2*2 ~!2 1*2] 0*8> [3*2 4*5]>" # midiN 1 -- drums
+  -- whenmod 30 27 ((slow 3) . (linger (1/32))) $ 
+  -- (|- n 24) $ n "<<[2*2 ~!2 1*2] 0*8> [3*2 4*5]>" # midiN 1 -- drums
+  -- ,
+  -- slow 2 $ (+ n "[0,[24|12|7]]") $ n (scale "locrian" "<fs3'min11'o gs3'm7f5'i>") # midiN 2 -- pad
+  -- ,
+  -- degradeBy (2/3) $ 
+  slow 2 $ n (scale "locrian" "<fs4'min11'o gs4'm7f5'o>")  # midiN 3 -- vocals
 ]
-  # cps (156/60/2)
+  # cps (161/60/2)
 
 hush
 
@@ -283,42 +276,42 @@ in
 d6
 $
 whenmod 12 9 (slow 3)
-$
-whenmod 17 13 (soak 2 (fast (4/3)))
-$
--- degradeBy 0.8
 -- $
+-- whenmod 17 13 (soak 2 (fast (4/3)))
+-- $
+-- degradeBy 0.8
+$
 stack [
   fast 2 $ n basePat # midiN 5 -- bass
   ,
   stack [
-    fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ticks
-    ,
-    n "~ 4*8" # midiN 6 -- shaker
-    ,
-    slow 2 
-    $
-    every 2 (0.125 <~)
-    $
-    every 3 (fast "0.5 2")
-    $
-    whenmod 6 3 (fast "2")
-    $
-    n "~ 1 ~*2 2" # midiN 6 -- snares
-    ,
-    whenmod 12 9 (const $ n "0*3 1*3") $ fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- kick
-    ,
-    fast 2 $ n basePat # midiN 7 -- voc 
-    # silence
-    ,
-    ccDis 121 "[0|127]" -- voc selector
-    ,
-    every 4 (|+ n 11) 
-    $
-    every 13 (|+ n 5) 
-    $ n "-5" # legato 0.3
-    # midiN 8 -- stab
+    -- fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ticks
+    -- ,
+    -- n "~ 4*8" # midiN 6 -- shaker
+    -- ,
+    -- slow 2 
+    -- $
+    -- every 2 (0.125 <~)
+    -- $
+    -- every 3 (fast "0.5 2")
+    -- $
+    -- whenmod 6 3 (fast "2")
+    -- $
+    -- n "~ 1 ~*2 2" # midiN 6 -- snares
+    -- ,
+    -- whenmod 12 9 (const $ n "0*3 1*3") $ fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- kick
+    -- ,
+    -- fast 2 $ n basePat # midiN 7 -- voc 
     -- # silence
+    -- ,
+    -- ccDis 121 "0" -- voc selector
+    -- ,
+    -- every 4 (|+ n 11) 
+    -- $
+    -- every 13 (|+ n 5) 
+    -- $ n "-5" # legato 0.3
+    -- # midiN 8 -- stab
+  --   # silence
   ]
 ]
 # cps (160/60/4)
