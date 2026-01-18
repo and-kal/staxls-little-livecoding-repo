@@ -1,6 +1,8 @@
-Playing a livecoding noise show as _Shin-Ra Electric Power Company_ on July 24, 2025 in Leipzig at...
+##### January 24, 2026 | Fête du Brûlée 
 
-##### Fête du Brûlée
+:: tape release show ::
+
+##### July 24, 2025 | Fête du Brûlée
 
 :: concerts & food ::
 
