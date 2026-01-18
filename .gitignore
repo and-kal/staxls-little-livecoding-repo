@@ -1,1 +1,6 @@
-/2022-05-28-ClawsOfSaurtopia/CoS-samples
+*.asd
+.env
+Desktop.ini
+/_temp
+/.vscode
+*.mp4
