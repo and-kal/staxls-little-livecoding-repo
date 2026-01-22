@@ -1,6 +1,30 @@
-##### January 24, 2026 | Fête du Brûlée 
+##### January 24, 2026 | tape release show @ PRACHT
 
-:: tape release show ::
+:: Fête du Brûlée presents ::  
+
+//Tape Brülle//
+
+A compilation tape release party w/ international noise & ambient artists. 
+
+live:
+
+*[^|!<3](https://soundcloud.com/crysz-cacze)*
+\ 
+*[Shin-ra Electric Power Company](https://soundcloud.com/shinraepc)*
+\ 
+*[meeek](https://on.soundcloud.com/8Auj4Ji2NOqDf3fWuz)*
+\ 
+*[LADGHA](https://soundcloud.com/ladgha)*
+\ 
+*[ah](https://soundcloud.com/ahabzutun)_[mult](https://soundcloud.com/mmschneider)*
+
+DJ team: *potes au feu*
+
+Visuals: *Petrikov*
+
+![concert poster for the tape release show with an x-ray of a human olfactory organ as the main visual](poster_24012026.jpg)
+
+Poster: [Susu](https://www.instagram.com/suliane.h/)
 
 ##### July 24, 2025 | Fête du Brûlée
 
@@ -49,7 +73,7 @@ Unhappy Hardcore
 [meeek](https://on.soundcloud.com/8Auj4Ji2NOqDf3fWuz)
 ambient drone pop
 
-**Shin-Ra Electric Power Company**
+[Shin-Ra Electric Power Company](https://soundcloud.com/shinraepc)
 ludicrously distorted + massively compressed splitterkore noize
 
 [StöRenFrieD](https://m.soundcloud.com/st-renfried)
