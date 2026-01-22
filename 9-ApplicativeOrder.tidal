@@ -1,0 +1,21 @@
+let pattern = "{0@2 0@8 1@4 0@6 1@6 0@6 2@2}%4"
+in 
+d4 
+$ somecyclesBy (1/8) (rev)
+$ whenmod 14 11 (linger (1/12))
+$ stack [
+    someCyclesBy (1/8) (|+ n 7)
+    $ n (unwrap $ fmap (["c3","~","d3"]!!) $ pattern) # s "midi" # midichan 6 -- ^ Kick2 + Surge
+    , degradeBy 0.5 $ n (unwrap $ fmap (["~","[[~ c4]*16, [f3 ~]*16]","~"]!!) $ pattern) # s "midi" # midichan 7 -- ^ Hihat [hitick]
+    , n (unwrap $ fmap (["0","0*18","~"]!!) $ pattern) # s "midi" # midichan 14 -- ^ LEX-Snare
+    , somecyclesBy (1/4) (|+ n "[-2|12]")
+    $ n (scale "partch" (unwrap $ fmap (["c'7f5","~","f'7f5"]!!) $ pattern)) # s "midi" # midichan "[4|5]" -- ^ MI Plaits
+    # legato 0.5 
+    , ccv (segment 100 $ range 30 80 $ slow 8 $ sine) # ccn "[33,41]" # s "midi"
+    , ccv (segment 100 $ range 0 100 $ fast 2 $ sine) # ccn "[34,42]" # s "midi"
+    , ccv (segment 100 $ range 30 60 $ slow 4 $ sine) # ccn "[35,43]" # s "midi"
+    , ccv (segment 100 $ range 0 60  $ slow 8 $ sine) # ccn "[36,44]" # s "midi"
+    , ccv (segment 100 $ range 0 127 $ slow 8 $ tri) # ccn 49 # s "midi" -- ^ kick distortion
+    , ccv (segment 100 $ range 0 127 $ slow 16 $ sine) # ccn 50 # s "midi" -- ^ kick click pitch
+]
+# cps(154/60/4)

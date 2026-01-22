@@ -1,0 +1,32 @@
+let 
+  structure = mask "[10010 11100 10101 00101 01110]/2"
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d1
+$ somecyclesBy (1/3) (rev)
+$ someCyclesBy (1/4) (rev)
+$ someCyclesBy (1/6) (zoom (0, 0.875))
+$ whenmod 18 15 (fastSqueeze "1 0.75")
+$ someCyclesBy (1/4) ((1/4) <~)
+$ whenmod 19 16 ((slow 2) . (brak))
+$ whenmod 32 27 ((slow 1.5))
+$ stack 
+[
+  structure $ s "midi*12" # note "<0!2 2!2 -1!2>" # midichan (3-1) -- ^ kick
+  , degradeBy 0.66 $ mask "fffftf" $ n "2*6" # midiN 5 -- ^ swoosh
+  , mask "ffftff" $ n "3*6" # midiN 5 -- ^ clap
+  , n "1*12" # midiN 5 -- ^ hat
+  , n "0/12" # midiN 5 -- ^ sfx
+  , slow 4 
+  $
+  n (scale "yu" "<0 4 9 4 0 9>") # midiN 4 -- ^ fm
+  # legato 1
+  , ccSeg 13 (range 0 120 $ slow 8 $ sine) -- ^ kick osc3
+  , ccSeg 14 (range 0 120 $ slow 8 $ sine) -- ^ kick bloop dist
+  , ccDis 15 "<0 20 70 80 90>" -- ^ kick warp
+  , ccDis 25 "<120 10!5>" -- ^ swoosh chorus
+  , ccDis 25 "<0!5 120>" -- ^ swoosh spectral
+]
+  # cps(171/60/4)

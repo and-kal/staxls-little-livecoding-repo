@@ -1,0 +1,30 @@
+let 
+  midiN chan = s "midi" # midichan (chan - 1) 
+  ccDis chan val = ccv val # ccn chan # s "midi" 
+  ccDisrand1 chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  basePat = "<0 [1 2] 2 [1 2 0] 1 2 [2 1]>*4"
+  var1 = whenmod 36 33 (zoom (1/4, 4)) 
+  var2 = whenmod 12 9 (fast "<1.25 1.5>")
+  var3 = whenmod 50 45 ((slow 8) . (ply 8))
+in
+d2
+$ var1 $ var2 $ var3 
+$ somecyclesBy (1/6) (rev)
+$ stack [
+  whenmod 42 38 (degradeBy 1)
+  $ n (fit 1 [0..2] basePat) # midiN 5 -- ^ 0..2=kick + FX
+  , (0.5 <~) $ n "<~ 12 ~ 17>" # midiN 5 -- ^ 12=snare
+  , whenmod 6 8 (fast (3/4))
+  $ every 3 rev $ n "[0!3 ~ 2!4]*2" # midiN 6 -- ^ hat
+  , whenmod 32 16 (|+ ccv 90) $ ccn 31 # ccv 0 # s "midi" -- ^ add clicks half of the time
+  , ("[1|0]" <~) -- ^ introducing another randomness generator here, otherwise the two `choose` will always be in sync
+  $ ccn 27 # ccv (cycleChoose [0, 105]) # s "midi" -- ^ grain pitch
+  , ccn 30 # ccv (cycleChoose [30, 120]) # s "midi" -- ^ grain freq
+  , n (scale "harmonicMajor" $ (unwrap $ fit 0 ["c'min9", "gs'min9", "fs'min9"] basePat)) # midiN 8 -- ^ synth
+  , every 4 ((fast 4) . (|+ ccv (segment 32 $ range 10 127 $ rand))) $ ccn 43 # ccv 0 # s "midi" -- ^ grain freq
+]
+# cps (161/60/4)

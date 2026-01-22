@@ -1,0 +1,20 @@
+d1
+$ whenmod 8 1 ((slow 4) . (ply 8))
+$ somecyclesBy (1/8) (# speed (-1)) 
+$ somecyclesBy (1/8) (hurry 2) 
+$ stack [
+    s "undefined:24" 
+    # cut 1
+    # end 0.5
+    # shape (range 0 0.85 $ cF 0 "32") 
+    # up (-12)
+    , 
+    cat [
+        s "[null:5 null:5 null:5 {kicky:0}%3 ~]" # cut 2 # gain 1.25 
+        , rarely (# up "[2|-1]") $ s "kicky:9?!4 undefined:4 kicky:9!2 Pikmin:32"
+        , loopAt 16 $ someCyclesBy (1/4) ((chop 128) . (striate 2)) $ s "null:4"
+    ]
+    , s "[~*2 undefined:13*3]" # up (-10.5)
+    , rarely (# up 3) $ s "minima:14*12" # cut 3 # pan (slow 2 $ smooth "-0.7 0.7") 
+] 
+# cps(165/60/1)

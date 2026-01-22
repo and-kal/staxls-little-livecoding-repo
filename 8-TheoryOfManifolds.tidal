@@ -1,0 +1,33 @@
+let 
+    midiN chan = s "midi" # midichan (chan - 1) 
+    ccDisrand1 chan val1 val2 = 
+        ccn chan 
+        # ccv (segment 50 (range val1 val2 $ rand)) 
+        # s "midi"
+    ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+    -- | creating a polyrhythm in TidalCycles mini-notation from a Collatz chain/sequence
+    myNotes = [ x | (a, b) <- zip (replicate 8 1) (replicate 8 0), x <- [a, b]]
+    collatzChain :: Integral t => t -> [t]
+    collatzChain 1 = [1]
+    collatzChain x
+        | (x `mod` 2) == 0 = x:collatzChain (x `div` 2)
+        | otherwise = x:collatzChain (x*3 + 1)
+    collatzZip y z = [show (a) ++ "@" ++ show (b) | (a, b) <- zip y z]
+    collatzBeat = parseBP_E("{" ++ unwords (collatzZip myNotes (collatzChain 17)) ++ "}%64")
+    -- collatzBeat = parseBP_E("[" ++ unwords (collatzZip myNotes (collatzChain 37)) ++ "]")
+in 
+d6
+$ 
+stack [
+    (|- n 24) $ n collatzBeat # midiN 5
+    , ccDisrand1 104 40 100 -- pitch
+    , ccDisrand1 105 0 127 -- pan
+    , ccDisrand1 106 30 90 -- vol
+    , ccDisrand1 107 0 127 -- reverse
+    , ccDisrand1 108 0 100 -- FX amount
+    , ccDisrand1 109 0 100 -- FX wetness
+    , ccv (segment 50 $ range 0 90 $ slow 16 $ (0.25 <~) $ sine) # ccn 110 # s "midi" -- attack
+    , ccv (segment 50 $ range 95 120 $ slow 16 $ sine) # ccn 111 # s "midi" -- decay
+    , ((3/6) ~>) $ n "-22" # midiN 5
+]
+# cps (80/60/4)

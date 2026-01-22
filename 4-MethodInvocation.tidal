@@ -1,0 +1,25 @@
+let 
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ MIDI channels in TC are 0-indexed 
+  ccDis chan val = ccv val # ccn chan # s "midi" -- ^ this one is patterning CC values (make sure to use `segment` when applying continuous patterns/oscillators)
+  ccSeg chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+  ccDisrand1 chan val1 val2 = 
+    ccn chan 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+  speedvari = cps (range (180/60/32) (180/60/0.5) $ slow 256 $ tri)
+in
+d1
+$ stack [ 
+  n "-24" # midiN 1 -- ^ impactor
+  , ccDisrand1 1 40 100 -- ^ pitch
+  , ccDisrand1 2 0 127 -- ^ pan
+  , ccDisrand1 4 0 127 -- ^ reverse
+  , ccDisrand1 5 0 127 -- ^ delay
+  , ccDisrand1 6 0 127 -- ^ delaymode
+  , ccSeg 7 (range 80 30 $ slow 32 $ sine) -- ^ attack
+  , ccSeg 8 (range 100 120 $ slow 32 $ sine) -- ^ decay
+  , n "[-24,-23,-22,-21]" # midiN 2 # legato 0.125 -- ^ kick+perc
+  , ccDis 9 ("[20|40|60|90]") -- ^ perc release
+  , ccSeg 10 (range 60 120 $ perlin) -- ^ perc detune
+]
+ # speedvari 

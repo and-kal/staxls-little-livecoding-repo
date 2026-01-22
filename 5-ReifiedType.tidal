@@ -1,0 +1,28 @@
+let repeater x = ((ply x) . (slow (x / 2)))
+in
+d9
+$
+someCyclesBy (1/4) (rev)
+$
+whenmod 32 29 (slow (segment 64 $ range 1 6 $ saw))
+$
+whenmod 40 36 (repeater 64)
+$
+sometimesBy (1/4) ((1/12) <~)
+$
+stack [
+  (|+ n (range 12 36 $ rand))
+  $ n (scale "octatonic" ("[~ [0 1 2]]!2")) # s "midi" # midichan 4 -- ^ reaktor
+  # legato 0.125
+  , ccn 25 # ccv (range 0 66 $ ((1 <~) $ rand)) # s "midi" -- ^ reaktor flanger wet
+  , ccn 26 # ccv (range 40 127 $ ((2 <~) $ rand)) # s "midi" -- ^ reaktor flanger
+  , ccn 27 # ccv (segment 6 $ range 0 127 $ saw) # s "midi" -- ^ reaktor pan
+  , n "[[0 ~!2 2!2 1?]!2 , 3*12]" # s "midi" # midichan 5 -- ^ drums
+  , sometimes (|+ n 3)
+  $ degradeBy (3/4) $ n (run 2) # s "midi" # midichan 6 # legato 0.75 -- ^ akaizer
+  , fast 2 $ ccn 37 # ccv (range 0 127 $ ((3 <~) $ rand)) # s "midi" -- ^ loop start
+  , somecyclesBy (1/8) (|+ n "[12|24]")
+  $ loopAt 4 $ n ("[c'min|f'min'ii]") # s "midi" # midichan 7 -- ^ pad surge
+  # legato 4
+]
+  # cps (135/60/4)
