@@ -39,8 +39,8 @@ $ stack [
   ,
   n (unwrap $ fmap (["[0,1]", "~", "~", "~"]!!) $ pattern) 
   # midiN 4 
-  -- , 
-  -- whenmod 13 9 (|+ ccv 80) $ midilfo 1 27
+  , 
+  whenmod 13 9 (|+ ccv 80) $ midilfo 1 27
 ]
   # cps(100/60/2)
 
@@ -60,7 +60,7 @@ let
     snap = "~ -23 ~ -23 ~ -23"
     midiN chan = s "midi" # midichan (chan - 1) 
 in
-d2 
+d2
 $
   someCyclesBy (1/4) (0.125 <~)
   $ whenmod 100 70 (ply 2)
@@ -68,11 +68,15 @@ $
   $ whenmod 120 100 (degradeBy 0.9) 
   $
   stack [
-    n kick # midiN 5,
-    n hat # midiN 6,
-    n snap # midiN 6,
-    n "c2" # midiN 7,
-    someCyclesBy (1/8) (|+ n "[7|-12]") $ n "g5'm11*2" # midiN 8
+    -- n kick # midiN 5
+    -- ,
+    n hat # midiN 6
+    ,
+    n snap # midiN 6
+    -- ,
+    -- n "c2" # midiN 7
+    -- ,
+    -- someCyclesBy (1/8) (|+ n "[7|-12]") $ n "g5'm11*2" # midiN 8
   ]
   # cps(666/60/2)
 
@@ -88,18 +92,18 @@ hush
 -------------------------------------------------
 
 d3 
--- $ every 5 (chew 4 "0*2 1 2*3 1 3") 
--- $ every 6 (fast 1.25) 
--- $ every 8 (bite 4 "0*2 1 2*2 1 3") 
--- $ whenmod 20 18 (slow 8) 
+$ every 5 (chew 4 "0*2 1 2*3 1 3") 
+$ every 6 (fast 1.25) 
+$ every 8 (bite 4 "0*2 1 2*2 1 3") 
+$ whenmod 20 18 (slow 8) 
 $ stack [
-  -- n "0*16" # s "midi" # midichan 8
-  -- , 
-  -- slow 6 $ n "~!7 [0*[4|8]]!5" # s "midi" # midichan 10
-  -- , 
-  -- n "-12*8 -12*8" # s "midi" # midichan 11
-  -- , 
-  n "0*8 0*12" # s "midi" # midichan 11
+  n "0*16" # s "midi" # midichan 8
+  , 
+  slow 6 $ n "~!7 [0*[4|8]]!5" # s "midi" # midichan 10
+  , 
+  n "-12*8 -12*8" # s "midi" # midichan 11
+  , 
+  n "0*8 0*16" # s "midi" # midichan 11
 ]
 # cps(199/60/4)
 
@@ -122,6 +126,8 @@ $
 whenmod 56 40 (slow 12)
 $
 whenmod 40 30 (ply 4)
+-- $
+-- degrade
 $
 stack [
   someCycles (fast 1.5) $ n "[0*4 [0*3 ~]]/2" # midiN 14
@@ -141,6 +147,26 @@ hush
 --                                             --
 --     don't forget to unmute                  --
 -------------------------------------------------
+
+let
+  midiN chan = s "midi" # midichan (chan - 1) 
+  midilfo chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
+in
+d6
+$
+  whenmod 20 13 (shuffle 8) $
+  whenmod 32 26 (fast (5/6)) $
+stack [
+  (|- n 24) $ sometimes (|+ n (irand 12)) $ n "<[0*4]!15 ~>" # midiN 5
+  -- ,
+  -- (|- n 22) $ n "0 7 5 2" # midiN 6
+  -- ,
+  -- superimpose (|+ n "-12,4,7,12") $ n "0 7 5 2" # midiN 7
+]
+# cps (484/60/2)
+
+hush
+
 let
   midiN chan = s "midi" # midichan (chan - 1) 
   midilfo chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
@@ -151,16 +177,16 @@ $
   whenmod 32 26 (fast (4/3)) $
 stack [
   whenmod 12 8 (# up (-12)) $ 
-  n "<[0*4]!15 ~>" # midiN 1
-  , 
-  fast 2 $ whenmod 54 32 (|+ n 24) 
-  $ shuffle 16 $ n (scale "neapolitanMinor" "<4 5 4 3 2 3 2 0 4 5 4 3 2 3 4 0>*2") 
-  # midiN 2
-  , 
-  n "-24*4" # midiN 3
-  , 
-  n "[-23*2]" # midiN 3
-  , 
+  -- n "<[0*4]!15 ~>" # midiN 1
+  -- , 
+  -- fast 2 $ whenmod 54 32 (|+ n 24) 
+  -- $ shuffle 16 $ n (scale "neapolitanMinor" "<4 5 4 3 2 3 2 0 4 5 4 3 2 3 4 0>*2") 
+  -- # midiN 2
+  -- , 
+  -- n "-24*4" # midiN 3
+  -- , 
+  -- n "[-23*2]" # midiN 3
+  -- , 
   n (run 4) # s "midi" # midiN 4
 ]
 # cps (396/60/2)
