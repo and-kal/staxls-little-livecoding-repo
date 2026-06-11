@@ -1,16 +1,16 @@
 ServerOptions.devices.do({|dev| dev.postln});
 
-Server.default.options.outDevice*("ASIO : JackRouter");
-Server.default.options.inDevice*("ASIO : JackRouter");
+Server.default.options.outDevice_("ASIO : JackRouter");
+Server.default.options.inDevice_("ASIO : JackRouter");
 
 (
 s.reboot { // server options are only updated on reboot
 // configure the sound server: here you could add hardware specific options
 // see http://doc.sccode.org/Classes/ServerOptions.html
-s.options.numBuffers = 1024 _ 256; // increase this if you need to load more samples
-s.options.memSize = 8192 _ 32; // increase this if you get "alloc failed" messages
+s.options.numBuffers = 1024 * 256; // increase this if you need to load more samples
+s.options.memSize = 8192 * 32; // increase this if you get "alloc failed" messages
 s.options.numWireBufs = 64; // increase this if you get "exceeded number of interconnect buffers" messages
-s.options.maxNodes = 1024 \* 32; // increase this if you are getting drop outs and the message "too many nodes"
+s.options.maxNodes = 1024 * 32; // increase this if you are getting drop outs and the message "too many nodes"
 s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
 s.options.sampleRate = 44100; // some interfaces might need other values like 48000 (ASIO on Windows defaults to 44100)
@@ -71,7 +71,7 @@ cc.free;
 SynthDef(\gendy3, {
 | out, sustain=1, freq=440, max, speed=1, begin=0, end=1, pan, accelerate, offset, volume, ampdist, durdist, cfilt = 20000|
 var env = Line.ar(1, 0, sustain, doneAction: Done.freeSelf);
-var osc = RLPF.ar(in: Gendy3.ar(ampdist, durdist, freq:freq), freq: cfilt);
+var osc = RLPF.ar(in: Gendy3.ar(ampdist, durdist, freq: freq), freq: cfilt);
 osc = Limiter.ar(osc, 0.9);
 // Out.ar(0 , osc)
 OffsetOut.ar(out,DirtPan.ar(osc, ~dirt.numChannels, pan, env))
