@@ -1,3 +1,8 @@
+-- you can define custom global variables and settings in 
+-- `C:\tools\cabal\x86_64-windows-ghc-9.6.1\tidal-1.10.1\BootTidal.hs`
+
+-- if you want to use Ableton Link, evaluate this line once:
+streamEnableLink tidal
 
 -------------------------------------------------
 --           part one                          --
@@ -57,5 +62,5 @@
 --                                                           --
 --                   relevant CC channels                    --
 --                   113-127:                                --
--- keep in mind, that #123 is reserved and can't be assigned --
+--keep in mind, that #123 is reserved and can't be assigned--
 ---------------------------------------------------------------

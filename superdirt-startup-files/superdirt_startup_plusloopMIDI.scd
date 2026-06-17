@@ -1,4 +1,15 @@
 (
+ServerOptions.devices.do({|d|
+	d.postln;
+})
+)
+
+Server.default.options.outDevice_("ASIO : JackRouter");
+Server.default.options.inDevice_("ASIO : JackRouter");
+
+
+
+(
 s.reboot { // server options are only updated on reboot
 	// configure the sound server: here you could add hardware specific options
 	// see http://doc.sccode.org/Classes/ServerOptions.html
@@ -27,9 +38,6 @@ s.reboot { // server options are only updated on reboot
 	s.latency = 0.3; // increase this if you get "late" messages
 };
 );
-
-Server.default.options.outDevice_("ASIO : UA-25");
-Server.default.options.inDevice_("ASIO : UA-25");
 
 (
 	MIDIClient.init;
