@@ -5,3 +5,4 @@ Desktop.ini
 /.vscode
 *.mp4
 libs/
+.venv/

@@ -1,14 +1,15 @@
-Next show coming up:
+code snippets for the 2026 tour with
 
-(((((((((((((((((((( ͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡--22 ))))))))))))))))))))) (((((((((((((((((((( ͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡--11 ))))))))))))))))))))) (((((((((((((((((((( ͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡͡2025 )))))))))))))))))))))
+✦ . 　⁺ 　 . ✦ . 　⁺ 　 . ✦
 
-@@@@@@@@@@@@
-[GIFGROND t.ilburg](http://gifgrond.nl/)
+[Esil](https://simplemusicexperience.bandcamp.com/track/a2-esil-the-mountains-they-grow-in-chains)
 
-w/w/w/w/
+✦ . 　⁺ 　 . ✦ . 　⁺ 　 . ✦
 
-- [x] MONTAGNE ROUGE
-- [x] VIVE LA POP
-- [x] PICKLS XP
-- [x] DJ RAE
-- [x] DJoker
+[Torte la bûche](https://ubac.bandcamp.com/album/songs-of-tadada)
+
+✦ . 　⁺ 　 . ✦ . 　⁺ 　 . ✦
+
+in Berlin, Zürich, Geneva etc.
+
+<sub>0-MonadLogger.tidal & 0-MonadLogger.als contain some stuff from the `../Gifgrond` branch</sub>
