@@ -40,7 +40,26 @@ s.reboot { // server options are only updated on reboot
 );
 
 (
-	MIDIClient.init;
-	~midiOut = MIDIOut.newByName("loopMIDI Port", "loopMIDI Port"); // substitute your own device here
-	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
+var cc;
+var osc;
+
+osc = NetAddr.new("127.0.0.1", 6010);
+
+MIDIClient.init;
+// MIDIIn.connectAll;
+
+cc = MIDIFunc.cc({ |val, num, chan, src|
+	osc.sendMsg("/ctrl", num.asString, val/127);
+});
+
+if (~stopMidiToOsc != nil, {
+	~stopMidiToOsc.value;
+});
+
+~stopMidiToOsc = {
+	cc.free;
+};
+
+~midiOut = MIDIOut.newByName("loopMIDI Port", "loopMIDI Port"); // substitute your own device here
+~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 )
