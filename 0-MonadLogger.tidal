@@ -23,6 +23,37 @@
 streamEnableLink tidal 
 -- ^ enables Ableton Link
 
+-- d1
+--   $ rarely (fast 1.25)
+--   $ note (toScale [0,2,3,6,7,9,10] ("<c5(5,16) es5(3,16)>"))
+--     # s "superfm" 
+--     -- # alg (irand 23)
+--     -- # lfmr [1, 2.3, 1.9, 0.6] 
+--     # amp1 1
+--     # ratio2 2.5
+--     # mod12 4
+--     # egrate11 0.3 # eglevel11 1 -- slow attack
+--     # egrate12 1  # eglevel12 0.1 -- fast decay to 1/2 amp
+--     # egrate13 0.5 # eglevel13 0.8 -- 2nd amp swell
+--     # egrate14 0.4 # eglevel14 0 -- decay of mod to 0
+--     -- # fmamp 2 1 # fmratio 2 0.4 # fmdt 4 1
+--     -- # fmamp 3 1 
+--     -- # fmamp 4 1
+--     -- # fmmod 4 1 0.4
+--     -- # fmmod
+--     -- # fmeglevel
+--     -- # fmfb
+--     -- # lfof
+--     -- # lfod
+--     -- # fmparam
+--     -- # fma
+--     -- # fmr
+--     -- # fmd
+--     -- # fmer
+--     -- # fmel
+--     -- # fmm
+-- # cps(132/60/4)
+
 -----------------------------------
 --           part one            --
 --                               --
@@ -39,7 +70,6 @@ streamEnableLink tidal
 -- TODO: EQ
 
 let 
-  midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
   melody = "[0 7 5 7 5 2 11 1 0 7 5 9 12 2 11 1]"
   pattern = binary "<<1274 1275>!4 <1174 1195>!4 <1000 1003>!4>"
   lforand chan val1 val2 = 
@@ -98,7 +128,6 @@ hush
 --  TODO: find new synth
 
 let 
-   midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
    cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 + chan) # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
 in
 d2
@@ -150,13 +179,10 @@ hush
 -- keep as is
 -- TODO: continue MIDI CC assignments >= 33
 
-d1 $ ccv (segment 50 $ 100) # ccn 32 # s "midi" 
+d1 $ ccv (segment 50 $ 100) # ccn 33 # s "midi" 
 
 d1 $ silence
 
-let 
-   midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
-in
 d3
 $ palindrome 
 $ whenmod 24 21 (slow "2 1.5 1.25") 
@@ -180,71 +206,53 @@ hush
 --           part four           --
 --                               --
 --   relevant note channels      --
---    13,14                      --
+--    13,14,15,16                --
 --                               --
 --     relevant CC channels      --
 --     49-52:                    --
 --     53-56:                    --
------------------------------------
-
--- TODO: add acid bass + faster / maybe remove interlude
-
-let 
-  midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
-  cclfo chan val = ccv (segment 32 $ val) # ccn (3 * 4 * 4 + chan)  # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
-  randlfo chan val1 val2 = ccv (segment 50 $ range val1 val2 $ slow 2 $ perlin) # ccn (12 * 4 + chan) # s "midi" 
-in
-d4
-$ every 8 rev 
-$ stack [
-  whenmod 17 14 (degradeBy 1) $
-  substruct (inv (ascii "<t c ß>")) $ n "0" # midiN 13 -- kick
-  ,
-  whenmod 24 21 (degradeBy 1) $
-  substruct (ascii "<t c ß>") $ n "[2]" # midiN 13 -- weirdhit
-  ,
-  whenmod 8 6 (degradeBy 1) $ n "1" # midiN 13 -- snarey
-  ,
-  sometimes (|+ n "2") $ substruct (ascii "<t c ß>")
-  $ n "0" # midiN "[15]" -- glitchy
-  ,
-  randlfo 79 0 99 -- delay feedback
-  ,
-  cclfo 80 0 -- delay d/w
-  ,
-  sometimes (|+ n "2") $ n "0!8" # midiN 14 -- "hats"
-]
-# cps (142/60/2)
-
-hush
-
--- -- this one cannot be called inside "stack" for some reason
--- d3 $ ccv 0 # ccn 91 # s "midi" 
-
------------------------------------
---           interlude           --
---                               --
---   relevant note channels      --
---          15,16                --
---                               --
---     relevant CC channels      --
 --     57-60:                    --
 --     61-64:                    --
 -----------------------------------
 
+-- TODO: different kick + wilder 303
+
+
 let 
-  midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
+  cclfo chan val = ccv (segment 32 $ val) # ccn (3 * 4 * 4 + chan)  # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
+  randlfo chan val1 val2 = ccv (segment 50 $ range val1 val2 $ slow 2 $ perlin) # ccn (3 * 4 * 4 + chan) # s "midi" 
+  pat = ascii "<t c ß>"
+  mel303 = toScale [0,2,3,6,7,9,10] "[0!8 2 -2!4 2 0 1]/2" -- ^ dorian#4
 in
-d5 
-$ sometimes (# midiN "[15,16]")
-$ trigger
-$ (|- note "<19 24>") 
-$ superimpose (|+ note "[0,2,[7|14]]") 
-$ note (scale "hexAeolian" 
-  $ snowball 12 (+) (slow 2) "0 3 _ -1 _ 5 _ 7 4 _ -2 _"
-)
-# midiN 16
-# cps (107/60/4)
+d4
+$ every 8 rev 
+$ whenmod 20 16 (scramble 12)
+$ stack [
+  -- whenmod 17 14 (degradeBy 1) $
+  substruct (inv pat) $ n "0" # midiN 13 -- kick
+  ,
+  -- whenmod 24 21 (degradeBy 1) $
+  substruct pat $ n "[2]" # midiN 13 -- weirdhit
+  ,
+  whenmod 11 9 (plyWith 4 ((|+ ccv 5)) . (rev) . (slow 2)) -- ^ ascending snare
+  $
+  stack [ -- ^ stack inside stack so we I can modulate CC conditionally
+     fast 2 $ whenmod 8 6 (degradeBy 1) $ whenmod 7 5 (0.25 <~) $ n "1 ~ ~ 1" # midiN 13 -- snarey
+     ,
+     ccv 80 # ccn (3 * 4 * 4 + 1) # s "midi" -- ^ transpose snare
+  ]
+  ,
+  (|- n 3) $ sometimes (|+ n "[-12|12]") $ often (|+ n "[3|5]") 
+  -- $ substruct (ascii "<t c ß>")
+  $ n mel303 # midiN 15 -- ^ 303
+  ,
+  randlfo 9 50 99 -- ^ filter envelope
+  ,
+  randlfo 10 89 0 -- ^ 303 waveform
+  ,
+  sometimes (|+ n "2") $ n "0!8" # midiN 14 -- ^ glitchy hat particles
+]
+# cps (169/60/2)
 
 hush
 
@@ -360,7 +368,6 @@ hush
 -- TODO: shape kick and mix 
 
 let
-  midiN chan = s "midi" # midichan (chan - 1) 
   midilfo chan val = ccv (segment 50 $ val) # ccn (96 + chan) # s "midi" 
   midicc chan val = ccv val # ccn (96 + chan) # s "midi" 
   pat_1 = binary "<[1122, 4499] [2004, 4894]>"
@@ -412,7 +419,6 @@ let
   mel_1 = "{<4!4 [0 3 2 7] [1 0 2 0] 5!2 0 9!3>}%12"
   pat_1 = "{<0!4 [0 2 4 6] [0 7 9 12] 0!2 0 9!3>}%6"
   struct_1 = binary "<23973 3456>"
-  midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
 in
 d8
   -- $ slow 8
