@@ -278,27 +278,25 @@ hush
 -- TODO: continue MIDI CC assignments > 64
 -- change drums
 
-d1 $ ccv (segment 50 $ 100) # ccn 48 # s "midi" 
+d1 $ ccv (segment 50 $ 100) # ccn 65 # s "midi" 
 
 d1 $ silence
 
 d5 
 $ whenmod 12 8 (sometimes loopFirst) 
 $ whenmod 18 12 (sometimesBy (1/4) ((1/4) <~) . revArc (0.25, 0.75))
-$ (linger (1/20))
-$
-stack [
-  whenmod 30 27 ((slow 3) . (linger (1/32))) $ 
-  (|- n 24) $ n "<<[2*2 ~!2 1*2] 0*8> [3*2 4*5]>" # midiN 1 -- drums
+$ stack [
+  n (scale "locrian" "<0 ~ 5 ~!2 4>") # midiN 1 -- ^ snarefxy
   ,
-  slow 2 $ (+ n "[0,[24|12|7]]") $ n (scale "locrian" "<fs3'min11'o gs3'm7f5'i>") # midiN 2 -- pad
+  (+ n "[0,[24|12|7]]") $ n (scale "locrian" "<fs3'min11'o gs3'm7f5'i>") # midiN 2 -- pad
   ,
   degradeBy (2/3) $ 
-  slow 2 $ 
   every 8 (|- n 7) $ 
   n (scale "locrian" "<fs4'min11'o gs4'm7f5'o>")  # midiN 3 -- fx
+  ,
+  n (scale "locrian" "<~!2 0 ~ -4>")  # midiN 4 # legato 1.5 -- subbbass
 ]
-  # cps (161/60/2)
+  # cps (161/60/4)
 
 hush
 
@@ -361,7 +359,7 @@ stack [
     # silence
   ]
 ]
-# cps (160/60/4)
+# cps (161/60/4)
 
 hush
 
