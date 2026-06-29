@@ -1,0 +1,33 @@
+-----------------------------------
+--           part three          --
+--                               --
+--   relevant note channels      --
+--      9,10,11,12               --
+--                               --
+--     relevant CC channels      --
+--     33-36:                    --
+--     37-40:                    --
+--     41-44:                    --
+--     45-48:                    --
+-----------------------------------
+
+-- keep as is
+
+d3
+$ palindrome 
+$ whenmod 24 21 (slow "2 1.5 1.25") 
+$ whenmod 23 17 (linger (1/16))
+$ stack [
+ whenmod 23 17
+ (const $ (n "[fs6'min11]*9" # midiN 10 # legato 0.4)) 
+ $ silence -- occassional synth
+  , stutter 13 (1/16) $ n "0 1" # midiN "9" -- kick
+  , stutter 12 (1/16) $ n "2" # midiN 9 -- hats
+  , 
+  whenmod 6 4 (bite 4 "3 2 0 1") 
+  $ fast 2 $ struct (binary "1110110" ) $ n (run 32) # midiN 11 -- clap 
+  , stutter 24 (1/16) $ n "[12|7] [14|5] -12 _" # midiN 12 -- synth
+]
+# cps (185/60/4)
+
+hush

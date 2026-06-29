@@ -1,0 +1,58 @@
+-----------------------------------
+--           part one            --
+--                               --
+--   relevant note channels      --
+--      1,2,3,4                  --
+--                               --
+--     relevant CC channels      --
+--     1-4:                      --
+--     5-8:                      --
+--     9-12:                     --
+--     13-16:                    --
+-----------------------------------
+
+-- TODO: EQ # fx to stab
+
+let 
+  midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
+  melody = "[0 7 5 7 5 2 11 1 0 7 5 9 12 2 11 1]"
+  pattern = binary "<<1274 1275>!4 <1174 1195>!4 <1000 1003>!4>"
+  lforand chan val1 val2 = 
+    ccn (1 * 4 + chan) 
+    # ccv (segment 50 (range val1 val2 $ rand)) 
+    # s "midi" -- ^ this one is for sending one random value per cycle
+in
+d1
+$ whenmod 20 14 ((linger (1/8)) . (|- note 3) . (0.75 ~>))
+$ stack [
+    struct (pattern) 
+    $ note 0
+    # midiN 1 -- ^ kick
+    ,
+    ccn 1
+    # ccv "<0!8 127!8>" -- ^ alternate synth
+    # s "midi"
+    , struct (inv pattern) 
+    $ somecyclesBy 0.7 rev
+    $ note "0 1 14"
+    # midiN 2 -- ^ digits
+    , 
+    often (|+ n "[0|1|2|3]")
+    $
+    (|- n 24)
+    $ n "0*16"
+    # midiN 3 -- ^ particles
+    ,
+    fast 1.5 $ lforand 5 0 127
+    ,
+    fast 2 $ lforand 6 30 100
+    ,
+    (0.75 ~>)
+    $ 
+    whenmod 20 14 (const $ silence)
+    $
+    n "0*2"
+    # midiN 4
+] # cps(172/60/4)
+
+hush

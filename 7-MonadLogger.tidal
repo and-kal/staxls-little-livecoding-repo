@@ -1,0 +1,48 @@
+
+-----------------------------------
+--           part seven          --
+--                               --
+--   relevant note channels      --
+--      9,10,11,12               --
+--                               --
+--     relevant CC channels      --
+--     97-100:                   --
+--     101-104:                  --
+--     105-108:                  --
+--     109-112:                  --
+-----------------------------------
+
+-- TODO: shape kick and mix 
+
+let
+  midilfo chan val = ccv (segment 50 $ val) # ccn (96 + chan) # s "midi" 
+  midicc chan val = ccv val # ccn (96 + chan) # s "midi" 
+  pat_1 = binary "<[1122, 4499] [2004, 4894]>"
+  pat_2 = binary "<[122, 279] [3111, 1814]>"
+  pat_3 = ascii "<co Rp Os>"
+in
+d7 
+$ someCyclesBy 0.6 (rev) 
+-- $ always (slow 6) 
+$ whenmod 12 9 (slow 2) 
+$ whenmod 20 17 (linger (1/24)) 
+$ stack [
+ struct (inv pat_3) $ n (scale "hexDorian" "0 1 3 5") # midiN 10
+  ,
+  struct pat_3 $ n "-24 -23" # midiN 9  
+  ,
+  n "0*8" # midiN 11
+  ,
+  n "~ 0" # midiN 12 
+  ,
+  midicc 1 120
+  ,
+  sometimes (0.25 <~) $ midilfo 13 (range 0 127 $ fast "[1|2|3|4]" $ sine)  
+  ,
+  sometimes (0.25 ~>) $ midilfo 14 (range 0 127 $ fast "[1|2|3|4]" $ sine)  
+]
+# cps (180/60/4)
+-- # cps (range (155/60/4) (155/60/5) $ slow 4 $ sine)
+-- # cps (151/60/4)
+
+d7 $ silence
