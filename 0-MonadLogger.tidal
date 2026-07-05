@@ -98,6 +98,40 @@ in
 
 hush
 
+⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊
+🏺🏛️🧿🫒
+⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆
+
+
+
+let
+  cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 * 7 + chan)  # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
+in
+d5 
+$ whenmod 12 8 (sometimes loopFirst) 
+$ whenmod 18 12 (sometimesBy (1/4) ((1/4) <~) . revArc (0.25, 0.75))
+$ stack [
+  n (scale "locrian" "<0 ~ 5 ~!2 4>") # midiN 13 -- ^ snarefxy
+  ,
+  someCyclesBy (1/4) (|* ccv (range 0 127 $ slow 4 $ perlin))
+  $
+  cclfo 1 50 -- ^ snarefxy delay warp
+  ,
+  (+ n "[0,[24|12|7]]") $ n (scale "locrian" "<fs3'min11'o gs3'm7f5'i>") # midiN 14 -- pad
+  ,
+  degradeBy (2/3) $ 
+  every 8 (|- n 7) $ 
+  n (scale "locrian" "<fs4'min11'o gs4'm7f5'o>")  # midiN 15 -- fx
+  ,
+  n (scale "locrian" "<~!2 0 ~ -4>")  # midiN 16 # legato 1.5 -- subbbass
+]
+  # cps (161/60/4)
+
+hush
+
+
+
+
 {-
 ↘↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↙
 →some ideas for the next tracks/patterns←
@@ -111,15 +145,7 @@ $
 soak 12 (fast 1.2) $ s "[808hc, bd sd/2 <cp? [cp/4]!3>]"
 # cps (166/60/4)
 
-
-let 
-  xenscale n = map (\x -> x / n * 12) [0..(n-1)]
-  xen n p = toScale (xenscale n) p
-in
-  d1 $ note (xen 9 "0 1 2 5") # s "superpiano"
-
 d1 
-$ spaceOut [(5/3), 1.5, (4/3), 1.25, 1, (7/8), 0.75, (2/3)]
   $ s (fmap (["bd:18", "sd"]!!) 
   $ markovPat 16 0 [ 
     [3, 5], 
@@ -127,30 +153,4 @@ $ spaceOut [(5/3), 1.5, (4/3), 1.25, 1, (7/8), 0.75, (2/3)]
   ])
 # cps (160/60/4)
 
--- assoc group 
-let 
-  midiN chan = s "midi" # midichan (chan - 1)
-  midicc chan val = ccv val # ccn chan # s "midi" 
-  midilfo chan val = ccv (segment 50 $ val) # ccn chan # s "midi" 
-  in
-d3 
-$
-whenmod 8 5 (slow "2 1 4 8 2")
-$
-whenmod 12 6 ((slow 2) . (bite 4 "0 2 3 1"))
-$
-  stack [
-    -- whenmod 14 10 (shuffle 8) 
-    -- $
-    -- someCyclesBy (1/4) (|- n 24) 
-    -- $ n (run 16) # midiN 9
-    -- ,
-    -- midilfo 55 (range 0 37 $ rand)
-    -- ,
-    -- fast 4 $ midicc 56 "[0|127]"
-    -- ,
-    -- struct (ascii "<ha [H A] <hA Ha>>") $ n "0" # midiN 10
-    -- ,
-    struct (inv (ascii "<ha [H A] <hA Ha>>")) $ n "0" # midiN 11
-    ]
-# cps(166/60/4)
+hush

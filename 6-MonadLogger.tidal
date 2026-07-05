@@ -12,26 +12,31 @@
 -----------------------------------
 
 let 
-  basePat = "0 ~!2 0 ~!2 1 ~"
-  cclfo chan val = ccv (segment 32 $ val) # ccn (80 + chan) # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
+  basePat = "{0 ~!2 0 ~!2 1 _ 7!24}%8"
+  fill = whenmod 17 13
+  fillPat = "0!24"
+  cclfo chan val = ccv (segment 32 $ val) # ccn (5*4*4 + chan) # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
+  slowed = whenmod 12 9
 in
 d6
 $
--- always (bite 4 "1 2 0 3")
--- $
-whenmod 12 9 (slow 3)
--- $
--- whenmod 17 13 (soak 2 (fast (4/3)))
--- $
--- degradeBy 0.8
+every 4 (bite 4 "1 2 0 3")
+$
+slowed (slow 3)
+$
+fill (soak 2 (fast (4/3)))
+$
+whenmod 32 29 (degradeBy 0.8)
 $
 stack [
-  fast 2 $ n basePat # midiN 5 -- bass
+  fill (# n fillPat)
+  $
+  fast 2 $ n basePat # midiN 5 -- ^ bass
   ,
   stack [
-    fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ticks
+    fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ^ ticks
     ,
-    n "~ 4*8" # midiN 6 -- shaker
+    n "~ 4*8" # midiN 6 -- ^ shaker
     ,
     slow 2 
     $
@@ -41,23 +46,29 @@ stack [
     $
     whenmod 6 3 (fast "2")
     $
-    n "~ 1 ~*2 2" # midiN 6 -- snares
+    n "~ 1 ~*2 2*4" # midiN 6 -- ^ snares
     ,
-    whenmod 12 9 (const $ n "0*3 1*3") $ fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- kick
+    fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- ^ kick
     ,
-    fast 2 $ n basePat # midiN 7 -- voc 
-    # silence
+    whenmod 8 5 (# silence)
+    $
+    fast 2 $ n basePat # midiN 7 -- ^ voc 
     ,
-    cclfo 121 0 -- voc selector
+    someCyclesBy (1/5) (|+ ccv 66)
+    $
+    slowed (|+ ccv 127)
+    $
+    cclfo 9 0 -- ^ voc selector
     ,
+    slowed (|- n 7)
+    $
     every 4 (|+ n 11) 
     $
     every 13 (|+ n 5) 
     $ n "-5" # legato 0.3
-    # midiN 8 -- stab
-    # silence
+    # midiN 8 -- ^ stab
   ]
 ]
-# cps (161/60/4)
+# cps (171/60/4)
 
 hush

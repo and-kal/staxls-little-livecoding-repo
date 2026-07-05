@@ -10,28 +10,42 @@
 --     77-80:                    --
 -----------------------------------
 
-
--- TODO: continue MIDI CC assignments > 64
--- change drums
-
-d1 $ ccv (segment 50 $ 100) # ccn 65 # s "midi" 
+d1 $ ccv (segment 50 $ 100) # ccn 80 # s "midi" 
 
 d1 $ silence
 
-d5 
-$ whenmod 12 8 (sometimes loopFirst) 
-$ whenmod 18 12 (sometimesBy (1/4) ((1/4) <~) . revArc (0.25, 0.75))
-$ stack [
-  n (scale "locrian" "<0 ~ 5 ~!2 4>") # midiN 1 -- ^ snarefxy
-  ,
-  (+ n "[0,[24|12|7]]") $ n (scale "locrian" "<fs3'min11'o gs3'm7f5'i>") # midiN 2 -- pad
-  ,
-  degradeBy (2/3) $ 
-  every 8 (|- n 7) $ 
-  n (scale "locrian" "<fs4'min11'o gs4'm7f5'o>")  # midiN 3 -- fx
-  ,
-  n (scale "locrian" "<~!2 0 ~ -4>")  # midiN 4 # legato 1.5 -- subbbass
+-- assoc group 
+let 
+  midicc chan val = ccv val # ccn (4**3 + chan) # s "midi" 
+  midilfo chan val = ccv (segment 50 $ val) # ccn (4**3 + chan) # s "midi" 
+  pat = ascii "<ha [H A] <hA Ha>>"
+  in
+d3 
+$
+whenmod 8 5 (slow "2 1 4 1 2")
+$
+whenmod 12 8 ((slow 2) . (bite 4 "0 2 3 1"))
+-- $ 
+-- always ((slow 4) . (spaceOut [(5/3), 1.5, (4/3), 1.25, 1, (7/8), 0.75]))
+$
+  stack [
+    whenmod 14 10 (shuffle 8) 
+    $
+    someCyclesBy (1/4) (|- n 24) 
+    $ n (run 16) # midiN 1
+    ,
+    midilfo 1 (range 0 37 $ rand)
+    ,
+    fast 4 $ midicc 2 "[0|127]"
+    ,
+    struct (pat) $ n "0" # midiN 2
+    ,
+    struct (inv (pat)) $ n "0" # midiN 3
+    -- ,
+    -- someCyclesBy (1/1) (|- n 12)
+    -- $
+    -- n "<e gs ds>" # midiN 4 # legato 2
 ]
-  # cps (161/60/4)
+# cps(166/60/4)
 
 hush
