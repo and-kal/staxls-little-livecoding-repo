@@ -38,8 +38,8 @@ in
   $ stack [
     every 3 (shuffle 4) 
     $ 
-    n pat1 # midiN 1
-    ,
+    -- n pat1 # midiN 1
+    -- ,
     n bass # midiN 2
     -- ,
     -- every 3 (rev) $ every 4 (const $ silence) $ slow 2 $ n kinte # midiN 3
@@ -50,7 +50,7 @@ in
     every 8 ((|+ ccv 127)) 
     $ ccv 0 # ccn 1 # s "midi"
   ]
-  # cps (215/60/4)
+  # cps (205/60/4)
 
 hush
 
@@ -76,36 +76,50 @@ in
     every 4 (rev)
     $
     someCyclesBy (1/1) (fast 2) $ n bass # midiN 6
-    ,
-    someCyclesBy (1/4) (fast 2) $ n synth # midiN 7
-    ,
-    someCyclesBy (1/4) (fast 2) $ n pad # legato 3 # midiN 8
+    -- ,
+    -- someCyclesBy (1/4) (fast 2) $ n synth # midiN 7
+    -- ,
+    -- someCyclesBy (1/4) (fast 2) $ n pad # legato 3 # midiN 8
   ]
   # cps (222/60/4)
 
 hush
 
-let 
-  pat1 = "{ 0!2 2 6 9!2 10*[1|2]!2 8!3 2*[1|2] }%4"
+-- ellas noten
+-- a d -> g c 
+let
+  pat1 = "{ 0*2 2*8 6*8 9!2 10*[1|2]!2 8!8 2*[1|2] }%4"
+  bass = "[g4 _ _ _ g4 _ _ d4 _ g4 _ g4 c5 _ c5 _ a5 _ c5 _]/3" 
 in
   d3
   $ stack [
+    whenmod 15 9 (plyWith 4 (|+ ccv 20)) -- ^ ascending snare
+    $ 
+    ccv 0 # ccn 113 # s "midi"
+    ,
     every 4 (rev)
     $
+    whenmod 10 8 (fast 2) 
+    $ 
+    every 5 (shuffle 4) 
+    $ 
+    every 4 ((1/4) <~) 
+    $
     someCyclesBy (1/1) (fast 2) $ n pat1 # midiN 9
+    ,
+    n bass # midiN 2
   ]
-  # cps (177/60/4)
+  # cps (187/60/64)
 
 hush
 
-⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊
-🏺🏛️🧿🫒
-⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆
-
-
+-- ⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆
+-- 🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒
+-- ⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺
 
 let
-  cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 * 7 + chan)  # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
+  cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 * 7 + chan)  # s "midi" 
+  -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
 in
 d5 
 $ whenmod 12 8 (sometimes loopFirst) 
