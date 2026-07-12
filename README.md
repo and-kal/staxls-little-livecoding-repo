@@ -10,6 +10,7 @@ code snippets for the 2026 tour with
 
 ✦ . 　⁺ 　 . ✦ . 　⁺ 　 . ✦
 
-in Berlin, Zürich, Geneva etc.
+in Stuttgart, Freiburg/Breisgau, Bern, Geneva
 
-<sub>0-MonadLogger.tidal & 0-MonadLogger.als contain some stuff from the `../Gifgrond` branch</sub>
+<sub>0-MonadLogger.als and the according .tidal files also contain some stuff from the `../Gifgrond` branch</sub>
+<sub>0-ShellScripting.tidal and the Ableton file</sub> are more mellow and with some breakbeats

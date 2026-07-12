@@ -23,7 +23,7 @@ let
     # s "midi" -- ^ this one is for sending one random value per cycle
 in
 d1
-$ whenmod 20 14 ((linger (1/8)) . (|- note 3) . (0.75 ~>))
+$ whenmod 20 15 ((slow 4) . (ply 8) . (|+ note 1))
 $ stack [
     struct (pattern) 
     $ note 0
@@ -49,10 +49,8 @@ $ stack [
     ,
     (0.75 ~>)
     $ 
-    whenmod 20 14 (const $ silence)
-    $
-    n "0*2"
-    # midiN 4
-] # cps(172/60/4)
+    n "0*[2|4|8]"
+    # midiN 4 -- ^ snare 
+] # cps(177/60/4)
 
 hush

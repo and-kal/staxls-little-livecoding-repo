@@ -12,6 +12,7 @@
 -----------------------------------
 
 -- TODO: different kick + wilder 303
+-- break sounds weird
 
 let 
   cclfo chan val = ccv (segment 32 $ val) # ccn (3 * 4 * 4 + chan)  # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
