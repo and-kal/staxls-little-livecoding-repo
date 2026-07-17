@@ -1,0 +1,56 @@
+
+-----------------------------------
+--           part eight          --
+--                               --
+--   relevant note channels      --
+--    13,14,15,16                --
+--                               --
+--     relevant CC channels      --
+--     113-116                   --
+--     117-120                   --
+--     121&122                   --
+--     124-127                   --
+-----------------------------------
+
+-- TODO: add more CC fx
+
+let
+  mel_1 = "{<4!4 [0 3 2 7] [1 0 2 0] 5!2 0 9!3>}%12"
+  pat_1 = "{<0!4 [0 2 4 6] [0 7 9 12] 0!2 0 9!3>}%6"
+  struct_1 = binary "<23973 3456>"
+  midicc chan val = ccv val # ccn chan # s "midi" 
+in
+d8
+-- clutchIn 7 12
+  -- $ slow 8
+  $ stack [
+  sometimes (|+ n 7) 
+  $ 
+  someCyclesBy (1/4) (shuffle 4) 
+  $ 
+  someCyclesBy (1/2) (|- n "[12|24]") 
+  $ 
+  n (scale "hexDorian" mel_1) # midiN 13
+  , 
+  whenmod 14 8 (shuffle 12) 
+  $
+  n (scale "hexDorian" pat_1) # midiN 14
+  ,
+  someCyclesBy ("[0.5|0.25]") ("[0.5|0.25]" <~)
+  $
+  fast 2 
+  $ struct (inv struct_1) $ n "[-4 3]" # midiN 15
+  ,
+  someCyclesBy (1/6) (fast 1.5) 
+  $ 
+  whenmod 10 8 (|- n 1) 
+  $ 
+  n "0*6" # midiN 16 -- ^ kick
+  ,
+  whenmod 16 11 (|+ ccv 127) 
+  $ 
+  midicc 124 0
+]
+# cps (132/60/4)
+
+hush

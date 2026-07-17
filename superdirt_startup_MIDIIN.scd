@@ -12,8 +12,6 @@ Server.default.options.outDevice_("ASIO : JackRouter");
 Server.default.options.inDevice_("ASIO : JackRouter");
 
 s.reboot { // server options are only updated on reboot
-	var cc;
-	var osc;
 	// configure the sound server: here you could add hardware specific options
 	// see http://doc.sccode.org/Classes/ServerOptions.html
 	s.options.numBuffers = 1024 * 256; // increase this if you need to load more samples

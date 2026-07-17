@@ -23,7 +23,7 @@ let
   pat_2 = binary "<[122, 279]*2 [3111, 1814]*2>"
   pat_3 = ascii "<co Rp Os>"
 in
-d7 
+d7
 $ someCyclesBy (2/3) (rev) 
 $ whenmod 34 31 (slow 6) 
 -- $ whenmod 12 11 (slow 3) 
@@ -45,7 +45,6 @@ $ stack [
 ]
 # cps (171/60/4)
 -- # cps (range (155/60/4) (155/60/5) $ slow 4 $ sine)
--- # cps (151/60/4)
 
 d7 $ silence
 

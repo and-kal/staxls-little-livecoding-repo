@@ -23,34 +23,14 @@
 streamEnableLink tidal 
 -- ^ enables Ableton Link
 
-
-let 
-  pat1 = "{[0*[1|2|4]]/2 3![2|4|8] 11!4 9!4}%8"
-  pat2 = "{0!2 2 9!2 3 9!2 1!3 5!3 1*[1|2|8] 0*[1|3] 1}%8"
-  bass = "[fs4 _ _ _ fs4 _ _ fs4 _ fs4 _ fs4 cs5 _ cs5 _ e5 _ e5 _]/3" 
-  kinte = "<b5 [a5 b5] fs5 [e5 fs5] e5 [cs5 c5] _>" 
-in
-  d1 
-  $ stack [
-    every 3 (shuffle 4) 
-    $ 
-    n pat1 # midiN 1
-    ,
-    n bass # midiN 2
-    ,
-    every 3 (rev) $ every 4 (const $ silence) $ slow 2 $ n kinte # midiN 3
-    ,
-    whenmod 30 20 (plyWith 4 ((|- ccv 7)) . (rev) . (slow 2)) -- ^ ascending snare
-    $ ccv 66 # ccn 2 # s "midi"
-    ,
-    every 8 ((|+ ccv 127)) 
-    $ ccv 0 # ccn 1 # s "midi"
-  ]
-  # cps (205/60/4)
-
 hush
 
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⢀⡤⢹⡳⣹⣲⣀⠀⠀⠀⠀⠈⠐⠁⢛⠒⣃⠂⣪⠥⠦⡵⠛⠀⠚⢛⡱⢉⠆⡌⢁⡁⠀⠠⢄⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠥⠠⠀⠊⡖⠐⠔⠐⡓⡷⣿⣖⣀⠀⠀⠀⠀⠀⠦⡄⠷⢒⢆⣐⠜⠐⠕⢫⠅⢥⢘⡀⠡⡘⠬⠀⠀⢸⡑⡀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⡀⠀⠂⠀⡈⠀⡦⠊⠀⠐⠈⠈⠀⠀⠀⠀⠨⣁⠟⢗⠷⣆⡀⠀⠀⠀⠈⠀⠀⠁⠓⠐⡘⠁⣀⢀⠚⠐⡐⠁⠀⠂⠀⠀⡈⠀⠠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+
 let 
+  midicc chan val = ccv val # ccn (24 + chan) # s "midi" 
   pat1 = "{0![2|4|8] 2 0 4![2|4|8] 0 7!3 2!2 10!2 8![2|4|8] 10!2}%8"
   pat2 = "{0!4 2*[1|4] 4![2|4|8]}%8"
   bass = scale "hexAeolian" "<-14 [-12 -7] -12 [-9 [-12]]>"
@@ -58,7 +38,10 @@ let
   pad = scale "hexAeolian" "<as3'add9 _ _ e4'maj7'ii _>" 
 in
   d2
-  $ stack [
+  $
+  every 12 ((# cps (212/60/16)) . (brak))
+  $
+  stack [
     whenmod 10 8 (fast 2) 
     $ 
     every 5 (shuffle 4) 
@@ -67,63 +50,40 @@ in
     $ 
     every 3 (revArc (0.25, 0.75) ) 
     $ 
-    n pat2 # midiN 5
+    n pat2 # midiN 5 -- ^ breaks
+    ,
+    whenmod 8 6 (|+ ccv "[64|127]")
+    $
+    midicc 1 0 -- ^ switch breaks 
+    ,
+    whenmod 15 12 (# ccv "<15 40 50>")
+    $
+    midicc 2 0 -- ^ transpose breaks 
+    ,
+    every 7 (# ccv "<127>")
+    $
+    midicc 3 0 -- ^ phaser breaks 
+    ,
+    n synth # midiN 7 # legato 1 -- ^ surge (maybe kill manually)
     ,
     every 4 (rev)
     $
-    someCyclesBy (1/1) (fast 2) $ n bass # midiN 6
+    someCyclesBy (1/1) (fast 2) $ n bass # midiN 6 -- ^ reese
     ,
-    someCyclesBy (1/4) (fast 2) $ n synth # midiN 7
-    ,
-    someCyclesBy (1/4) (fast 2) $ n pad # legato 3 # midiN 8
-  ]
-  # cps (222/60/4)
+    someCyclesBy (1/4) (fast 2) $ n pad # legato 3 # midiN 8 -- ^ pad
+  ] # cps (217/60/4)
 
 hush
 
--- 
-
-🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚
- 🪼🪸🎐 🫧🫧🫧///// My Little Shell \\\\\ 🫧🫧🫧 🎐🪸🪼
-˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚
-
--- Ella: a d -> g c 
-
-let
-  pat1 = "{ 0*2 2*8 6*8 9!2 10*[1|2]!2 8!8 2*[1|2] }%4"
-  bass = "[g4 _ _ _ g4 _ _ d4 _ g4 _ g4 c5 _ c5 _ a5 _ c5 _]/3" 
-in
-  d3
-  $ stack [
-    whenmod 15 9 (plyWith 4 (|+ ccv 20)) -- ^ ascending snare
-    $ 
-    ccv 0 # ccn 113 # s "midi"
-    ,
-    every 4 (rev)
-    $
-    whenmod 10 8 (fast 2) 
-    $ 
-    every 5 (shuffle 4) 
-    $ 
-    every 4 ((1/4) <~) 
-    $
-    someCyclesBy (1/1) (fast 2) $ n pat1 # midiN 9
-    ,
-    n bass # midiN 2
-  ]
-  # cps (187/60/64)
-
-hush
-
--- ⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆
--- 🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒
--- ⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺
+⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆
+🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒
+⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺
 
 let
   cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 * 7 + chan)  # s "midi" 
   -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
 in
-d5 
+d1
 $ whenmod 12 8 (sometimes loopFirst) 
 $ whenmod 18 12 (sometimesBy (1/4) ((1/4) <~) . revArc (0.25, 0.75))
 $ stack [
@@ -140,13 +100,9 @@ $ stack [
   n (scale "locrian" "<fs4'min11'o gs4'm7f5'o>")  # midiN 15 -- fx
   ,
   n (scale "locrian" "<~!2 0 ~ -4>")  # midiN 16 # legato 1.5 -- subbbass
-]
-  # cps (161/60/4)
+] # cps (161/60/4)
 
 hush
-
-
-
 
 -----------------------------------
 --           part two            --
@@ -194,8 +150,14 @@ stack [
   # midiN 12
 ] # cps (154/60/4)
 
+hush
+
+‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚
+‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚
+‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.⋆. 𐙚 ˚
+
 -----------------------------------
---           part five           --
+--           assoc               --
 --                               --
 --   relevant note channels      --
 --      1,2,3,4                  --
@@ -206,9 +168,6 @@ stack [
 --     77-80:                    --
 -----------------------------------
 
--- add something on chan 3 + 4
-
--- assoc group 
 let 
   midicc chan val = ccv val # ccn (4**3 + chan) # s "midi" 
   midilfo chan val = ccv (segment 50 $ val) # ccn (4**3 + chan) # s "midi" 
@@ -233,17 +192,13 @@ $
     fast 4 $ midicc 2 "[0|127]"
     ,
     struct (pat) $ n "0" # midiN 2
-    -- ,
-    -- struct (inv (pat)) $ n "0" # midiN 3
     ,
-    (|- n 12)
-    $
-    n "<e gs ds>" # midiN 4 # legato 2
-]
-# cps(166/60/4)
+    struct (inv (pat)) $ n "0" # midiN 3
+    ,
+    every 4 (superimpose (|+ n 12)) $ n "<e4 gs4 ds4>" # midiN 4 # legato 2
+] # cps(166/60/4)
 
 hush
-
 
 -----------------------------------
 --           part six            --
@@ -314,55 +269,38 @@ stack [
     $ n "-5" # legato 0.3
     # midiN 8 -- ^ stab
   ]
-]
-# cps (171/60/4)
+] # cps (171/60/4)
 
 hush
 
 
+🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚🐚⋆｡˚
+ 🪼🪸🎐 🫧🫧🫧///// My Little Shell \\\\\ 🫧🫧🫧 🎐🪸🪼
+˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚˚｡⋆🐚
 
------------------------------------
---           part eight          --
---                               --
---   relevant note channels      --
---    13,14,15,16                --
---                               --
---     relevant CC channels      --
---     113-116                   --
---     117-120                   --
---     121&122                   --
---     124-127                   --
------------------------------------
+-- Ella: a d -> g c 
 
 let
-  mel_1 = "{<4!4 [0 3 2 7] [1 0 2 0] 5!2 0 9!3>}%12"
-  pat_1 = "{<0!4 [0 2 4 6] [0 7 9 12] 0!2 0 9!3>}%6"
-  struct_1 = binary "<23973 3456>"
+  pat1 = "{ 0*2 2*8 6*8 9!2 10*[1|2]!2 8!8 2*[1|2] }%4"
+  bass = "[g4 _ _ _ g4 _ _ d4 _ g4 _ g4 c5 _ c5 _ a5 _ c5 _]/3" 
 in
-d8
-  -- $ slow 8
+  d3
   $ stack [
-  sometimes (|+ n 7) 
-  $ 
-  someCyclesBy (1/4) (shuffle 4) 
-  $ 
-  someCyclesBy (1/2) (|- n "[12|24]") 
-  $ 
-  n (scale "hexDorian" mel_1) # midiN 13
-  , 
-  whenmod 14 8 (shuffle 12) 
-  $
-  n (scale "hexDorian" pat_1) # midiN 14
-  ,
-  someCyclesBy ("[0.5|0.25]") ("[0.5|0.25]" <~)
-  $
-  fast 2 
-  $ struct (inv struct_1) $ n "[-4 3]" # midiN 15
-  ,
-  someCyclesBy (1/4) (fast 1.5) $ n "0*6" # midiN 16
-]
-# cps (132/60/4)
-
-d8 $ silence
+    whenmod 15 9 (plyWith 4 (|+ ccv 20)) -- ^ ascending snare
+    $ 
+    ccv 0 # ccn 113 # s "midi"
+    ,
+    every 4 (rev)
+    $
+    whenmod 10 8 (fast 2) 
+    $ 
+    every 5 (shuffle 4) 
+    $ 
+    every 4 ((1/4) <~) 
+    $
+    someCyclesBy (1/1) (fast 2) $ n pat1 # midiN 9
+    ,
+    n bass # midiN 10
+  ]  # cps (187/60/4)
 
 hush

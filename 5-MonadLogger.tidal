@@ -1,0 +1,42 @@
+-----------------------------------
+--           assoc               --
+--                               --
+--   relevant note channels      --
+--      1,2,3,4                  --
+--                               --
+--     65-68:                    --
+--     69-72:                    --
+--     73-76:                    --
+--     77-80:                    --
+-----------------------------------
+
+let 
+    rip a b c d p = within (a, b) (slow 2 . rev . echo c 1 d) p -- courtesy of kindohm ;)
+    bools = "<t*16 f*16>"
+    midilfo chan val = ccv (segment 50 $ val) # ccn (4**3 + chan) # s "midi" 
+in
+    d1 
+    $
+    whenmod 30 27 (const $ sound "~") $
+    whenmod 12 7 (rip 0.25 0.75 8 0.25) $
+    whenmod 11 9 (slow (4/3)) $
+    whenmod 10 8 (rip 0.25 1 16 0.25) $
+    foldEvery [3,4] (0.25 <~) 
+    $ 
+    stack [
+        whenmod 4 2 (slow 2) 
+        $
+        n "[0*16]" # midiN 1
+        ,
+        struct bools $ n "[0|3]" # midiN 2
+        ,
+        struct (inv bools) $ n "[0|7]" # midiN 4
+        ,
+        whenmod 10 8 (echoWith 4 (1/8) (|+ n 7))
+        $
+        n (scale "minPent" "<0 3 5 8>") # midiN 3  -- ^ pulse
+        ,
+        midilfo 9 (range 64 127 $ slow 8 $ tri) -- ^ pw
+    ] # cps (195/60/4)
+
+hush

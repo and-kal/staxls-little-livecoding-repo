@@ -12,6 +12,8 @@
 --     29-32:                    --
 -----------------------------------
 
+-- add hi-ends
+
 let 
    cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 + chan) # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
 in
@@ -35,6 +37,7 @@ stack [
   -- cclfo 5 (segment 32 $ slow 3 $ range 60 127 tri) -- ^
   ,
   someCyclesBy (1/3) (rev) 
+  $ someCyclesBy (1/3) ((ply 4) . (slow 3)) 
   $ n "[~ [0 1] ~ 0]!2" # midiN 6 -- ^ "snare"
   ,
   n "12*16" # midiN 7 -- ^ hats

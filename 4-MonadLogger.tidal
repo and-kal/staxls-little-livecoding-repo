@@ -18,18 +18,7 @@ let
   cclfo chan val = ccv (segment 32 $ val) # ccn (3 * 4 * 4 + chan)  # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
   randlfo chan val1 val2 = ccv (segment 50 $ range val1 val2 $ slow 2 $ perlin) # ccn (3 * 4 * 4 + chan) # s "midi" 
   riddim = ascii "<t c ß>"
-  mel303 = toScale [0,2,3,6,7,9,10] "[-3!8 -1 -5!4 -1 -3 -2]/2" -- ^ dorian#4
-  pats =
-    [
-      ("a", sometimes (|- n "12") $ often (|+ n "[3|5]") 
-        $ n mel303 # midiN 15 -- ^ 303 
-      ),
-      ("b", sometimes (|+ n "[1|12]") 
-        $ n "-24*8" # midiN 16 -- ^ breaks
-      ),
-      ("c", n "~"
-      )
-    ]
+  -- mel303 = toScale [0,2,3,6,7,9,10] "[-3!8 -1 -5!4 -1 -3 -2]/2" -- ^ dorian#4
 in
 d4
 $ every 8 rev 
@@ -49,13 +38,17 @@ $ stack [
      ccv 80 # ccn (3 * 4 * 4 + 1) # s "midi" -- ^ transpose snare
   ]
   , 
-  randlfo 9 50 99 -- ^ 303 filter envelope
+  randlfo 9 50 99 -- ^ _____
   ,
-  randlfo 10 89 0 -- ^ 303 waveform
+  randlfo 10 89 0 -- ^ _____
+  ,
+  sometimes (|+ n "[1|12]") 
+  $ n "<[0*8]!3 12*8>" # midiN 15 -- ^ sample
   ,
   cclfo 13 (range 0 "<0!6 90!2>" $ slow 2 saw) -- ^ break transpose
   ,
-  ur 16 "[a [a,b] b]!4 c" pats [] -- ^ alternate between 303 and breaks
+  sometimes (|+ n "[1|12]") 
+  $ n "-24*8" # midiN 16 -- ^ breaks
   ,
   sometimes (|+ n "2") $ n "0!8" # midiN 14 -- ^ glitchy hat particles
 ]
