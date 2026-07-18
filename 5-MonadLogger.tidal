@@ -15,7 +15,7 @@ let
     bools = "<t*16 f*16>"
     midilfo chan val = ccv (segment 50 $ val) # ccn (4**3 + chan) # s "midi" 
 in
-    d1 
+    d5
     $
     whenmod 30 27 (const $ sound "~") $
     whenmod 12 7 (rip 0.25 0.75 8 0.25) $
@@ -34,9 +34,11 @@ in
         ,
         whenmod 10 8 (echoWith 4 (1/8) (|+ n 7))
         $
+        every 6 (superimpose (|+ n "[3,5]"))
+        $
         n (scale "minPent" "<0 3 5 8>") # midiN 3  -- ^ pulse
         ,
-        midilfo 9 (range 64 127 $ slow 8 $ tri) -- ^ pw
+        midilfo 9 (range 0 127 $ slow 8 $ tri) -- ^ pw
     ] # cps (195/60/4)
 
 hush

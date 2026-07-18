@@ -39,13 +39,11 @@ $ stack [
   ,
   midicc 1 "<0!4 120!2>"
   ,
-  sometimes (0.25 <~) $ midilfo 13 (range 0 127 $ fast "[1|2|3|4]" $ sine)  
+  sometimes (0.25 <~) $ midilfo 13 (range 0 127 $ fast "[1|2|3|4]" $ sine) -- ^ formant shift
   ,
-  sometimes (0.25 ~>) $ midilfo 14 (range 0 127 $ fast "[1|2|3|4]" $ sine)  
+  sometimes (0.25 ~>) $ midilfo 14 (range 0 80 $ fast "[1|2|3|4]" $ sine) -- ^ delay feedback
 ]
 # cps (171/60/4)
 -- # cps (range (155/60/4) (155/60/5) $ slow 4 $ sine)
-
-d7 $ silence
 
 hush

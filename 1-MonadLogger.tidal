@@ -17,8 +17,8 @@ let
   midiN chan = s "midi" # midichan (chan - 1) -- ^ make MIDI channels 1-indexed
   melody = "[0 7 5 7 5 2 11 1 0 7 5 9 12 2 11 1]"
   pattern = binary "<<1274 1275>!4 <1174 1195>!4 <1000 1003>!4>"
-  lforand chan val1 val2 = 
-    ccn (1 * 4 + chan) 
+  lforand chan val1 val2 =
+    ccn chan
     # ccv (segment 50 (range val1 val2 $ rand)) 
     # s "midi" -- ^ this one is for sending one random value per cycle
 in
@@ -29,9 +29,10 @@ $ stack [
     $ note 0
     # midiN 1 -- ^ kick
     ,
-    ccn 1
-    # ccv "<0!8 127!8>" -- ^ alternate synth
-    # s "midi"
+    ccv (
+      whenmod 8 6 (const $ segment 50 (range 0 127 rand)) $
+      pure 0 -- ^ `pure` explicitly turns `0` into a pattern again
+    ) # ccn 5 # s "midi"
     , struct (inv pattern) 
     $ somecyclesBy 0.7 rev
     $ note "0 1 14"
@@ -43,9 +44,7 @@ $ stack [
     $ n "0*16"
     # midiN 3 -- ^ particles
     ,
-    fast 1.5 $ lforand 5 0 127
-    ,
-    fast 2 $ lforand 6 30 100
+    fast 2 $ lforand 9 30 100, lforand 10 10 120-- ^ particle fx
     ,
     (0.75 ~>)
     $ 
