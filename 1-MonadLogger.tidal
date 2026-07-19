@@ -1,3 +1,43 @@
+
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+◢◤◢◤◢◤◢◤InTeRLuDe◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+
+d1
+$ 
+whenmod 36 33 (# binshift (range 0 1 $ perlin)) $
+whenmod 30 20 (fast 1.5) $
+whenmod 14 12 (trunc 0.25) $
+every 10 (# accelerate (range (-2) 2 $ slow 2 sine)) $
+every 5 (jux rev) $
+every 8 (# accelerate "[-1 1]") $
+every 7 (# coarse "16 32 24") $
+every 4 (chop 4 . rev) $
+every 9 (stut 8 0.25 0.5) $
+stack [
+    -- whenmod 10 5 (# up "0 2 3 5") $
+    -- fast 8 $
+    -- sound "<jungle:6 jungle:6>" # up ( 
+    --     spread ($) [(fmap (+12)), (fmap (+2))] -- ^ `($)` turns the function application operator into a function
+    --     $ "[0 1]*4"
+    -- ) 
+    -- # cut "1" # shape 0.9 # amp 0.8
+    -- ,
+    -- sound "amencutup:12*8? amencutup:2*4" # shape "0 1"
+    -- ,
+    -- foldEvery [2,3] (fast 2) $ sound "{tech:5 tech:5 tech:5 tech:5 808oh}%8" -- ^ kicks
+    -- # cut "2" # gain "0.95" 
+    -- ,
+    s "superpwm" # n (scale "wholetone" "<as4'min es4'min gs4'min>") # scram "[0.4|0.6|0.8]" 
+    # gain 0.7 # resonance 0.8 # accelerate 0.2
+] 
+# amp 0.5
+# shape 0.9
+# distort 0
+# cps(169/60/4)
+
+hush
+
 -----------------------------------
 --           part one            --
 --                               --
@@ -23,21 +63,22 @@ let
     # s "midi" -- ^ this one is for sending one random value per cycle
 in
 d1
-$ whenmod 20 15 ((slow 4) . (ply 8) . (|+ note 1))
+-- $ whenmod 20 15 ((slow 4) . (ply 6) . (|+ note 1))
 $ stack [
-    struct (pattern) 
-    $ note 0
-    # midiN 1 -- ^ kick
-    ,
-    ccv (
-      whenmod 8 6 (const $ segment 50 (range 0 127 rand)) $
-      pure 0 -- ^ `pure` explicitly turns `0` into a pattern again
-    ) # ccn 5 # s "midi"
-    , struct (inv pattern) 
-    $ somecyclesBy 0.7 rev
-    $ note "0 1 14"
-    # midiN 2 -- ^ digits
-    , 
+    -- struct (pattern) 
+    -- $ note 0
+    -- # midiN 1 -- ^ kick
+    -- ,
+    -- ccv (
+    --   whenmod 8 6 (const $ segment 50 (range 0 127 rand)) $
+    --   pure 0 -- ^ `pure` explicitly turns `0` into a pattern again
+    -- ) # ccn 5 # s "midi" -- ^ harmonics digits
+    -- , 
+    -- struct (inv pattern) 
+    -- $ somecyclesBy 0.7 rev
+    -- $ note "0 1 14"
+    -- # midiN 2 -- ^ digits
+    -- , 
     often (|+ n "[0|1|2|3]")
     $
     (|- n 24)
@@ -45,11 +86,11 @@ $ stack [
     # midiN 3 -- ^ particles
     ,
     fast 2 $ lforand 9 30 100, lforand 10 10 120-- ^ particle fx
-    ,
-    (0.75 ~>)
-    $ 
-    n "0*[2|4|8]"
-    # midiN 4 -- ^ snare 
+    -- ,
+    -- (0.75 ~>)
+    -- $ 
+    -- n "0*[2|4|8]"
+    -- # midiN 4 -- ^ snare 
 ] # cps(177/60/4)
 
 hush

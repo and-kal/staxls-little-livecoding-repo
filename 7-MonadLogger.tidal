@@ -12,10 +12,6 @@
 --     109-112:                  --
 -----------------------------------
 
--- change drums
-
--- TODO: shape kick and mix 
-
 let
   midilfo chan val = ccv (segment 50 $ val) # ccn (96 + chan) # s "midi" 
   midicc chan val = ccv val # ccn (96 + chan) # s "midi" 
@@ -29,15 +25,15 @@ $ whenmod 34 31 (slow 6)
 -- $ whenmod 12 11 (slow 3) 
 $ whenmod 20 17 (linger (1/18)) 
 $ stack [
-  struct (inv pat_3) $ n "0 1 1 0" # midiN 10 -- ^ phased snare
-  ,
-  struct pat_2 $ n "0 1" # midiN 9 -- ^ kicks
-  ,
-  n "0*8" # midiN 11
-  ,
-  n "~ 0" # midiN 12 
-  ,
-  midicc 1 "<0!4 120!2>"
+  -- midicc 1 "<0!4 120!2>" -- ^ kick sel
+  -- ,
+  -- struct pat_2 $ n "0 1" # midiN 9 -- ^ kicks
+  -- ,
+  -- struct (inv pat_3) $ n "0 1 1 0" # midiN 10 -- ^ phased hat
+  -- ,
+  -- n "0*8" # midiN 11 -- ^ microperc
+  -- ,
+  n "~ 0" # midiN 12 -- ^ "snare"
   ,
   sometimes (0.25 <~) $ midilfo 13 (range 0 127 $ fast "[1|2|3|4]" $ sine) -- ^ formant shift
   ,

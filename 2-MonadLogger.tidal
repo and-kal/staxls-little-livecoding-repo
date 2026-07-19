@@ -12,8 +12,6 @@
 --     29-32:                    --
 -----------------------------------
 
--- add hi-ends
-
 let 
   cclfo chan val = ccv (segment 32 $ val) # ccn (4 * 4 + chan) # s "midi" -- ^ this one is patterning CC values (`segment` necessary for applying continuous patterns/oscillators)
   midicc chan val = ccv val # ccn (4 * 4 + chan) # s "midi" 
@@ -30,30 +28,30 @@ whenmod 14 8 (slow 2)
 $
 stack [
   n "[-4!8]" # midiN 5 -- ^ kick
-  ,
-  whenmod 8 6 (|+ ccv 127)
-  $
-  midicc 1 0 -- ^ kick dist
-  ,
-  cclfo 2 (slow 7 $ range 0 50 tri) -- ^
-  ,
-  whenmod 9 7 (|+ ccv 127)
-  $
-  midicc 5 0 -- ^ snare bufferglitch
-  ,
-  someCyclesBy (1/3) (rev) 
-  $ someCyclesBy (1/3) ((ply 4) . (slow 3)) 
-  $ n "[~ [0 1] ~ 0]!2" # midiN 6 -- ^ "snare"
-  ,
-  n "12*16" # midiN 7 -- ^ hats
-  ,
-  foldEvery [4,5,9,10] (|+ ccv 127)
-  $
-  midicc 13 0 -- ^ amp noise
-  ,
-  someCyclesBy (1/3) (|- n 4) $ 
-  someCyclesBy (1/4) (|+ n 1) $ 
-  n "[e,es]*4" # midiN 8 -- ^ bassnoise
+  -- ,
+  -- whenmod 8 6 (|+ ccv 127)
+  -- $
+  -- midicc 1 0 -- ^ kick dist
+  -- ,
+  -- cclfo 2 (slow 7 $ range 0 0 saw) -- ^ kick drive
+  -- ,
+  -- whenmod 9 7 (|+ ccv 127)
+  -- $
+  -- midicc 5 0 -- ^ snare bufferglitch
+  -- ,
+  -- someCyclesBy (1/3) (rev) 
+  -- $ someCyclesBy (1/3) ((ply 4) . (slow 3)) 
+  -- $ n "[~ [0 1] ~ 0]!2" # midiN 6 -- ^ "snare"
+  -- ,
+  -- n "12*16" # midiN 7 -- ^ hats
+  -- ,
+  -- foldEvery [4,5,9,10] (|+ ccv 127)
+  -- $
+  -- midicc 13 0 -- ^ amp noise
+  -- ,
+  -- someCyclesBy (1/3) (|- n 4) $ 
+  -- someCyclesBy (1/4) (|+ n 1) $ 
+  -- n "[e,es]*4" # midiN 8 -- ^ bassnoise
 ] # cps (194/60/4)
 
 hush

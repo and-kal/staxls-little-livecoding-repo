@@ -16,36 +16,37 @@ let
     midicc chan val = ccv val # ccn (5 * 4 * 4 + chan) # s "midi" 
     varcc = foldEvery [5,7] (|+ ccv 127)
 in
-d6 $
-    whenmod 22 17 ((slow 1.25) . brak)
-    $
-    whenmod 18 15 (fast "[2 1.5 0.25 1.75]/3")
+d6 
+    -- $
+    -- whenmod 22 17 ((slow 1.25) . brak)
+    -- $
+    -- whenmod 18 15 (fast "[2 1.5 0.25 1.75]/3")
     $
     whenmod 8 5 (fast 2)
     $
     stack [
-        rarely (|+ n 1)
-        $
-        n "0(7,8,<2 4>)" # midiN 5
-        ,
-        varcc
-        $
-        midicc 5 0 -- ^ swap lazer / x
-        ,
-        someCyclesBy (1/3) (|- n 5)
-        $
-        n "0?*8" # midiN 6 -- ^ lazer / x
-        ,
-        varcc
-        $
-        midicc 9 0 -- ^ dleay
-        ,
-        n "[0|7]*4" # midiN 7 -- ^ liq.snare
-        ,
-        varcc
-        $
-        midicc 13 0 -- ^ tremolo
-        ,
+        -- rarely (|+ n 1)
+        -- $
+        -- n "0(7,8,<2 4>)" # midiN 5
+        -- ,
+        -- varcc
+        -- $
+        -- midicc 5 0 -- ^ swap lazer / x
+        -- ,
+        -- someCyclesBy (1/3) (|- n 5)
+        -- $
+        -- n "0?*8" # midiN 6 -- ^ lazer / x
+        -- ,
+        -- varcc
+        -- $
+        -- midicc 9 0 -- ^ dleay
+        -- ,
+        -- n "[0|7]*4" # midiN 7 -- ^ liq.snare
+        -- ,
+        -- varcc
+        -- $
+        -- midicc 13 0 -- ^ tremolo
+        -- ,
         every 5 (superimpose (|+ n 12))
         $
         slow 4 $ n "as!2 cs c" # midiN 8 -- ^ pad

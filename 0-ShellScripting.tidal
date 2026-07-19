@@ -23,57 +23,6 @@
 streamEnableLink tidal 
 -- ^ enables Ableton Link
 
-hush
-
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⢀⡤⢹⡳⣹⣲⣀⠀⠀⠀⠀⠈⠐⠁⢛⠒⣃⠂⣪⠥⠦⡵⠛⠀⠚⢛⡱⢉⠆⡌⢁⡁⠀⠠⢄⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠥⠠⠀⠊⡖⠐⠔⠐⡓⡷⣿⣖⣀⠀⠀⠀⠀⠀⠦⡄⠷⢒⢆⣐⠜⠐⠕⢫⠅⢥⢘⡀⠡⡘⠬⠀⠀⢸⡑⡀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⡀⠀⠂⠀⡈⠀⡦⠊⠀⠐⠈⠈⠀⠀⠀⠀⠨⣁⠟⢗⠷⣆⡀⠀⠀⠀⠈⠀⠀⠁⠓⠐⡘⠁⣀⢀⠚⠐⡐⠁⠀⠂⠀⠀⡈⠀⠠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-
-let 
-  midicc chan val = ccv val # ccn (24 + chan) # s "midi" 
-  pat1 = "{0![2|4|8] 2 0 4![2|4|8] 0 7!3 2!2 10!2 8![2|4|8] 10!2}%8"
-  pat2 = "{0!4 2*[1|4] 4![2|4|8]}%8"
-  bass = scale "hexAeolian" "<-14 [-12 -7] -12 [-9 [-12]]>"
-  synth = scale "hexAeolian" "<7 _ [-5 [12|0]] -5 _ [-9 _ _ [-2|7]] _>" 
-  pad = scale "hexAeolian" "<as3'add9 _ _ e4'maj7'ii _>" 
-in
-  d2
-  $
-  every 12 ((# cps (212/60/16)) . (brak))
-  $
-  stack [
-    whenmod 10 8 (fast 2) 
-    $ 
-    every 5 (shuffle 4) 
-    $ 
-    every 4 ((1/4) <~) 
-    $ 
-    every 3 (revArc (0.25, 0.75) ) 
-    $ 
-    n pat2 # midiN 5 -- ^ breaks
-    ,
-    whenmod 8 6 (|+ ccv "[64|127]")
-    $
-    midicc 1 0 -- ^ switch breaks 
-    ,
-    whenmod 15 12 (# ccv "<15 40 50>")
-    $
-    midicc 2 0 -- ^ transpose breaks 
-    ,
-    every 7 (# ccv "<127>")
-    $
-    midicc 3 0 -- ^ phaser breaks 
-    ,
-    n synth # midiN 7 # legato 1 -- ^ surge (maybe kill manually)
-    ,
-    every 4 (rev)
-    $
-    someCyclesBy (1/1) (fast 2) $ n bass # midiN 6 -- ^ reese
-    ,
-    someCyclesBy (1/4) (fast 2) $ n pad # legato 3 # midiN 8 -- ^ pad
-  ] # cps (217/60/4)
-
-hush
 
 ⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆⁺₊⋆
 🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒🏺🏛️🧿🫒
@@ -101,6 +50,56 @@ $ stack [
   ,
   n (scale "locrian" "<~!2 0 ~ -4>")  # midiN 16 # legato 1.5 -- subbbass
 ] # cps (161/60/4)
+
+hush 
+
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⢀⡤⢹⡳⣹⣲⣀⠀⠀⠀⠀⠈⠐⠁⢛⠒⣃⠂⣪⠥⠦⡵⠛⠀⠚⢛⡱⢉⠆⡌⢁⡁⠀⠠⢄⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠥⠠⠀⠊⡖⠐⠔⠐⡓⡷⣿⣖⣀⠀⠀⠀⠀⠀⠦⡄⠷⢒⢆⣐⠜⠐⠕⢫⠅⢥⢘⡀⠡⡘⠬⠀⠀⢸⡑⡀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⡀⠀⠂⠀⡈⠀⡦⠊⠀⠐⠈⠈⠀⠀⠀⠀⠨⣁⠟⢗⠷⣆⡀⠀⠀⠀⠈⠀⠀⠁⠓⠐⡘⠁⣀⢀⠚⠐⡐⠁⠀⠂⠀⠀⡈⠀⠠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+
+let 
+  midicc chan val = ccv val # ccn (24 + chan) # s "midi" 
+  pat1 = "{0![2|4|8] 2 0 4![2|4|8] 0 7!3 2!2 10!2 8![2|4|8] 10!2}%8"
+  pat2 = "{0!4 2*[1|4] 4![2|4|8]}%8"
+  bass = scale "hexAeolian" "<-14 [-12 -7] -12 [-9 [-12]]>"
+  synth = scale "hexAeolian" "<7 _ [-5 [12|0]] -5 _ [-9 _ _ [-2|7]] _>" 
+  pad = scale "hexAeolian" "<as3'add9 _ _ e4'maj7'ii _>" 
+in
+  d2
+  $
+  every 12 ((# cps (212/60/16)) . (brak))
+  $
+  stack [
+    whenmod 10 8 (fast 2) 
+    $ 
+    every 5 (shuffle 4) 
+    $ 
+    every 4 ((1/4) <~) 
+    $ 
+    every 3 (revArc (0.25, 0.75) ) 
+    $ 
+    n pat2 # midiN 5 -- ^ breaks
+    -- ,
+    -- whenmod 8 6 (|+ ccv "[64|127]")
+    -- $
+    -- midicc 1 0 -- ^ switch breaks 
+    -- ,
+    -- whenmod 15 12 (# ccv "<15 40 50>")
+    -- $
+    -- midicc 2 0 -- ^ transpose breaks 
+    -- ,
+    -- every 7 (# ccv "<127>")
+    -- $
+    -- midicc 3 0 -- ^ phaser breaks 
+    -- ,
+    -- n synth # midiN 7 # legato 1 -- ^ surge (maybe kill manually)
+    -- ,
+    -- every 4 (rev)
+    -- $
+    -- someCyclesBy (1/1) (fast 2) $ n bass # midiN 6 -- ^ reese
+    ,
+    someCyclesBy (1/4) (fast 2) $ n pad # legato 3 # midiN 8 -- ^ pad
+  ] # cps (217/60/4)
 
 hush
 
@@ -130,24 +129,24 @@ $
 whenmod 11 6 (ply 3 . slow 2.5) 
 $
 stack [
-  every 4 (|- n 3) $ 
-  every 5 (|+ n 6) $ 
-  beat "[3,4.2,9,11,12,14]" 16 $ n "-24" # midiN 9 -- kick
-  ,
-  cclfo 1 (slow 8 $ range 0 50 tri) -- kickfmfeedb
-  ,
-  cclfo 2 (slow 7 $ range 0 50 tri) -- kickdecay
-  ,
-  whenmod 9 6 (|+ ccv 25) $ ccn 19 # ccv 0 # s "midi" -- kickfmlevel
-  ,
-  cclfo 5 (segment 32 $ slow 3 $ range 60 127 tri) -- snare delay
-  ,
-  beat "[4.9,15.3]" 16 $ n "1" # midiN 10 -- snare
-  ,
-  beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 11 -- hat
-  ,
+  -- every 4 (|- n 3) $ 
+  -- every 5 (|+ n 6) $ 
+  -- beat "[3,4.2,9,11,12,14]" 16 $ n "-24" # midiN 9 -- ^ kick
+  -- ,
+  -- cclfo 1 (slow 8 $ range 0 50 tri) -- ^ kickfmfeedb
+  -- ,
+  -- cclfo 2 (slow 7 $ range 0 50 tri) -- ^ kickdecay
+  -- ,
+  -- whenmod 9 6 (|+ ccv 25) $ ccn 19 # ccv 0 # s "midi" -- ^ kickfmlevel
+  -- ,
+  -- cclfo 5 (segment 32 $ slow 3 $ range 60 127 tri) -- ^ snare delay
+  -- ,
+  -- beat "[4.9,15.3]" 16 $ n "1" # midiN 10 -- ^ snare
+  -- ,
+  -- beat "[0.1,3,4.2,9,11,12,14,4.9,15.3]" 16 $ n "0" # midiN 11 -- ^ hat
+  -- ,
   note (scale "minor" "<fs5'min5 gs4'min4'o d4'min4'ii>") # legato 2 
-  # midiN 12
+  # midiN 12 -- ^ synth
 ] # cps (154/60/4)
 
 hush
@@ -162,10 +161,10 @@ hush
 --   relevant note channels      --
 --      1,2,3,4                  --
 --                               --
---     65-68:                    --
---     69-72:                    --
---     73-76:                    --
---     77-80:                    --
+--     65-68: particillz         --
+--     69-72: knock              --
+--     73-76: weirdit           --
+--     77-80: jazz               --
 -----------------------------------
 
 let 
@@ -174,27 +173,27 @@ let
   pat = ascii "<ha [H A] <hA Ha>>"
   in
 d5
-$
-whenmod 8 5 (slow "2 1 4 1 2")
-$
-whenmod 12 8 ((slow 2) . (bite 4 "0 2 3 1"))
+-- $
+-- whenmod 8 5 (slow "2 1 4 1 2")
+-- $
+-- whenmod 12 8 ((slow 2) . (bite 4 "0 2 3 1"))
 -- $ 
 -- always ((slow 4) . (spaceOut [(5/3), 1.5, (4/3), 1.25, 1, (7/8), 0.75]))
 $
   stack [
-    whenmod 14 10 (shuffle 8) 
-    $
-    someCyclesBy (1/4) (|- n 24) 
-    $ n (run 16) # midiN 1
-    ,
-    midilfo 1 (range 0 37 $ rand)
-    ,
-    fast 4 $ midicc 2 "[0|127]"
-    ,
-    struct (pat) $ n "0" # midiN 2
-    ,
-    struct (inv (pat)) $ n "0" # midiN 3
-    ,
+    -- whenmod 14 10 (shuffle 8) 
+    -- $
+    -- someCyclesBy (1/4) (|- n 24) 
+    -- $ n (run 16) # midiN 1
+    -- ,
+    -- midilfo 1 (range 0 37 $ rand)
+    -- ,
+    -- fast 4 $ midicc 2 "[0|127]"
+    -- ,
+    -- struct (pat) $ n "0" # midiN 2
+    -- ,
+    -- struct (inv (pat)) $ n "0" # midiN 3
+    -- ,
     every 4 (superimpose (|+ n 12)) $ n "<e4 gs4 ds4>" # midiN 4 # legato 2
 ] # cps(166/60/4)
 
@@ -220,14 +219,14 @@ let
   slowed = whenmod 12 9
 in
 d6
-$
-every 4 (bite 4 "1 2 0 3")
-$
-slowed (slow 3)
-$
-fill (soak 2 (fast (4/3)))
-$
-whenmod 32 29 (degradeBy 0.8)
+-- $
+-- every 4 (bite 4 "1 2 0 3")
+-- $
+-- slowed (slow 3)
+-- $
+-- fill (soak 2 (fast (4/3)))
+-- $
+-- whenmod 32 29 (degradeBy 0.8)
 $
 stack [
   fill (# n fillPat)
@@ -235,39 +234,39 @@ stack [
   fast 2 $ n basePat # midiN 5 -- ^ bass
   ,
   stack [
-    fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ^ ticks
-    ,
+  --   fast 2 $ n "~ 3!2 ~ 3!2 ~ 3" # midiN 6 -- ^ ticks
+  --   ,
     n "~ 4*8" # midiN 6 -- ^ shaker
-    ,
-    slow 2 
-    $
-    every 2 (0.125 <~)
-    $
-    every 3 (fast "0.5 2")
-    $
-    whenmod 6 3 (fast "2")
-    $
-    n "~ 1 ~*2 2*4" # midiN 6 -- ^ snares
-    ,
-    fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- ^ kick
-    ,
-    whenmod 8 5 (# silence)
-    $
-    fast 2 $ n basePat # midiN 7 -- ^ voc 
-    ,
-    someCyclesBy (1/5) (|+ ccv 66)
-    $
-    slowed (|+ ccv 127)
-    $
-    cclfo 9 0 -- ^ voc selector
-    ,
-    slowed (|- n 7)
-    $
-    every 4 (|+ n 11) 
-    $
-    every 13 (|+ n 5) 
-    $ n "-5" # legato 0.3
-    # midiN 8 -- ^ stab
+  --   ,
+  --   slow 2 
+  --   $
+  --   every 2 (0.125 <~)
+  --   $
+  --   every 3 (fast "0.5 2")
+  --   $
+  --   whenmod 6 3 (fast "2")
+  --   $
+  --   n "~ 1 ~*2 2*4" # midiN 6 -- ^ snares
+  --   ,
+  --   fast 2 $ (|+ n 5) $ n basePat # midiN 6 -- ^ kick
+  --   ,
+  --   whenmod 8 5 (# silence)
+  --   $
+  --   fast 2 $ n basePat # midiN 7 -- ^ voc 
+  --   ,
+  --   someCyclesBy (1/5) (|+ ccv 66)
+  --   $
+  --   slowed (|+ ccv 127)
+  --   $
+  --   cclfo 9 0 -- ^ voc selector
+  --   ,
+  --   slowed (|- n 7)
+  --   $
+  --   every 4 (|+ n 11) 
+  --   $
+  --   every 13 (|+ n 5) 
+  --   $ n "-5" # legato 0.3
+  --   # midiN 8 -- ^ stab
   ]
 ] # cps (171/60/4)
 
